@@ -11,6 +11,8 @@
 #    XRF270 158.64.26.132 BB
 #
 #  note: the remote XLX must list this XLX in its interlink file
-#        for the link to be established
+#        for the link to be established.
+#        Remote XRF reflectors must have your XLX reflector listed
+#        in their xrfs.txt (for dxrfd) to peer as well as an XRF peer.
 #
 #############################################################################
