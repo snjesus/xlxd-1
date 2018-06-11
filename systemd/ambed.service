@@ -1,0 +1,14 @@
+[Unit]
+Description=ambed
+After=systemd-user-session.service
+
+[Service]
+Type=simple
+ExecStartPre=-/sbin/rmmod ftdi_sio
+ExecStartPre=-/sbin/rmmod usbserial
+ExecStart=/ambed/ambed 127.0.0.1
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

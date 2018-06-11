@@ -20,3 +20,8 @@ install:
 	mkdir -p /ambed
 	cp $(EXECUTABLE) /ambed/
 	cp ./run /ambed/
+	cp ../systemd/ambed.service /lib/systemd/system/
+	systemctl enable ambed
+	# ambed is now controlled with systemd. The service has been enabled. You can start it
+	# with systemctl start ambed.
+

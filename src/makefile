@@ -28,3 +28,7 @@ install:
 	[ -f /xlxd/xlxd.interlink ] && \
 		cp ../config/xlxd.interlink /xlxd/xlxd.interlink.sample || \
 		cp ../config/xlxd.interlink /xlxd/xlxd.interlink
+	cp -f ../systemd/xlxd.service /lib/systemd/system/
+	systemctl enable xlxd
+	# xlxd is now controlled with systemd. The service has been enabled. You can start it 
+	# with systemctl start xlxd
