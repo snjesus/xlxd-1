@@ -13,6 +13,8 @@
 #  note: the remote XLX must list this XLX in its interlink file
 #        for the link to be established.
 #        Remote XRF reflectors must have your XLX reflector listed
-#        in their xrfs.txt (for dxrfd) to peer as well as an XRF peer.
+#        in their xrfs.txt (for dxrfd). Your XLX reflector should be
+#	 listed as an XRF gatweay (i.e. XLX001 would be listed as
+#	 XRF001.
 #
 #############################################################################
