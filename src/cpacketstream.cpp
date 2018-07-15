@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -30,11 +30,11 @@
 
 CPacketStream::CPacketStream()
 {
-    m_bOpen = false;
-    m_uiStreamId = 0;
-    m_uiPacketCntr = 0;
-    m_OwnerClient = NULL;
-    m_CodecStream = NULL;
+	m_bOpen = false;
+	m_uiStreamId = 0;
+	m_uiPacketCntr = 0;
+	m_OwnerClient = NULL;
+	m_CodecStream = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -42,35 +42,34 @@ CPacketStream::CPacketStream()
 
 bool CPacketStream::Open(const CDvHeaderPacket &DvHeader, CClient *client)
 {
-    bool ok = false;
-    
-    // not already open?
-    if ( !m_bOpen )
-    {
-        // update status
-        m_bOpen = true;
-        m_uiStreamId = DvHeader.GetStreamId();
-        m_uiPacketCntr = 0;
-        m_DvHeader = DvHeader;
-        m_OwnerClient = client;
-        m_LastPacketTime.Now();
+	bool ok = false;
+
+	// not already open?
+	if ( !m_bOpen ) {
+		// update status
+		m_bOpen = true;
+		m_uiStreamId = DvHeader.GetStreamId();
+		m_uiPacketCntr = 0;
+		m_DvHeader = DvHeader;
+		m_OwnerClient = client;
+		m_LastPacketTime.Now();
 		if(DvHeader.GetRpt2Module() == 'A' || DvHeader.GetRpt2Module() == 'B' || DvHeader.GetRpt2Module() == 'C' || DvHeader.GetRpt2Module() == 'D')
 			m_CodecStream = g_Transcoder.GetStream(this, client->GetCodec());
 		else
 			m_CodecStream = g_Transcoder.GetStream(this, CODEC_NONE);
 		ok = true;
 	}
-   return ok;
+	return ok;
 }
 
 void CPacketStream::Close(void)
 {
-    // update status
-    m_bOpen = false;
-    m_uiStreamId = 0;
-    m_OwnerClient = NULL;
-    g_Transcoder.ReleaseStream(m_CodecStream);
-    m_CodecStream = NULL;
+	// update status
+	m_bOpen = false;
+	m_uiStreamId = 0;
+	m_OwnerClient = NULL;
+	g_Transcoder.ReleaseStream(m_CodecStream);
+	m_CodecStream = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -78,50 +77,43 @@ void CPacketStream::Close(void)
 
 void CPacketStream::Push(CPacket *Packet)
 {
-    // update stream dependent packet data
-    m_LastPacketTime.Now();
-    Packet->UpdatePids(m_uiPacketCntr++);
-    // transcoder avaliable ?
-    if ( m_CodecStream != NULL )
-    {
-        // todo: verify no possibilty of double lock here
-        m_CodecStream->Lock();
-        {
-            // transcoder ready & frame need transcoding ?
-            if ( m_CodecStream->IsConnected() && Packet->HaveTranscodableAmbe() )
-            {
-                // yes, push packet to trancoder queue
-                // trancoder will push it after transcoding
-                // is completed
-                m_CodecStream->push(Packet);
-            }
-            else
-            {
-                // no, just bypass tarnscoder
-                push(Packet);
-            }
-        }
-        m_CodecStream->Unlock();
-    }
-    else
-    {
-        // otherwise, push direct push
-        push(Packet);
-    }
+	// update stream dependent packet data
+	m_LastPacketTime.Now();
+	Packet->UpdatePids(m_uiPacketCntr++);
+	// transcoder avaliable ?
+	if ( m_CodecStream != NULL ) {
+		// todo: verify no possibilty of double lock here
+		m_CodecStream->Lock();
+		{
+			// transcoder ready & frame need transcoding ?
+			if ( m_CodecStream->IsConnected() && Packet->HaveTranscodableAmbe() ) {
+				// yes, push packet to trancoder queue
+				// trancoder will push it after transcoding
+				// is completed
+				m_CodecStream->push(Packet);
+			} else {
+				// no, just bypass tarnscoder
+				push(Packet);
+			}
+		}
+		m_CodecStream->Unlock();
+	} else {
+		// otherwise, push direct push
+		push(Packet);
+	}
 }
 
 bool CPacketStream::IsEmpty(void) const
 {
-    bool bEmpty = empty();
-    
-    // also check no packets still in Codec stream's queue
-    if ( bEmpty && (m_CodecStream != NULL) )
-    {
-        bEmpty &= m_CodecStream->IsEmpty();
-    }
+	bool bEmpty = empty();
 
-    // done
-    return bEmpty;
+	// also check no packets still in Codec stream's queue
+	if ( bEmpty && (m_CodecStream != NULL) ) {
+		bEmpty &= m_CodecStream->IsEmpty();
+	}
+
+	// done
+	return bEmpty;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -129,10 +121,9 @@ bool CPacketStream::IsEmpty(void) const
 
 const CIp *CPacketStream::GetOwnerIp(void)
 {
-    if ( m_OwnerClient != NULL )
-    {
-        return &(m_OwnerClient->GetIp());
-    }
-    return NULL;
+	if ( m_OwnerClient != NULL ) {
+		return &(m_OwnerClient->GetIp());
+	}
+	return NULL;
 }
 

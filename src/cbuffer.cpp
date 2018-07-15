@@ -31,8 +31,8 @@
 
 CBuffer::CBuffer(uint8 *buffer, int len)
 {
-    resize(len);
-    ::memcpy(data(), buffer, len);
+	resize(len);
+	::memcpy(data(), buffer, len);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -40,91 +40,87 @@ CBuffer::CBuffer(uint8 *buffer, int len)
 
 void CBuffer::Set(uint8 *buffer, int len)
 {
-    resize(len);
-    ::memcpy(data(), buffer, len);
+	resize(len);
+	::memcpy(data(), buffer, len);
 }
 
 void CBuffer::Set(const char *sz)
 {
-    resize(::strlen(sz)+1);
-    ::strcpy((char *)data(), sz);
+	resize(::strlen(sz)+1);
+	::strcpy((char *)data(), sz);
 }
 
 void CBuffer::Append(uint8 *buffer, int len)
 {
-    int n = (int)size();
-    resize(n+len);
-    ::memcpy(&(data()[n]), buffer, len);
+	int n = (int)size();
+	resize(n+len);
+	::memcpy(&(data()[n]), buffer, len);
 }
 
 void CBuffer::Append(uint8 ui, int len)
 {
-    int n = (int)size();
-    resize(n+len);
-    ::memset(&(data()[n]), ui, len);
+	int n = (int)size();
+	resize(n+len);
+	::memset(&(data()[n]), ui, len);
 }
 
 void CBuffer::Append(uint8 ui)
 {
-    int n = (int)size();
-    resize(n+sizeof(uint8));
-    ::memcpy(&(data()[n]), &ui, sizeof(uint8));
+	int n = (int)size();
+	resize(n+sizeof(uint8));
+	::memcpy(&(data()[n]), &ui, sizeof(uint8));
 }
 
 void CBuffer::Append(uint16 ui)
 {
-    int n = (int)size();
-    resize(n+sizeof(uint16));
-    ::memcpy(&(data()[n]), &ui, sizeof(uint16));
+	int n = (int)size();
+	resize(n+sizeof(uint16));
+	::memcpy(&(data()[n]), &ui, sizeof(uint16));
 }
 
 void CBuffer::Append(uint32 ui)
 {
-    int n = (int)size();
-    resize(n+sizeof(uint32));
-    ::memcpy(&(data()[n]), &ui, sizeof(uint32));
+	int n = (int)size();
+	resize(n+sizeof(uint32));
+	::memcpy(&(data()[n]), &ui, sizeof(uint32));
 }
 
 void CBuffer::Append(const char *sz)
 {
-    Append((uint8 *)sz, (int)strlen(sz));
-    Append((uint8)0x00);
+	Append((uint8 *)sz, (int)strlen(sz));
+	Append((uint8)0x00);
 }
 
 void CBuffer::ReplaceAt(unsigned int i, uint8 ui)
 {
-    if ( size() < (i+sizeof(uint8)) )
-    {
-        resize(i+sizeof(uint8));
-    }
-    *(uint8 *)(&(data()[i])) = ui;
+	if ( size() < (i+sizeof(uint8)) ) {
+		resize(i+sizeof(uint8));
+	}
+	*(uint8 *)(&(data()[i])) = ui;
 }
 
 void CBuffer::ReplaceAt(unsigned int i, uint16 ui)
 {
-    if ( size() < (i+sizeof(uint16)) )
-    {
-        resize(i+sizeof(uint16));
-    }
-    *(uint16 *)(&(data()[i])) = ui;
+	if ( size() < (i+sizeof(uint16)) ) {
+		resize(i+sizeof(uint16));
+	}
+	*(uint16 *)(&(data()[i])) = ui;
 }
 
 void CBuffer::ReplaceAt(unsigned int i, uint32 ui)
 {
-    if ( size() < (i+sizeof(uint32)) )
-    {
-        resize(i+sizeof(uint32));
-    }
-    *(uint32 *)(&(data()[i])) = ui;
+	if ( size() < (i+sizeof(uint32)) ) {
+		resize(i+sizeof(uint32));
+	}
+	*(uint32 *)(&(data()[i])) = ui;
 }
 
 void CBuffer::ReplaceAt(unsigned int i, const uint8 *ptr, unsigned int len)
 {
-    if ( size() < (i+len) )
-    {
-        resize(i+len);
-    }
-    ::memcpy(&(data()[i]), ptr, len);
+	if ( size() < (i+len) ) {
+		resize(i+len);
+	}
+	::memcpy(&(data()[i]), ptr, len);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -132,22 +128,20 @@ void CBuffer::ReplaceAt(unsigned int i, const uint8 *ptr, unsigned int len)
 
 int CBuffer::Compare(uint8 *buffer, unsigned int len) const
 {
-    int result = -1;
-    if ( size() >= len )
-    {
-        result = ::memcmp(data(), buffer, len);
-    }
-    return result;
+	int result = -1;
+	if ( size() >= len ) {
+		result = ::memcmp(data(), buffer, len);
+	}
+	return result;
 }
 
 int CBuffer::Compare(uint8 *buffer, unsigned int off, unsigned int len) const
 {
-    int result = -1;
-    if ( size() >= (off+len) )
-    {
-        result = ::memcmp(&(data()[off]), buffer, len);
-    }
-    return result;
+	int result = -1;
+	if ( size() >= (off+len) ) {
+		result = ::memcmp(&(data()[off]), buffer, len);
+	}
+	return result;
 }
 
 
@@ -156,25 +150,23 @@ int CBuffer::Compare(uint8 *buffer, unsigned int off, unsigned int len) const
 
 bool CBuffer::operator ==(const CBuffer &Buffer) const
 {
-    if ( size() == Buffer.size() )
-    {
-        return (::memcmp((const char *)data(), (const char *)Buffer.data(), size()) == 0);
-    }
-    return false;
+	if ( size() == Buffer.size() ) {
+		return (::memcmp((const char *)data(), (const char *)Buffer.data(), size()) == 0);
+	}
+	return false;
 }
 
 bool CBuffer::operator ==(const char *sz) const
 {
-    if ( size() == ::strlen(sz) )
-    {
-        return (::memcmp((const char *)data(), sz, size()) == 0);
-    }
-    return false;
+	if ( size() == ::strlen(sz) ) {
+		return (::memcmp((const char *)data(), sz, size()) == 0);
+	}
+	return false;
 }
 
 CBuffer::operator const char *() const
 {
-    return (const char *)data();
+	return (const char *)data();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -182,20 +174,16 @@ CBuffer::operator const char *() const
 
 void CBuffer::DebugDump(std::ofstream &debugout) const
 {
-    for ( unsigned int i = 0; i < size(); i++ )
-    {
-        char sz[16];
-        //sprintf(sz, "%02X", data()[i]);
-        sprintf(sz, "0x%02X", data()[i]);
-        debugout << sz;
-        if ( i == size()-1 )
-        {
-            debugout << std::endl;
-        }
-        else
-        {
-            debugout << ',';
-        }
-    }
+	for ( unsigned int i = 0; i < size(); i++ ) {
+		char sz[16];
+		//sprintf(sz, "%02X", data()[i]);
+		sprintf(sz, "0x%02X", data()[i]);
+		debugout << sz;
+		if ( i == size()-1 ) {
+			debugout << std::endl;
+		} else {
+			debugout << ',';
+		}
+	}
 }
 

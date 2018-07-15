@@ -33,7 +33,7 @@
 
 CClients::CClients()
 {
-    m_Clients.reserve(100);
+	m_Clients.reserve(100);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -41,16 +41,15 @@ CClients::CClients()
 
 CClients::~CClients()
 {
-    m_Mutex.lock();
-    {
-        for ( unsigned int i = 0; i < m_Clients.size(); i++ )
-        {
-            delete m_Clients[i];
-        }
-        m_Clients.clear();
+	m_Mutex.lock();
+	{
+		for ( unsigned int i = 0; i < m_Clients.size(); i++ ) {
+			delete m_Clients[i];
+		}
+		m_Clients.clear();
 
-    }
-    m_Mutex.unlock();
+	}
+	m_Mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -58,94 +57,81 @@ CClients::~CClients()
 
 void CClients::AddClient(CClient *client)
 {
-    // first check if client already exists
-    bool found = false;
-    for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ )
-    {
-        found = (*client == *m_Clients[i]);
-        // if found, just do nothing
-        // so *client keep pointing on a valid object
-        // on function return
-        if ( found )
-        {
-            // delete new one
-            delete client;
-            //std::cout << "Adding existing client " << client->GetCallsign() << " at " << client->GetIp() << std::endl;
-        }
-    }
+	// first check if client already exists
+	bool found = false;
+	for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ ) {
+		found = (*client == *m_Clients[i]);
+		// if found, just do nothing
+		// so *client keep pointing on a valid object
+		// on function return
+		if ( found ) {
+			// delete new one
+			delete client;
+			//std::cout << "Adding existing client " << client->GetCallsign() << " at " << client->GetIp() << std::endl;
+		}
+	}
 
-    // if not, append to the vector
-    if ( !found )
-    {
-        // grow vector capacity if needed
-        if ( m_Clients.capacity() == m_Clients.size() )
-        {
-            m_Clients.reserve(m_Clients.capacity()+10);
-        }
-        // and append
-        m_Clients.push_back(client);
-        std::cout << "New client " << client->GetCallsign() << " at " << client->GetIp()
-                  << " added with protocol " << client->GetProtocolName();
-        if ( client->GetReflectorModule() != ' ' )
-        {
-            std::cout << " on module " << client->GetReflectorModule();
-        }
-        std::cout << std::endl;
-        // notify
-        g_Reflector.OnClientsChanged();
-    }
+	// if not, append to the vector
+	if ( !found ) {
+		// grow vector capacity if needed
+		if ( m_Clients.capacity() == m_Clients.size() ) {
+			m_Clients.reserve(m_Clients.capacity()+10);
+		}
+		// and append
+		m_Clients.push_back(client);
+		std::cout << "New client " << client->GetCallsign() << " at " << client->GetIp()
+				  << " added with protocol " << client->GetProtocolName();
+		if ( client->GetReflectorModule() != ' ' ) {
+			std::cout << " on module " << client->GetReflectorModule();
+		}
+		std::cout << std::endl;
+		// notify
+		g_Reflector.OnClientsChanged();
+	}
 }
 
 void CClients::RemoveClient(CClient *client)
 {
-    // look for the client
-    bool found = false;
-    for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ )
-    {
-        // compare objetc pointers
-        if ( (m_Clients[i]) ==  client )
-        {
-            // found it !
-            if ( !m_Clients[i]->IsAMaster() )
-            {
-                // remove it
-                std::cout << "Client " << m_Clients[i]->GetCallsign() << " at " << m_Clients[i]->GetIp()
-                          << " removed with protocol " << client->GetProtocolName();
-                if ( client->GetReflectorModule() != ' ' )
-                {
-                    std::cout << " on module " << client->GetReflectorModule();
-                }
-                std::cout << std::endl;
-                delete m_Clients[i];
-                m_Clients.erase(m_Clients.begin()+i);
-                found = true;
-                // notify
-                g_Reflector.OnClientsChanged();
-            }
-        }
-    }
+	// look for the client
+	bool found = false;
+	for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ ) {
+		// compare objetc pointers
+		if ( (m_Clients[i]) ==  client ) {
+			// found it !
+			if ( !m_Clients[i]->IsAMaster() ) {
+				// remove it
+				std::cout << "Client " << m_Clients[i]->GetCallsign() << " at " << m_Clients[i]->GetIp()
+						  << " removed with protocol " << client->GetProtocolName();
+				if ( client->GetReflectorModule() != ' ' ) {
+					std::cout << " on module " << client->GetReflectorModule();
+				}
+				std::cout << std::endl;
+				delete m_Clients[i];
+				m_Clients.erase(m_Clients.begin()+i);
+				found = true;
+				// notify
+				g_Reflector.OnClientsChanged();
+			}
+		}
+	}
 }
 
 CClient *CClients::GetClient(unsigned int i)
 {
-    if (i < m_Clients.size())
-    {
-        return m_Clients[i];
-    }
-    else
-    {
-        return NULL;
-    }
+	if (i < m_Clients.size()) {
+		return m_Clients[i];
+	} else {
+		return NULL;
+	}
 }
 
 bool CClients::IsClient(CClient *client) const
 {
-    bool found = false;
-    for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ )
-    {
-        found = (m_Clients[i] == client);
-    }
-    return found;
+	bool found = false;
+	for ( unsigned int i = 0; (i < m_Clients.size()) && !found; i++ ) {
+		found = (m_Clients[i] == client);
+	}
+	return found;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -153,112 +139,100 @@ bool CClients::IsClient(CClient *client) const
 
 CClient *CClients::FindClient(const CIp &Ip)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( m_Clients[i]->GetIp() == Ip )
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( m_Clients[i]->GetIp() == Ip ) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 CClient *CClients::FindClient(const CIp &Ip, int Protocol)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( (m_Clients[i]->GetIp() == Ip)  && (m_Clients[i]->GetProtocol() == Protocol))
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( (m_Clients[i]->GetIp() == Ip)  && (m_Clients[i]->GetProtocol() == Protocol)) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 CClient *CClients::FindClient(const CIp &Ip, int Protocol, char ReflectorModule)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( (m_Clients[i]->GetIp() == Ip)  &&
-             (m_Clients[i]->GetReflectorModule() == ReflectorModule) &&
-             (m_Clients[i]->GetProtocol() == Protocol) )
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( (m_Clients[i]->GetIp() == Ip)  &&
+				(m_Clients[i]->GetReflectorModule() == ReflectorModule) &&
+				(m_Clients[i]->GetProtocol() == Protocol) ) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 CClient *CClients::FindClient(const CCallsign &Callsign, const CIp &Ip, int Protocol)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) &&
-             (m_Clients[i]->GetIp() == Ip)  &&
-             (m_Clients[i]->GetProtocol() == Protocol) )
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) &&
+				(m_Clients[i]->GetIp() == Ip)  &&
+				(m_Clients[i]->GetProtocol() == Protocol) ) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 CClient *CClients::FindClient(const CCallsign &Callsign, char module, const CIp &Ip, int Protocol)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) &&
-             (m_Clients[i]->GetModule() == module) &&
-             (m_Clients[i]->GetIp() == Ip)  &&
-             (m_Clients[i]->GetProtocol() == Protocol) )
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) &&
+				(m_Clients[i]->GetModule() == module) &&
+				(m_Clients[i]->GetIp() == Ip)  &&
+				(m_Clients[i]->GetProtocol() == Protocol) ) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 CClient *CClients::FindClient(const CCallsign &Callsign, int Protocol)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ )
-    {
-        if ( (m_Clients[i]->GetProtocol() == Protocol) &&
-             m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) )
-        {
-            client = m_Clients[i];
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < m_Clients.size()) && (client == NULL); i++ ) {
+		if ( (m_Clients[i]->GetProtocol() == Protocol) &&
+				m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) ) {
+			client = m_Clients[i];
+		}
+	}
 
-    // done
-    return client;
+	// done
+	return client;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -266,58 +240,52 @@ CClient *CClients::FindClient(const CCallsign &Callsign, int Protocol)
 
 CClient *CClients::FindNextClient(int Protocol, int *index)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find next client
-    bool found = false;
-    for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ )
-    {
-        if ( m_Clients[i]->GetProtocol() == Protocol )
-        {
-            found = true;
-            client = m_Clients[i];
-            *index = i;
-        }
-    }
-    return client;
+	// find next client
+	bool found = false;
+	for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ ) {
+		if ( m_Clients[i]->GetProtocol() == Protocol ) {
+			found = true;
+			client = m_Clients[i];
+			*index = i;
+		}
+	}
+	return client;
 }
 
 CClient *CClients::FindNextClient(const CIp &Ip, int Protocol, int *index)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find next client
-    bool found = false;
-    for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ )
-    {
-        if ( (m_Clients[i]->GetProtocol() == Protocol) &&
-             (m_Clients[i]->GetIp() == Ip) )
-        {
-            found = true;
-            client = m_Clients[i];
-            *index = i;
-        }
-    }
-    return client;
+	// find next client
+	bool found = false;
+	for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ ) {
+		if ( (m_Clients[i]->GetProtocol() == Protocol) &&
+				(m_Clients[i]->GetIp() == Ip) ) {
+			found = true;
+			client = m_Clients[i];
+			*index = i;
+		}
+	}
+	return client;
 }
 
 CClient *CClients::FindNextClient(const CCallsign &Callsign, const CIp &Ip, int Protocol, int *index)
 {
-    CClient *client = NULL;
+	CClient *client = NULL;
 
-    // find next client
-    bool found = false;
-    for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ )
-    {
-        if ( (m_Clients[i]->GetProtocol() == Protocol) &&
-            (m_Clients[i]->GetIp() == Ip) &&
-            m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) )
-        {
-            found = true;
-            client = m_Clients[i];
-            *index = i;
-        }
-    }
-    return client;
+	// find next client
+	bool found = false;
+	for ( unsigned int i = *index+1; (i < m_Clients.size()) && !found; i++ ) {
+		if ( (m_Clients[i]->GetProtocol() == Protocol) &&
+				(m_Clients[i]->GetIp() == Ip) &&
+				m_Clients[i]->GetCallsign().HasSameCallsign(Callsign) ) {
+			found = true;
+			client = m_Clients[i];
+			*index = i;
+		}
+	}
+	return client;
 }
 

@@ -46,15 +46,15 @@ CTranscoder g_Transcoder;
 
 CTranscoder::CTranscoder()
 {
-    m_bStopThread = false;
-    m_pThread = NULL;
-    m_Streams.reserve(12);
-    m_bConnected = false;
-    m_LastKeepaliveTime.Now();
-    m_LastActivityTime.Now();
-    m_bStreamOpened = false;
-    m_StreamidOpenStream = 0;
-    m_PortOpenStream = 0;
+	m_bStopThread = false;
+	m_pThread = NULL;
+	m_Streams.reserve(12);
+	m_bConnected = false;
+	m_LastKeepaliveTime.Now();
+	m_LastActivityTime.Now();
+	m_bStreamOpened = false;
+	m_StreamidOpenStream = 0;
+	m_PortOpenStream = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -62,25 +62,23 @@ CTranscoder::CTranscoder()
 
 CTranscoder::~CTranscoder()
 {
-    // close all streams
-    m_Mutex.lock();
-    {
-        for ( unsigned int i = 0; i < m_Streams.size(); i++ )
-        {
-            delete m_Streams[i];
-        }
-        m_Streams.clear();
+	// close all streams
+	m_Mutex.lock();
+	{
+		for ( unsigned int i = 0; i < m_Streams.size(); i++ ) {
+			delete m_Streams[i];
+		}
+		m_Streams.clear();
 
-    }
-    m_Mutex.unlock();
+	}
+	m_Mutex.unlock();
 
-    // kill threads
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-    }
+	// kill threads
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -88,55 +86,50 @@ CTranscoder::~CTranscoder()
 
 bool CTranscoder::Init(void)
 {
-    bool ok;
+	bool ok;
 
-    // reset stop flag
-    m_bStopThread = false;
+	// reset stop flag
+	m_bStopThread = false;
 
-    // create server's IP
-    m_Ip = g_Reflector.GetTranscoderIp();
+	// create server's IP
+	m_Ip = g_Reflector.GetTranscoderIp();
 
-    // create our socket
-    ok = m_Socket.Open(TRANSCODER_PORT);
-    if ( ok )
-    {
-        // start  thread;
-        m_pThread = new std::thread(CTranscoder::Thread, this);
-    }
-    else
-    {
-        std::cout << "Error opening socket on port UDP" << TRANSCODER_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
-    }
+	// create our socket
+	ok = m_Socket.Open(TRANSCODER_PORT);
+	if ( ok ) {
+		// start  thread;
+		m_pThread = new std::thread(CTranscoder::Thread, this);
+	} else {
+		std::cout << "Error opening socket on port UDP" << TRANSCODER_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+	}
 
-    // done
-    return ok;
+	// done
+	return ok;
 }
 
 void CTranscoder::Close(void)
 {
-    // close socket
-    m_Socket.Close();
+	// close socket
+	m_Socket.Close();
 
-    // close all streams
-    m_Mutex.lock();
-    {
-        for ( unsigned int i = 0; i < m_Streams.size(); i++ )
-        {
-            delete m_Streams[i];
-        }
-        m_Streams.clear();
+	// close all streams
+	m_Mutex.lock();
+	{
+		for ( unsigned int i = 0; i < m_Streams.size(); i++ ) {
+			delete m_Streams[i];
+		}
+		m_Streams.clear();
 
-    }
-    m_Mutex.unlock();
+	}
+	m_Mutex.unlock();
 
-    // kill threads
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-        m_pThread = NULL;
-    }
+	// kill threads
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+		m_pThread = NULL;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -144,171 +137,146 @@ void CTranscoder::Close(void)
 
 void CTranscoder::Thread(CTranscoder *This)
 {
-    while ( !This->m_bStopThread )
-    {
-        This->Task();
-    }
+	while ( !This->m_bStopThread ) {
+		This->Task();
+	}
 }
 
 void CTranscoder::Task(void)
 {
-    CBuffer     Buffer;
-    CIp         Ip;
-    uint16      StreamId;
-    uint16      Port;
+	CBuffer     Buffer;
+	CIp         Ip;
+	uint16      StreamId;
+	uint16      Port;
 
-    // anything coming in from codec server ?
-    //if ( (m_Socket.Receive(&Buffer, &Ip, 20) != -1) && (Ip == m_Ip) )
-    if ( m_Socket.Receive(&Buffer, &Ip, 20) != -1 )
-    {
-        m_LastActivityTime.Now();
+	// anything coming in from codec server ?
+	//if ( (m_Socket.Receive(&Buffer, &Ip, 20) != -1) && (Ip == m_Ip) )
+	if ( m_Socket.Receive(&Buffer, &Ip, 20) != -1 ) {
+		m_LastActivityTime.Now();
 
-        // crack packet
-        if ( IsValidStreamDescrPacket(Buffer, &StreamId, &Port) )
-        {
-            //std::cout << "Transcoder stream " << (int) StreamId << " descr packet " << std::endl;
-            m_bStreamOpened = true;
-            m_StreamidOpenStream = StreamId;
-            m_PortOpenStream = Port;
-            m_SemaphoreOpenStream.Notify();
-        }
-        else if ( IsValidNoStreamAvailablePacket(Buffer) )
-        {
-            m_bStreamOpened = false;
-            m_SemaphoreOpenStream.Notify();
-        }
-        else if ( IsValidKeepAlivePacket(Buffer) )
-        {
-            if ( !m_bConnected )
-            {
-                std::cout << "Transcoder connected at " << Ip << std::endl;
-            }
-            m_bConnected = true;
-        }
+		// crack packet
+		if ( IsValidStreamDescrPacket(Buffer, &StreamId, &Port) ) {
+			//std::cout << "Transcoder stream " << (int) StreamId << " descr packet " << std::endl;
+			m_bStreamOpened = true;
+			m_StreamidOpenStream = StreamId;
+			m_PortOpenStream = Port;
+			m_SemaphoreOpenStream.Notify();
+		} else if ( IsValidNoStreamAvailablePacket(Buffer) ) {
+			m_bStreamOpened = false;
+			m_SemaphoreOpenStream.Notify();
+		} else if ( IsValidKeepAlivePacket(Buffer) ) {
+			if ( !m_bConnected ) {
+				std::cout << "Transcoder connected at " << Ip << std::endl;
+			}
+			m_bConnected = true;
+		}
 
-    }
+	}
 
-    // keep client alive
-    if ( m_LastKeepaliveTime.DurationSinceNow() > TRANSCODER_KEEPALIVE_PERIOD )
-    {
-        //
-        HandleKeepalives();
+	// keep client alive
+	if ( m_LastKeepaliveTime.DurationSinceNow() > TRANSCODER_KEEPALIVE_PERIOD ) {
+		//
+		HandleKeepalives();
 
-        // update time
-        m_LastKeepaliveTime.Now();
-    }
- }
+		// update time
+		m_LastKeepaliveTime.Now();
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // manage streams
 
 CCodecStream *CTranscoder::GetStream(CPacketStream *PacketStream, uint8 uiCodecIn)
 {
-    CBuffer     Buffer;
+	CBuffer     Buffer;
 
-    CCodecStream *stream = NULL;
+	CCodecStream *stream = NULL;
 
-    // do we need transcoding
-    if ( uiCodecIn != CODEC_NONE )
-    {
-        // are we connected to server
-        if ( m_bConnected )
-        {
-            // yes, post openstream request
-            EncodeOpenstreamPacket(&Buffer, uiCodecIn, (uiCodecIn == CODEC_AMBEPLUS) ? CODEC_AMBE2PLUS : CODEC_AMBEPLUS);
-            m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
+	// do we need transcoding
+	if ( uiCodecIn != CODEC_NONE ) {
+		// are we connected to server
+		if ( m_bConnected ) {
+			// yes, post openstream request
+			EncodeOpenstreamPacket(&Buffer, uiCodecIn, (uiCodecIn == CODEC_AMBEPLUS) ? CODEC_AMBE2PLUS : CODEC_AMBEPLUS);
+			m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
 
-            // wait relpy here
-            if ( m_SemaphoreOpenStream.WaitFor(AMBED_OPENSTREAM_TIMEOUT) )
-            {
-                if ( m_bStreamOpened )
-                {
-                    std::cout << "ambed openstream ok" << std::endl;
+			// wait relpy here
+			if ( m_SemaphoreOpenStream.WaitFor(AMBED_OPENSTREAM_TIMEOUT) ) {
+				if ( m_bStreamOpened ) {
+					std::cout << "ambed openstream ok" << std::endl;
 
-                    // create stream object
-                    stream = new CCodecStream(PacketStream, m_StreamidOpenStream, uiCodecIn, (uiCodecIn == CODEC_AMBEPLUS) ? CODEC_AMBE2PLUS : CODEC_AMBEPLUS);
+					// create stream object
+					stream = new CCodecStream(PacketStream, m_StreamidOpenStream, uiCodecIn, (uiCodecIn == CODEC_AMBEPLUS) ? CODEC_AMBE2PLUS : CODEC_AMBEPLUS);
 
-                    // init it
-                    if ( stream->Init(m_PortOpenStream) )
-                    {
-                        // and append to list
-                        Lock();
-                        m_Streams.push_back(stream);
-                        Unlock();
-                    }
-                    else
-                    {
-                        // send close packet
-                        EncodeClosestreamPacket(&Buffer, stream->GetStreamId());
-                        m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
-                        // and delete
-                        delete stream;
-                        stream = NULL;
-                    }
-                }
-                else
-                {
-                    std::cout << "ambed openstream failed (no suitable channel available)" << std::endl;
-                }
-            }
-            else
-            {
-                std::cout << "ambed openstream timeout" << std::endl;
-            }
+					// init it
+					if ( stream->Init(m_PortOpenStream) ) {
+						// and append to list
+						Lock();
+						m_Streams.push_back(stream);
+						Unlock();
+					} else {
+						// send close packet
+						EncodeClosestreamPacket(&Buffer, stream->GetStreamId());
+						m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
+						// and delete
+						delete stream;
+						stream = NULL;
+					}
+				} else {
+					std::cout << "ambed openstream failed (no suitable channel available)" << std::endl;
+				}
+			} else {
+				std::cout << "ambed openstream timeout" << std::endl;
+			}
 
-        }
-    }
-    return stream;
+		}
+	}
+	return stream;
 }
 
 void CTranscoder::ReleaseStream(CCodecStream *stream)
 {
-    CBuffer Buffer;
+	CBuffer Buffer;
 
-    if ( stream != NULL )
-    {
-        // look for the stream
-        bool found = false;
-        Lock();
-        {
-            for ( unsigned int i = 0; (i < m_Streams.size()) && !found; i++ )
-            {
-                // compare object pointers
-                if ( (m_Streams[i]) ==  stream )
-                {
-                    // send close packet
-                    EncodeClosestreamPacket(&Buffer, m_Streams[i]->GetStreamId());
-                    m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
+	if ( stream != NULL ) {
+		// look for the stream
+		bool found = false;
+		Lock();
+		{
+			for ( unsigned int i = 0; (i < m_Streams.size()) && !found; i++ ) {
+				// compare object pointers
+				if ( (m_Streams[i]) ==  stream ) {
+					// send close packet
+					EncodeClosestreamPacket(&Buffer, m_Streams[i]->GetStreamId());
+					m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
 
-                    // display stats
-                    if ( m_Streams[i]->GetPingMin() >= 0.0 )
-                    {
-                        char sz[256];
-                        sprintf(sz, "ambed stats (ms) : %.1f/%.1f/%.1f",
-                                m_Streams[i]->GetPingMin() * 1000.0,
-                                m_Streams[i]->GetPingAve() * 1000.0,
-                                m_Streams[i]->GetPingMax() * 1000.0);
-                        std::cout << sz << std::endl;
-                    }
-                    if ( m_Streams[i]->GetTimeoutPackets() > 0 )
-                    {
-                        char sz[256];
-                        sprintf(sz, "ambed %d of %d packets timed out",
-                                m_Streams[i]->GetTimeoutPackets(),
-                                m_Streams[i]->GetTotalPackets());
-                        std::cout << sz << std::endl;
-                    }
+					// display stats
+					if ( m_Streams[i]->GetPingMin() >= 0.0 ) {
+						char sz[256];
+						sprintf(sz, "ambed stats (ms) : %.1f/%.1f/%.1f",
+								m_Streams[i]->GetPingMin() * 1000.0,
+								m_Streams[i]->GetPingAve() * 1000.0,
+								m_Streams[i]->GetPingMax() * 1000.0);
+						std::cout << sz << std::endl;
+					}
+					if ( m_Streams[i]->GetTimeoutPackets() > 0 ) {
+						char sz[256];
+						sprintf(sz, "ambed %d of %d packets timed out",
+								m_Streams[i]->GetTimeoutPackets(),
+								m_Streams[i]->GetTotalPackets());
+						std::cout << sz << std::endl;
+					}
 
-                    // and close it
-                    m_Streams[i]->Close();
-                    delete m_Streams[i];
-                    m_Streams.erase(m_Streams.begin()+i);
-                    found = true;
-                }
-            }
-        }
-        Unlock();
-    }
+					// and close it
+					m_Streams[i]->Close();
+					delete m_Streams[i];
+					m_Streams.erase(m_Streams.begin()+i);
+					found = true;
+				}
+			}
+		}
+		Unlock();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -316,19 +284,18 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 
 void CTranscoder::HandleKeepalives(void)
 {
-    CBuffer keepalive;
+	CBuffer keepalive;
 
-    // send keepalive
-    EncodeKeepAlivePacket(&keepalive);
-    m_Socket.Send(keepalive, m_Ip, TRANSCODER_PORT);
+	// send keepalive
+	EncodeKeepAlivePacket(&keepalive);
+	m_Socket.Send(keepalive, m_Ip, TRANSCODER_PORT);
 
-    // check if still with us
-    if ( m_bConnected && (m_LastActivityTime.DurationSinceNow() >= TRANSCODER_KEEPALIVE_TIMEOUT) )
-    {
-        // no, disconnect
-        m_bConnected = false;
-        std::cout << "Transcoder keepalive timeout" << std::endl;
-    }
+	// check if still with us
+	if ( m_bConnected && (m_LastActivityTime.DurationSinceNow() >= TRANSCODER_KEEPALIVE_TIMEOUT) ) {
+		// no, disconnect
+		m_bConnected = false;
+		std::cout << "Transcoder keepalive timeout" << std::endl;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -336,37 +303,35 @@ void CTranscoder::HandleKeepalives(void)
 
 bool CTranscoder::IsValidKeepAlivePacket(const CBuffer &Buffer)
 {
-    uint8 tag[] = { 'A','M','B','E','D','P','O','N','G' };
+	uint8 tag[] = { 'A','M','B','E','D','P','O','N','G' };
 
-    bool valid = false;
-    if ( (Buffer.size() == 9) && (Buffer.Compare(tag, sizeof(tag)) == 0) )
-    {
-        valid = true;
-    }
-    return valid;
+	bool valid = false;
+	if ( (Buffer.size() == 9) && (Buffer.Compare(tag, sizeof(tag)) == 0) ) {
+		valid = true;
+	}
+	return valid;
 }
 
 bool CTranscoder::IsValidStreamDescrPacket(const CBuffer &Buffer, uint16 *Id, uint16 *Port)
 {
-    uint8 tag[] = { 'A','M','B','E','D','S','T','D' };
+	uint8 tag[] = { 'A','M','B','E','D','S','T','D' };
 
-    bool valid = false;
-    if ( (Buffer.size() == 14) && (Buffer.Compare(tag, sizeof(tag)) == 0) )
-    {
-        *Id = *(uint16 *)(&Buffer.data()[8]);
-        *Port = *(uint16 *)(&Buffer.data()[10]);
-        // uint8 CodecIn = Buffer.data()[12];
-        // uint8 CodecOut = Buffer.data()[13];
-        valid = true;
-    }
-    return valid;
+	bool valid = false;
+	if ( (Buffer.size() == 14) && (Buffer.Compare(tag, sizeof(tag)) == 0) ) {
+		*Id = *(uint16 *)(&Buffer.data()[8]);
+		*Port = *(uint16 *)(&Buffer.data()[10]);
+		// uint8 CodecIn = Buffer.data()[12];
+		// uint8 CodecOut = Buffer.data()[13];
+		valid = true;
+	}
+	return valid;
 }
 
 bool CTranscoder::IsValidNoStreamAvailablePacket(const CBuffer&Buffer)
 {
-    uint8 tag[] = { 'A','M','B','E','D','B','U','S','Y' };
+	uint8 tag[] = { 'A','M','B','E','D','B','U','S','Y' };
 
-    return  ( (Buffer.size() == 9) && (Buffer.Compare(tag, sizeof(tag)) == 0) );
+	return  ( (Buffer.size() == 9) && (Buffer.Compare(tag, sizeof(tag)) == 0) );
 }
 
 
@@ -375,27 +340,27 @@ bool CTranscoder::IsValidNoStreamAvailablePacket(const CBuffer&Buffer)
 
 void CTranscoder::EncodeKeepAlivePacket(CBuffer *Buffer)
 {
-    uint8 tag[] = { 'A','M','B','E','D','P','I','N','G' };
+	uint8 tag[] = { 'A','M','B','E','D','P','I','N','G' };
 
-    Buffer->Set(tag, sizeof(tag));
-    Buffer->Append((uint8 *)(const char *)g_Reflector.GetCallsign(), CALLSIGN_LEN);
+	Buffer->Set(tag, sizeof(tag));
+	Buffer->Append((uint8 *)(const char *)g_Reflector.GetCallsign(), CALLSIGN_LEN);
 }
 
 void CTranscoder::EncodeOpenstreamPacket(CBuffer *Buffer, uint8 uiCodecIn, uint8 uiCodecOut)
 {
-    uint8 tag[] = { 'A','M','B','E','D','O','S' };
+	uint8 tag[] = { 'A','M','B','E','D','O','S' };
 
-    Buffer->Set(tag, sizeof(tag));
-    Buffer->Append((uint8 *)(const char *)g_Reflector.GetCallsign(), CALLSIGN_LEN);
-    Buffer->Append((uint8)uiCodecIn);
-    Buffer->Append((uint8)uiCodecOut);
+	Buffer->Set(tag, sizeof(tag));
+	Buffer->Append((uint8 *)(const char *)g_Reflector.GetCallsign(), CALLSIGN_LEN);
+	Buffer->Append((uint8)uiCodecIn);
+	Buffer->Append((uint8)uiCodecOut);
 }
 
 void CTranscoder::EncodeClosestreamPacket(CBuffer *Buffer, uint16 uiStreamId)
 {
-    uint8 tag[] = { 'A','M','B','E','D','C','S' };
+	uint8 tag[] = { 'A','M','B','E','D','C','S' };
 
-    Buffer->Set(tag, sizeof(tag));
-    Buffer->Append((uint16)uiStreamId);
+	Buffer->Set(tag, sizeof(tag));
+	Buffer->Append((uint16)uiStreamId);
 }
 

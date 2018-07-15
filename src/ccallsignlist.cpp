@@ -33,8 +33,8 @@
 
 CCallsignList::CCallsignList()
 {
-    m_Filename = NULL;
-    ::memset(&m_LastModTime, 0, sizeof(time_t));
+	m_Filename = NULL;
+	::memset(&m_LastModTime, 0, sizeof(time_t));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -42,86 +42,77 @@ CCallsignList::CCallsignList()
 
 bool CCallsignList::LoadFromFile(const char *filename)
 {
-    bool ok = false;
-    char sz[256];
-    char szStar[2] = "*";
+	bool ok = false;
+	char sz[256];
+	char szStar[2] = "*";
 
-    // and load
-    std::ifstream file (filename);
-    if ( file.is_open() )
-    {
-        Lock();
+	// and load
+	std::ifstream file (filename);
+	if ( file.is_open() ) {
+		Lock();
 
-        // empty list
-        clear();
-        // fill with file content
-        while ( file.getline(sz, sizeof(sz)).good()  )
-        {
-            // remove leading & trailing spaces
-            char *szt = TrimWhiteSpaces(sz);
+		// empty list
+		clear();
+		// fill with file content
+		while ( file.getline(sz, sizeof(sz)).good()  ) {
+			// remove leading & trailing spaces
+			char *szt = TrimWhiteSpaces(sz);
 
-            // crack it
-            if ( (::strlen(szt) > 0) && (szt[0] != '#') )
-            {
-                // 1st token is callsign
-                if ( (szt = ::strtok(szt, " ,\t")) != NULL )
-                {
-                    CCallsign callsign(szt);
-                    // 2nd token is modules list
-                    szt = ::strtok(NULL, " ,\t");
-                    // if token absent, use wildcard
-                    if ( szt == NULL )
-                    {
-                        szt = szStar;
-                    }
-                    // and add to list
-                    push_back(CCallsignListItem(callsign, CIp(), szt));
-                }
-            }
-        }
-        // close file
-        file.close();
+			// crack it
+			if ( (::strlen(szt) > 0) && (szt[0] != '#') ) {
+				// 1st token is callsign
+				if ( (szt = ::strtok(szt, " ,\t")) != NULL ) {
+					CCallsign callsign(szt);
+					// 2nd token is modules list
+					szt = ::strtok(NULL, " ,\t");
+					// if token absent, use wildcard
+					if ( szt == NULL ) {
+						szt = szStar;
+					}
+					// and add to list
+					push_back(CCallsignListItem(callsign, CIp(), szt));
+				}
+			}
+		}
+		// close file
+		file.close();
 
-        // keep file path
-        m_Filename = filename;
+		// keep file path
+		m_Filename = filename;
 
-        // update time
-        GetLastModTime(&m_LastModTime);
+		// update time
+		GetLastModTime(&m_LastModTime);
 
-        // and done
-        Unlock();
-        ok = true;
-        std::cout << "Gatekeeper loaded " << size() << " lines from " << filename <<  std::endl;
-    }
-    else
-    {
-        std::cout << "Gatekeeper cannot find " << filename <<  std::endl;
-    }
+		// and done
+		Unlock();
+		ok = true;
+		std::cout << "Gatekeeper loaded " << size() << " lines from " << filename <<  std::endl;
+	} else {
+		std::cout << "Gatekeeper cannot find " << filename <<  std::endl;
+	}
 
-    return ok;
+	return ok;
 }
 
 bool CCallsignList::ReloadFromFile(void)
 {
-    bool ok = false;
+	bool ok = false;
 
-    if ( m_Filename !=  NULL )
-    {
-        ok = LoadFromFile(m_Filename);
-    }
-    return ok;
+	if ( m_Filename !=  NULL ) {
+		ok = LoadFromFile(m_Filename);
+	}
+	return ok;
 }
 
 bool CCallsignList::NeedReload(void)
 {
-    bool needReload = false;
+	bool needReload = false;
 
-    time_t time;
-    if ( GetLastModTime(&time) )
-    {
-        needReload = time != m_LastModTime;
-    }
-    return needReload;
+	time_t time;
+	if ( GetLastModTime(&time) ) {
+		needReload = time != m_LastModTime;
+	}
+	return needReload;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -129,57 +120,53 @@ bool CCallsignList::NeedReload(void)
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign) const
 {
-    bool listed = false;
+	bool listed = false;
 
-    for ( unsigned int i =  0; (i < size()) && !listed; i++ )
-    {
-        listed = (data()[i]).HasSameCallsignWithWildcard(callsign);
-    }
+	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
+		listed = (data()[i]).HasSameCallsignWithWildcard(callsign);
+	}
 
-    return listed;
+	return listed;
 }
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign, char module) const
 {
-    bool listed = false;
+	bool listed = false;
 
-    for ( unsigned int i =  0; (i < size()) && !listed; i++ )
-    {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsignWithWildcard(callsign) &&
-                  ((module == ' ') || item->HasModuleListed(module)) );
+	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
+		const CCallsignListItem *item = &(data()[i]);
+		listed = (item->HasSameCallsignWithWildcard(callsign) &&
+				  ((module == ' ') || item->HasModuleListed(module)) );
 
-    }
+	}
 
-    return listed;
+	return listed;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char module) const
 {
-    bool listed = false;
+	bool listed = false;
 
-    for ( unsigned int i =  0; (i < size()) && !listed; i++ )
-    {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsign(callsign) && item->HasModuleListed(module));
+	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
+		const CCallsignListItem *item = &(data()[i]);
+		listed = (item->HasSameCallsign(callsign) && item->HasModuleListed(module));
 
-    }
+	}
 
-    return listed;
+	return listed;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) const
 {
-    bool listed = false;
+	bool listed = false;
 
-    for ( unsigned int i =  0; (i < size()) && !listed; i++ )
-    {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsign(callsign) && item->CheckListedModules(modules));
+	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
+		const CCallsignListItem *item = &(data()[i]);
+		listed = (item->HasSameCallsign(callsign) && item->CheckListedModules(modules));
 
-    }
+	}
 
-    return listed;
+	return listed;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -187,19 +174,17 @@ bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) c
 
 CCallsignListItem *CCallsignList::FindListItem(const CCallsign &Callsign)
 {
-    CCallsignListItem *item = NULL;
+	CCallsignListItem *item = NULL;
 
-    // find client
-    for ( unsigned int i = 0; (i < size()) && (item == NULL); i++ )
-    {
-        if ( (data()[i]).GetCallsign().HasSameCallsign(Callsign) )
-        {
-            item = &(data()[i]);
-        }
-    }
+	// find client
+	for ( unsigned int i = 0; (i < size()) && (item == NULL); i++ ) {
+		if ( (data()[i]).GetCallsign().HasSameCallsign(Callsign) ) {
+			item = &(data()[i]);
+		}
+	}
 
-    // done
-    return item;
+	// done
+	return item;
 
 }
 
@@ -208,37 +193,35 @@ CCallsignListItem *CCallsignList::FindListItem(const CCallsign &Callsign)
 
 char *CCallsignList::TrimWhiteSpaces(char *str)
 {
-  char *end;
+	char *end;
 
-  // Trim leading space & tabs
-  while((*str == ' ') || (*str == '\t')) str++;
+	// Trim leading space & tabs
+	while((*str == ' ') || (*str == '\t')) str++;
 
-  // All spaces?
-  if(*str == 0)
-    return str;
+	// All spaces?
+	if(*str == 0)
+		return str;
 
-  // Trim trailing space, tab or lf
-  end = str + ::strlen(str) - 1;
-  while((end > str) && ((*end == ' ') || (*end == '\t') || (*end == '\r'))) end--;
+	// Trim trailing space, tab or lf
+	end = str + ::strlen(str) - 1;
+	while((end > str) && ((*end == ' ') || (*end == '\t') || (*end == '\r'))) end--;
 
-  // Write new null terminator
-  *(end+1) = 0;
+	// Write new null terminator
+	*(end+1) = 0;
 
-  return str;
+	return str;
 }
 
 bool CCallsignList::GetLastModTime(time_t *time)
 {
-    bool ok = false;
+	bool ok = false;
 
-    if ( m_Filename != NULL )
-    {
-        struct stat fileStat;
-        if( ::stat(m_Filename, &fileStat) != -1 )
-        {
-            *time = fileStat.st_mtime;
-            ok = true;
-        }
-    }
-    return ok;
+	if ( m_Filename != NULL ) {
+		struct stat fileStat;
+		if( ::stat(m_Filename, &fileStat) != -1 ) {
+			*time = fileStat.st_mtime;
+			ok = true;
+		}
+	}
+	return ok;
 }

@@ -34,33 +34,33 @@
 
 CPeer::CPeer()
 {
-    ::memset(m_ReflectorModules, 0, sizeof(m_ReflectorModules));
-    m_Clients.reserve(100);
-    m_ConnectTime = std::time(NULL);
-    m_LastHeardTime = std::time(NULL);
+	::memset(m_ReflectorModules, 0, sizeof(m_ReflectorModules));
+	m_Clients.reserve(100);
+	m_ConnectTime = std::time(NULL);
+	m_LastHeardTime = std::time(NULL);
 }
 
 CPeer::CPeer(const CCallsign &callsign, const CIp &ip, const char *modules, const CVersion &version)
 {
-    m_Callsign = callsign;
-    m_Ip = ip;
-    ::memset(m_ReflectorModules, 0, sizeof(m_ReflectorModules));
-    ::strncpy(m_ReflectorModules, modules, sizeof(m_ReflectorModules)-1);
-    m_Version = version;
-    m_LastKeepaliveTime.Now();
-    m_ConnectTime = std::time(NULL);
-    m_LastHeardTime = std::time(NULL);
+	m_Callsign = callsign;
+	m_Ip = ip;
+	::memset(m_ReflectorModules, 0, sizeof(m_ReflectorModules));
+	::strncpy(m_ReflectorModules, modules, sizeof(m_ReflectorModules)-1);
+	m_Version = version;
+	m_LastKeepaliveTime.Now();
+	m_ConnectTime = std::time(NULL);
+	m_LastHeardTime = std::time(NULL);
 }
 
 CPeer::CPeer(const CPeer &peer)
 {
-    m_Callsign = peer.m_Callsign;
-    m_Ip = peer.m_Ip;
-    ::memcpy(m_ReflectorModules, peer.m_ReflectorModules, sizeof(m_ReflectorModules));
-    m_Version = peer.m_Version;
-    m_LastKeepaliveTime = peer.m_LastKeepaliveTime;
-    m_ConnectTime = peer.m_ConnectTime;
-    m_LastHeardTime = peer.m_LastHeardTime;
+	m_Callsign = peer.m_Callsign;
+	m_Ip = peer.m_Ip;
+	::memcpy(m_ReflectorModules, peer.m_ReflectorModules, sizeof(m_ReflectorModules));
+	m_Version = peer.m_Version;
+	m_LastKeepaliveTime = peer.m_LastKeepaliveTime;
+	m_ConnectTime = peer.m_ConnectTime;
+	m_LastHeardTime = peer.m_LastHeardTime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -68,11 +68,10 @@ CPeer::CPeer(const CPeer &peer)
 
 CPeer::~CPeer()
 {
-    for ( unsigned int i = 0; i < m_Clients.size(); i++ )
-    {
-        delete m_Clients[i];
-    }
-    m_Clients.clear();
+	for ( unsigned int i = 0; i < m_Clients.size(); i++ ) {
+		delete m_Clients[i];
+	}
+	m_Clients.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -80,16 +79,15 @@ CPeer::~CPeer()
 
 bool CPeer::operator ==(const CPeer &peer) const
 {
-    bool same = true;
+	bool same = true;
 
-    same &= (peer.m_Callsign == m_Callsign);
-    same &= (peer.m_Ip == m_Ip);
-    same &= (peer.m_Version == m_Version);
-    for ( unsigned int i = 0; (i < m_Clients.size()) && same ; i++ )
-    {
-        same &= (peer.m_Clients[i] == m_Clients[i]);
-    }
-    return same;
+	same &= (peer.m_Callsign == m_Callsign);
+	same &= (peer.m_Ip == m_Ip);
+	same &= (peer.m_Version == m_Version);
+	for ( unsigned int i = 0; (i < m_Clients.size()) && same ; i++ ) {
+		same &= (peer.m_Clients[i] == m_Clients[i]);
+	}
+	return same;
 }
 
 
@@ -98,21 +96,19 @@ bool CPeer::operator ==(const CPeer &peer) const
 
 bool CPeer::IsAMaster(void) const
 {
-    bool master = false;
-    for ( unsigned int i = 0; (i < m_Clients.size()) && !master ; i++ )
-    {
-        master |= m_Clients[i]->IsAMaster();
-    }
-    return master;
+	bool master = false;
+	for ( unsigned int i = 0; (i < m_Clients.size()) && !master ; i++ ) {
+		master |= m_Clients[i]->IsAMaster();
+	}
+	return master;
 }
 
 void CPeer::Alive(void)
 {
-    m_LastKeepaliveTime.Now();;
-    for ( unsigned int i = 0; i < m_Clients.size(); i++ )
-    {
-        m_Clients[i]->Alive();
-    }
+	m_LastKeepaliveTime.Now();;
+	for ( unsigned int i = 0; i < m_Clients.size(); i++ ) {
+		m_Clients[i]->Alive();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -120,14 +116,11 @@ void CPeer::Alive(void)
 
 CClient *CPeer::GetClient(unsigned int i)
 {
-    if (i < m_Clients.size())
-    {
-        return m_Clients[i];
-    }
-    else
-    {
-        return NULL;
-    }
+	if (i < m_Clients.size()) {
+		return m_Clients[i];
+	} else {
+		return NULL;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -139,37 +132,34 @@ CClient *CPeer::GetClient(unsigned int i)
 
 void CPeer::WriteXml(std::ofstream &xmlFile)
 {
-    xmlFile << "<PEER>" << std::endl;
-    xmlFile << "\t<Callsign>" << m_Callsign << "</Callsign>" << std::endl;
-    xmlFile << "\t<IP>" << m_Ip << "</IP>" << std::endl;
-    xmlFile << "\t<LinkedModule>" << m_ReflectorModules << "</LinkedModule>" << std::endl;
-    xmlFile << "\t<Protocol>" << GetProtocolName() << "</Protocol>" << std::endl;
-    char mbstr[100];
-    if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_ConnectTime)))
-    {
-        xmlFile << "\t<ConnectTime>" << mbstr << "</ConnectTime>" << std::endl;
-    }
-    if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime)))
-    {
-        xmlFile << "\t<LastHeardTime>" << mbstr << "</LastHeardTime>" << std::endl;
-    }
-    xmlFile << "</PEER>" << std::endl;
+	xmlFile << "<PEER>" << std::endl;
+	xmlFile << "\t<Callsign>" << m_Callsign << "</Callsign>" << std::endl;
+	xmlFile << "\t<IP>" << m_Ip << "</IP>" << std::endl;
+	xmlFile << "\t<LinkedModule>" << m_ReflectorModules << "</LinkedModule>" << std::endl;
+	xmlFile << "\t<Protocol>" << GetProtocolName() << "</Protocol>" << std::endl;
+	char mbstr[100];
+	if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_ConnectTime))) {
+		xmlFile << "\t<ConnectTime>" << mbstr << "</ConnectTime>" << std::endl;
+	}
+	if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime))) {
+		xmlFile << "\t<LastHeardTime>" << mbstr << "</LastHeardTime>" << std::endl;
+	}
+	xmlFile << "</PEER>" << std::endl;
 }
 
 void CPeer::GetJsonObject(char *Buffer)
 {
-    char sz[512];
-    char mbstr[100];
-    char cs[16];
+	char sz[512];
+	char mbstr[100];
+	char cs[16];
 
-    if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime)))
-    {
-        m_Callsign.GetCallsignString(cs);
+	if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime))) {
+		m_Callsign.GetCallsignString(cs);
 
-        ::sprintf(sz, "{\"callsign\":\"%s\",\"linkedto\":\"%s\",\"time\":\"%s\"}",
-                  cs,
-                  m_ReflectorModules,
-                  mbstr);
-        ::strcat(Buffer, sz);
-    }
+		::sprintf(sz, "{\"callsign\":\"%s\",\"linkedto\":\"%s\",\"time\":\"%s\"}",
+				  cs,
+				  m_ReflectorModules,
+				  mbstr);
+		::strcat(Buffer, sz);
+	}
 }

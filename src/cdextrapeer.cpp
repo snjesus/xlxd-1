@@ -38,35 +38,32 @@ CDextraPeer::CDextraPeer()
 }
 
 CDextraPeer::CDextraPeer(const CCallsign &callsign, const CIp &ip, const char *modules, const CVersion &version)
-: CPeer(callsign, ip, modules, version)
+	: CPeer(callsign, ip, modules, version)
 {
-    std::cout << "Adding DExtra peer" << std::endl;
+	std::cout << "Adding DExtra peer" << std::endl;
 
-    // and construct the DExtra clients
-    for ( unsigned int i = 0; i < ::strlen(modules); i++ )
-    {
-        // create
-        CDextraClient *client = new CDextraClient(callsign, ip, modules[i], version.GetMajor());
-        // and append to vector
-        m_Clients.push_back(client);
-    }
+	// and construct the DExtra clients
+	for ( unsigned int i = 0; i < ::strlen(modules); i++ ) {
+		// create
+		CDextraClient *client = new CDextraClient(callsign, ip, modules[i], version.GetMajor());
+		// and append to vector
+		m_Clients.push_back(client);
+	}
 }
 
 CDextraPeer::CDextraPeer(const CDextraPeer &peer)
-: CPeer(peer)
+	: CPeer(peer)
 {
-    for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ )
-    {
-        CDextraClient *client = new CDextraClient((const CDextraClient &)*(peer.m_Clients[i]));
-        // grow vector capacity if needed
-        if ( m_Clients.capacity() == m_Clients.size() )
-        {
-            m_Clients.reserve(m_Clients.capacity()+10);
-        }
-        // and append
-        m_Clients.push_back(client);
+	for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ ) {
+		CDextraClient *client = new CDextraClient((const CDextraClient &)*(peer.m_Clients[i]));
+		// grow vector capacity if needed
+		if ( m_Clients.capacity() == m_Clients.size() ) {
+			m_Clients.reserve(m_Clients.capacity()+10);
+		}
+		// and append
+		m_Clients.push_back(client);
 
-    }
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -81,12 +78,11 @@ CDextraPeer::~CDextraPeer()
 
 bool CDextraPeer::IsAlive(void) const
 {
-    bool alive = true;
-    for ( unsigned int i = 0; (i < m_Clients.size()) && alive ; i++ )
-    {
-        alive &= m_Clients[i]->IsAlive();
-    }
-    return alive;
+	bool alive = true;
+	for ( unsigned int i = 0; (i < m_Clients.size()) && alive ; i++ ) {
+		alive &= m_Clients[i]->IsAlive();
+	}
+	return alive;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +90,6 @@ bool CDextraPeer::IsAlive(void) const
 
 int CDextraPeer::GetProtocolRevision(const CVersion &version)
 {
-    return version.GetMajor();
+	return version.GetMajor();
 }
 
