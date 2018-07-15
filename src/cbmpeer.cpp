@@ -38,9 +38,9 @@ CBmPeer::CBmPeer(const CCallsign &callsign, const CIp &ip, const char *modules, 
 : CPeer(callsign, ip, modules, version)
 {
     std::cout << "Adding BM peer" << std::endl;
-    
+
     // and construct all xlx clients
-    for ( int i = 0; i < ::strlen(modules); i++ )
+    for ( unsigned int i = 0; i < ::strlen(modules); i++ )
     {
         // create
         CBmClient *client = new CBmClient(callsign, ip, modules[i]);
@@ -52,7 +52,7 @@ CBmPeer::CBmPeer(const CCallsign &callsign, const CIp &ip, const char *modules, 
 CBmPeer::CBmPeer(const CBmPeer &peer)
 : CPeer(peer)
 {
-    for ( int i = 0; i < peer.m_Clients.size(); i++ )
+    for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ )
     {
         CBmClient *client = new CBmClient((const CBmClient &)*(peer.m_Clients[i]));
         // grow vector capacity if needed
@@ -62,7 +62,7 @@ CBmPeer::CBmPeer(const CBmPeer &peer)
         }
         // and append
         m_Clients.push_back(client);
-        
+
     }
 }
 
@@ -84,7 +84,7 @@ bool CBmPeer::IsAlive(void) const
 ////////////////////////////////////////////////////////////////////////////////////////
 // revision helper
 
-int CBmPeer::GetProtocolRevision(const CVersion &version)
+int CBmPeer::GetProtocolRevision(const CVersion &/*version*/)
 {
     return XLX_PROTOCOL_REVISION_2;
 }

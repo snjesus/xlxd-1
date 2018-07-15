@@ -41,9 +41,9 @@ CDextraPeer::CDextraPeer(const CCallsign &callsign, const CIp &ip, const char *m
 : CPeer(callsign, ip, modules, version)
 {
     std::cout << "Adding DExtra peer" << std::endl;
-    
+
     // and construct the DExtra clients
-    for ( int i = 0; i < ::strlen(modules); i++ )
+    for ( unsigned int i = 0; i < ::strlen(modules); i++ )
     {
         // create
         CDextraClient *client = new CDextraClient(callsign, ip, modules[i], version.GetMajor());
@@ -55,7 +55,7 @@ CDextraPeer::CDextraPeer(const CCallsign &callsign, const CIp &ip, const char *m
 CDextraPeer::CDextraPeer(const CDextraPeer &peer)
 : CPeer(peer)
 {
-    for ( int i = 0; i < peer.m_Clients.size(); i++ )
+    for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ )
     {
         CDextraClient *client = new CDextraClient((const CDextraClient &)*(peer.m_Clients[i]));
         // grow vector capacity if needed
@@ -65,7 +65,7 @@ CDextraPeer::CDextraPeer(const CDextraPeer &peer)
         }
         // and append
         m_Clients.push_back(client);
-        
+
     }
 }
 
@@ -82,7 +82,7 @@ CDextraPeer::~CDextraPeer()
 bool CDextraPeer::IsAlive(void) const
 {
     bool alive = true;
-    for ( int i = 0; (i < m_Clients.size()) && alive ; i++ )
+    for ( unsigned int i = 0; (i < m_Clients.size()) && alive ; i++ )
     {
         alive &= m_Clients[i]->IsAlive();
     }

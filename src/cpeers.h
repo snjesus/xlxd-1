@@ -40,20 +40,20 @@ class CPeers
 public:
     // constructors
     CPeers();
-    
+
     // destructors
     virtual ~CPeers();
-    
+
     // locks
     void Lock(void)                     { m_Mutex.lock(); }
     void Unlock(void)                   { m_Mutex.unlock(); }
-    
+
     // manage peers
     int     GetSize(void) const         { return (int)m_Peers.size(); }
     void    AddPeer(CPeer *);
     void    RemovePeer(CPeer *);
-    CPeer   *GetPeer(int);
-    
+    CPeer   *GetPeer(unsigned int);
+
     // find peers
     CPeer *FindPeer(const CIp &, int);
     CPeer *FindPeer(const CCallsign &, const CIp &, int);

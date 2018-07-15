@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -60,15 +60,15 @@ CGateKeeper::~CGateKeeper()
 
 bool CGateKeeper::Init(void)
 {
-    
+
     // load lists from files
     m_NodeWhiteList.LoadFromFile(WHITELIST_PATH);
     m_NodeBlackList.LoadFromFile(BLACKLIST_PATH);
     m_PeerList.LoadFromFile(INTERLINKLIST_PATH);
-    
+
     // reset stop flag
     m_bStopThread = false;
-    
+
     // start  thread;
     m_pThread = new std::thread(CGateKeeper::Thread, this);
 
@@ -92,7 +92,7 @@ void CGateKeeper::Close(void)
 bool CGateKeeper::MayLink(const CCallsign &callsign, const CIp &ip, int protocol, char *modules) const
 {
     bool ok = true;
-    
+
     switch (protocol)
     {
         // repeaters
@@ -105,33 +105,33 @@ bool CGateKeeper::MayLink(const CCallsign &callsign, const CIp &ip, int protocol
             ok &= IsNodeListedOk(callsign, ip);
             // todo: then apply any protocol specific authorisation for the operation
             break;
-            
+
         // XLX interlinks
         case PROTOCOL_XLX:
             ok &= IsPeerListedOk(callsign, ip, modules);
             break;
-            
+
         // unsupported
         case PROTOCOL_NONE:
         default:
             ok = false;
             break;
     }
-    
+
     // report
     if ( !ok )
     {
         std::cout << "Gatekeeper blocking linking of " << callsign << " @ " << ip << " using protocol " << protocol << std::endl;
     }
-    
+
     // done
     return ok;
 }
-    
+
 bool CGateKeeper::MayTransmit(const CCallsign &callsign, const CIp &ip, int protocol, char module) const
 {
     bool ok = true;
-    
+
     switch (protocol)
     {
         // repeaters, protocol specific
@@ -145,25 +145,25 @@ bool CGateKeeper::MayTransmit(const CCallsign &callsign, const CIp &ip, int prot
             ok &= IsNodeListedOk(callsign, ip, module);
             // todo: then apply any protocol specific authorisation for the operation
             break;
-            
+
         // XLX interlinks
         case PROTOCOL_XLX:
             ok &= IsPeerListedOk(callsign, ip, module);
             break;
-            
+
         // unsupported
         case PROTOCOL_NONE:
         default:
             ok = false;
             break;
     }
-    
+
     // report
     if ( !ok )
     {
         std::cout << "Gatekeeper blocking transmitting of " << callsign << " @ " << ip << " using protocol " << protocol << std::endl;
     }
-    
+
     // done
     return ok;
 }
@@ -197,12 +197,12 @@ void CGateKeeper::Thread(CGateKeeper *This)
 ////////////////////////////////////////////////////////////////////////////////////////
 // operation helpers
 
-bool CGateKeeper::IsNodeListedOk(const CCallsign &callsign, const CIp &ip, char module) const
+bool CGateKeeper::IsNodeListedOk(const CCallsign &callsign, const CIp &/*ip*/, char module) const
 {
     bool ok = true;
-    
+
     // first check IP
-    
+
     // next, check callsign
     if ( ok )
     {
@@ -214,24 +214,24 @@ bool CGateKeeper::IsNodeListedOk(const CCallsign &callsign, const CIp &ip, char 
             ok = m_NodeWhiteList.IsCallsignListedWithWildcard(callsign, module);
         }
         const_cast<CCallsignList &>(m_NodeWhiteList).Unlock();
-        
+
         // then check if not blacklisted
         const_cast<CCallsignList &>(m_NodeBlackList).Lock();
         ok &= !m_NodeBlackList.IsCallsignListedWithWildcard(callsign);
         const_cast<CCallsignList &>(m_NodeBlackList).Unlock();
     }
-    
+
     // done
     return ok;
-    
+
 }
 
-bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &ip, char module) const
+bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &/*ip*/, char module) const
 {
     bool ok = true;
-    
+
     // first check IP
-    
+
     // next, check callsign
     if ( ok )
     {
@@ -243,17 +243,17 @@ bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &ip, char 
         }
         const_cast<CPeerCallsignList &>(m_PeerList).Unlock();
     }
-    
+
     // done
     return ok;
 }
 
-bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &ip, char *modules) const
+bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &/*ip*/, char *modules) const
 {
     bool ok = true;
-    
+
     // first check IP
-    
+
     // next, check callsign
     if ( ok )
     {
@@ -265,7 +265,7 @@ bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &ip, char 
         }
         const_cast<CPeerCallsignList &>(m_PeerList).Unlock();
     }
-    
+
     // done
     return ok;
 }

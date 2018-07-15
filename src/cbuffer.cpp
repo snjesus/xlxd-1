@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -91,7 +91,7 @@ void CBuffer::Append(const char *sz)
     Append((uint8)0x00);
 }
 
-void CBuffer::ReplaceAt(int i, uint8 ui)
+void CBuffer::ReplaceAt(unsigned int i, uint8 ui)
 {
     if ( size() < (i+sizeof(uint8)) )
     {
@@ -100,7 +100,7 @@ void CBuffer::ReplaceAt(int i, uint8 ui)
     *(uint8 *)(&(data()[i])) = ui;
 }
 
-void CBuffer::ReplaceAt(int i, uint16 ui)
+void CBuffer::ReplaceAt(unsigned int i, uint16 ui)
 {
     if ( size() < (i+sizeof(uint16)) )
     {
@@ -109,7 +109,7 @@ void CBuffer::ReplaceAt(int i, uint16 ui)
     *(uint16 *)(&(data()[i])) = ui;
 }
 
-void CBuffer::ReplaceAt(int i, uint32 ui)
+void CBuffer::ReplaceAt(unsigned int i, uint32 ui)
 {
     if ( size() < (i+sizeof(uint32)) )
     {
@@ -118,7 +118,7 @@ void CBuffer::ReplaceAt(int i, uint32 ui)
     *(uint32 *)(&(data()[i])) = ui;
 }
 
-void CBuffer::ReplaceAt(int i, const uint8 *ptr, int len)
+void CBuffer::ReplaceAt(unsigned int i, const uint8 *ptr, unsigned int len)
 {
     if ( size() < (i+len) )
     {
@@ -130,7 +130,7 @@ void CBuffer::ReplaceAt(int i, const uint8 *ptr, int len)
 ////////////////////////////////////////////////////////////////////////////////////////
 // operation
 
-int CBuffer::Compare(uint8 *buffer, int len) const
+int CBuffer::Compare(uint8 *buffer, unsigned int len) const
 {
     int result = -1;
     if ( size() >= len )
@@ -140,7 +140,7 @@ int CBuffer::Compare(uint8 *buffer, int len) const
     return result;
 }
 
-int CBuffer::Compare(uint8 *buffer, int off, int len) const
+int CBuffer::Compare(uint8 *buffer, unsigned int off, unsigned int len) const
 {
     int result = -1;
     if ( size() >= (off+len) )
@@ -182,7 +182,7 @@ CBuffer::operator const char *() const
 
 void CBuffer::DebugDump(std::ofstream &debugout) const
 {
-    for ( int i = 0; i < size(); i++ )
+    for ( unsigned int i = 0; i < size(); i++ )
     {
         char sz[16];
         //sprintf(sz, "%02X", data()[i]);

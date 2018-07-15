@@ -101,16 +101,16 @@ bool CReflector::Start(void)
 
     // init gate keeper
     ok &= g_GateKeeper.Init();
-    
+
     // init dmrid directory
     g_DmridDir.Init();
-    
+
     // init the transcoder
     g_Transcoder.Init();
-    
+
     // create protocols
     ok &= m_Protocols.Init();
-    
+
     // if ok, start threads
     if ( ok )
     {
@@ -130,7 +130,7 @@ bool CReflector::Start(void)
     {
         m_Protocols.Close();
     }
-    
+
     // done
     return ok;
 }
@@ -170,7 +170,7 @@ void CReflector::Stop(void)
 
     // close transcoder
     g_Transcoder.Close();
-    
+
     // close gatekeeper
     g_GateKeeper.Close();
 }
@@ -178,7 +178,7 @@ void CReflector::Stop(void)
 ////////////////////////////////////////////////////////////////////////////////////////
 // stream opening & closing
 
-bool CReflector::IsStreaming(char module)
+bool CReflector::IsStreaming(char /*module*/)
 {
     return false;
 }
@@ -186,10 +186,10 @@ bool CReflector::IsStreaming(char module)
 CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client)
 {
     CPacketStream *retStream = NULL;
-    
+
     // clients MUST have bee locked by the caller
     // so we can freely access it within the fuction
-    
+
     // check sid is not NULL
     if ( DvHeader->GetStreamId() != 0 )
     {
@@ -213,21 +213,21 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
                         // stream open, mark client as master
                         // so that it can't be deleted
                         client->SetMasterOfModule(module);
-                        
+
                         // update last heard time
                         client->Heard();
                         retStream = stream;
-                        
+
                         // and push header packet
                         stream->Push(DvHeader);
-                        
+
                         // report
                         std::cout << "Opening stream on module " << module << " for client " << client->GetCallsign()
                                   << " with sid " << DvHeader->GetStreamId() << std::endl;
-                        
+
                         // notify
                         g_Reflector.OnStreamOpen(stream->GetUserCallsign());
-                        
+
                     }
                     // unlock now
                     stream->Unlock();
@@ -241,7 +241,7 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
             }
         }
     }
-    
+
     // done
     return retStream;
 }
@@ -268,10 +268,10 @@ void CReflector::CloseStream(CPacketStream *stream)
                 CTimePoint::TaskSleepFor(10);
             }
         } while (!bEmpty);
-        
+
         // lock clients
         GetClients();
-        
+
         // lock stream
         stream->Lock();
 
@@ -290,12 +290,12 @@ void CReflector::CloseStream(CPacketStream *stream)
 
         // release clients
         ReleaseClients();
-        
+
         // unlock before closing
         // to avoid double lock in assiociated
         // codecstream close/thread-join
         stream->Unlock();
-        
+
         // and stop the queue
         stream->Close();
 
@@ -499,7 +499,7 @@ void CReflector::JsonReportThread(CReflector *This)
 void CReflector::OnPeersChanged(void)
 {
     CNotification notification(NOTIFICATION_PEERS);
-    
+
     m_Notifications.Lock();
     m_Notifications.push(notification);
     m_Notifications.Unlock();
@@ -568,7 +568,7 @@ CPacketStream *CReflector::GetStream(char module)
 bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 {
     bool open = false;
-    for ( int i = 0; (i < m_Streams.size()) && !open; i++  )
+    for ( unsigned int i = 0; (i < m_Streams.size()) && !open; i++  )
     {
         open =  ( (m_Streams[i].GetStreamId() == DvHeader->GetStreamId()) &&
                   (m_Streams[i].IsOpen()));
@@ -579,7 +579,7 @@ bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 char CReflector::GetStreamModule(CPacketStream *stream)
 {
     char module = ' ';
-    for ( int i = 0; (i < m_Streams.size()) && (module == ' '); i++ )
+    for ( unsigned int i = 0; (i < m_Streams.size()) && (module == ' '); i++ )
     {
         if ( &(m_Streams[i]) == stream )
         {
@@ -596,12 +596,12 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 {
     // write header
     xmlFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-    
+
     // software version
     char sz[64];
     ::sprintf(sz, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
     xmlFile << "<Version>" << sz << "</Version>" << std::endl;
-    
+
     // linked peers
     xmlFile << "<" << m_Callsign << "linked peers>" << std::endl;
     // lock
@@ -614,7 +614,7 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
     // unlock
     ReleasePeers();
     xmlFile << "</" << m_Callsign << "linked peers>" << std::endl;
-    
+
     // linked nodes
     xmlFile << "<" << m_Callsign << "linked nodes>" << std::endl;
     // lock
@@ -630,7 +630,7 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
     // unlock
     ReleaseClients();
     xmlFile << "</" << m_Callsign << "linked nodes>" << std::endl;
-    
+
     // last heard users
     xmlFile << "<" << m_Callsign << "heard users>" << std::endl;
     // lock

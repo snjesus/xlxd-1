@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -37,24 +37,24 @@
 bool CDextraProtocol::Init(void)
 {
     bool ok;
-    
+
     // base class
     ok = CProtocol::Init();
-    
+
     // update the reflector callsign
     m_ReflectorCallsign.PatchCallsign(0, (const uint8 *)"XRF", 3);
-    
+
     // create our socket
     ok &= m_Socket.Open(DEXTRA_PORT);
     if ( !ok )
     {
         std::cout << "Error opening socket on port UDP" << DEXTRA_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
     }
-    
+
     // update time
     m_LastKeepaliveTime.Now();
     m_LastPeersLinkTime.Now();
-    
+
     // done
     return ok;
 }
@@ -72,7 +72,7 @@ void CDextraProtocol::Task(void)
     CDvHeaderPacket     *Header;
     CDvFramePacket      *Frame;
     CDvLastFramePacket  *LastFrame;
-    
+
     // any incoming packet ?
     if ( m_Socket.Receive(&Buffer, &Ip, 20) != -1 )
     {
@@ -80,7 +80,7 @@ void CDextraProtocol::Task(void)
         if ( (Frame = IsValidDvFramePacket(Buffer)) != NULL )
         {
             //std::cout << "DExtra DV frame"  << std::endl;
-            
+
             // handle it
             OnDvFramePacketIn(Frame, &Ip);
         }
@@ -88,7 +88,7 @@ void CDextraProtocol::Task(void)
         {
             //std::cout << "DExtra DV header:"  << std::endl << *Header << std::endl;
             //std::cout << "DExtra DV header:"  << std::endl;
-            
+
             // callsign muted?
             if ( g_GateKeeper.MayTransmit(Header->GetMyCallsign(), Ip, PROTOCOL_DEXTRA, Header->GetRpt2Module()) )
             {
@@ -103,14 +103,14 @@ void CDextraProtocol::Task(void)
         else if ( (LastFrame = IsValidDvLastFramePacket(Buffer)) != NULL )
         {
             //std::cout << "DExtra DV last frame" << std::endl;
-            
+
             // handle it
             OnDvLastFramePacketIn(LastFrame, &Ip);
         }
         else if ( IsValidConnectPacket(Buffer, &Callsign, &ToLinkModule, &ProtRev) )
         {
             std::cout << "DExtra connect packet for module " << ToLinkModule << " from " << Callsign << " at " << Ip << " rev " << ProtRev << std::endl;
-            
+
             // callsign authorized?
             if ( g_GateKeeper.MayLink(Callsign, Ip, PROTOCOL_DEXTRA) )
             {
@@ -123,7 +123,7 @@ void CDextraProtocol::Task(void)
                     if ( item != NULL && Callsign.GetModule() == item->GetModules()[1] && ToLinkModule == item->GetModules()[0] )
                     {
                         std::cout << "DExtra ack packet for module " << ToLinkModule << " from " << Callsign << " at " << Ip << std::endl;
-            
+
                         // already connected ?
                         CPeers *peers = g_Reflector.GetPeers();
                         if ( peers->FindPeer(Callsign, Ip, PROTOCOL_DEXTRA) == NULL )
@@ -143,10 +143,10 @@ void CDextraProtocol::Task(void)
                         // acknowledge the request
                         EncodeConnectAckPacket(&Buffer, ProtRev);
                         m_Socket.Send(Buffer, Ip);
-                        
+
                         // create the client
                         CDextraClient *client = new CDextraClient(Callsign, Ip, ToLinkModule, ProtRev);
-                        
+
                         // and append
                         g_Reflector.GetClients()->AddClient(client);
                         g_Reflector.ReleaseClients();
@@ -156,7 +156,7 @@ void CDextraProtocol::Task(void)
                 else
                 {
                     std::cout << "DExtra node " << Callsign << " connect attempt on non-existing module" << std::endl;
-                    
+
                     // deny the request
                     EncodeConnectNackPacket(&Buffer);
                     m_Socket.Send(Buffer, Ip);
@@ -172,7 +172,7 @@ void CDextraProtocol::Task(void)
         else if ( IsValidDisconnectPacket(Buffer, &Callsign) )
         {
             std::cout << "DExtra disconnect packet from " << Callsign << " at " << Ip << std::endl;
-            
+
             // find client & remove it
             CClients *clients = g_Reflector.GetClients();
             CClient *client = clients->FindClient(Ip, PROTOCOL_DEXTRA);
@@ -196,7 +196,7 @@ void CDextraProtocol::Task(void)
         else if ( IsValidKeepAlivePacket(Buffer, &Callsign) )
         {
             //std::cout << "DExtra keepalive packet from " << Callsign << " at " << Ip << std::endl;
-            
+
             // find all clients with that callsign & ip and keep them alive
             CClients *clients = g_Reflector.GetClients();
             int index = -1;
@@ -213,19 +213,19 @@ void CDextraProtocol::Task(void)
             //std::cout << Buffer.data() << std::endl;
         }
     }
-    
+
     // handle end of streaming timeout
     CheckStreamsTimeout();
-        
+
     // handle queue from reflector
     HandleQueue();
-        
+
     // keep alive
     if ( m_LastKeepaliveTime.DurationSinceNow() > DEXTRA_KEEPALIVE_PERIOD )
     {
         // handle keep alives
         HandleKeepalives();
-        
+
         // update time
         m_LastKeepaliveTime.Now();
     }
@@ -235,7 +235,7 @@ void CDextraProtocol::Task(void)
     {
         // handle remote peers connections
         HandlePeerLinks();
-        
+
         // update time
         m_LastPeersLinkTime.Now();
     }
@@ -252,7 +252,7 @@ void CDextraProtocol::HandleQueue(void)
         // get the packet
         CPacket *packet = m_Queue.front();
         m_Queue.pop();
-        
+
         // encode it
         CBuffer buffer;
         if ( EncodeDvPacket(*packet, &buffer) )
@@ -276,8 +276,8 @@ void CDextraProtocol::HandleQueue(void)
             }
             g_Reflector.ReleaseClients();
         }
-        
-        
+
+
         // done
         delete packet;
     }
@@ -303,7 +303,7 @@ void CDextraProtocol::HandleKeepalives(void)
     {
         // send keepalive
         m_Socket.Send(keepalive, client->GetIp());
-        
+
         // client busy ?
         if ( client->IsAMaster() )
         {
@@ -325,14 +325,14 @@ void CDextraProtocol::HandleKeepalives(void)
                 CBuffer disconnect;
                 EncodeDisconnectPacket(&disconnect, client->GetReflectorModule());
                 m_Socket.Send(disconnect, client->GetIp());
-                
+
                 // remove it
                 std::cout << "DExtra client " << client->GetCallsign() << " keepalive timeout" << std::endl;
                 clients->RemoveClient(client);
             }
             g_Reflector.ReleasePeers();
         }
-        
+
     }
     g_Reflector.ReleaseClients();
 
@@ -350,17 +350,17 @@ void CDextraProtocol::HandleKeepalives(void)
             // no, disconnect all clients
             CBuffer disconnect;
             EncodeDisconnectPacket(&disconnect, peer->GetReflectorModules()[0]);
-            CClients *clients = g_Reflector.GetClients();
-            for ( int i = 0; i < peer->GetNbClients(); i++ )
+            //CClients *clients = g_Reflector.GetClients();
+            for ( unsigned int i = 0; i < peer->GetNbClients(); i++ )
             {
                 m_Socket.Send(disconnect, peer->GetClient(i)->GetIp());
             }
             g_Reflector.ReleaseClients();
-            
+
             // remove it
             std::cout << "DExtra peer " << peer->GetCallsign() << " keepalive timeout" << std::endl;
             peers->RemovePeer(peer);
-        }        
+        }
     }
     g_Reflector.ReleasePeers();
 }
@@ -371,7 +371,7 @@ void CDextraProtocol::HandleKeepalives(void)
 void CDextraProtocol::HandlePeerLinks(void)
 {
     CBuffer buffer;
-    
+
     // get the list of peers
     CPeerCallsignList *list = g_GateKeeper.GetPeerList();
     CPeers *peers = g_Reflector.GetPeers();
@@ -392,10 +392,10 @@ void CDextraProtocol::HandlePeerLinks(void)
             peers->RemovePeer(peer);
         }
     }
-    
+
     // check if all ours peers listed by gatekeeper are connected
     // if not, connect or reconnect
-    for ( int i = 0; i < list->size(); i++ )
+    for ( unsigned int i = 0; i < list->size(); i++ )
     {
         CCallsignListItem *item = &((list->data())[i]);
         if ( !item->GetCallsign().HasSameCallsignWithWildcard(CCallsign("XRF*")) )
@@ -412,7 +412,7 @@ void CDextraProtocol::HandlePeerLinks(void)
             std::cout << "Sending connect packet to XRF peer " << item->GetCallsign() << " @ " << item->GetIp() << " for module " << item->GetModules()[1] << " (module " << item->GetModules()[0] << ")" << std::endl;
         }
     }
-    
+
     // done
     g_Reflector.ReleasePeers();
     g_GateKeeper.ReleasePeerList();
@@ -424,14 +424,14 @@ void CDextraProtocol::HandlePeerLinks(void)
 bool CDextraProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &Ip)
 {
     bool newstream = false;
-    
+
     // find the stream
     CPacketStream *stream = GetStream(Header->GetStreamId());
     if ( stream == NULL )
     {
         // no stream open yet, open a new one
         CCallsign via(Header->GetRpt1Callsign());
-        
+
         // find this client
         CClient *client = g_Reflector.GetClients()->FindClient(Ip, PROTOCOL_DEXTRA);
         if ( client != NULL )
@@ -455,11 +455,11 @@ bool CDextraProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &Ip)
         }
         // release
         g_Reflector.ReleaseClients();
-        
+
         // update last heard
         g_Reflector.GetUsers()->Hearing(Header->GetMyCallsign(), via, Header->GetRpt2Callsign());
         g_Reflector.ReleaseUsers();
-        
+
         // delete header if needed
         if ( !newstream )
         {
@@ -474,7 +474,7 @@ bool CDextraProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &Ip)
         // and delete packet
         delete Header;
     }
-    
+
     // done
     return newstream;
 }
@@ -535,7 +535,7 @@ bool CDextraProtocol::IsValidKeepAlivePacket(const CBuffer &Buffer, CCallsign *c
 CDvHeaderPacket *CDextraProtocol::IsValidDvHeaderPacket(const CBuffer &Buffer)
 {
     CDvHeaderPacket *header = NULL;
-    
+
     if ( (Buffer.size() == 56) && (Buffer.Compare((uint8 *)"DSVT", 4) == 0) &&
          (Buffer.data()[4] == 0x10) && (Buffer.data()[8] == 0x20) )
     {
@@ -555,7 +555,7 @@ CDvHeaderPacket *CDextraProtocol::IsValidDvHeaderPacket(const CBuffer &Buffer)
 CDvFramePacket *CDextraProtocol::IsValidDvFramePacket(const CBuffer &Buffer)
 {
     CDvFramePacket *dvframe = NULL;
-    
+
     if ( (Buffer.size() == 27) && (Buffer.Compare((uint8 *)"DSVT", 4) == 0) &&
          (Buffer.data()[4] == 0x20) && (Buffer.data()[8] == 0x20) &&
          ((Buffer.data()[14] & 0x40) == 0) )
@@ -576,7 +576,7 @@ CDvFramePacket *CDextraProtocol::IsValidDvFramePacket(const CBuffer &Buffer)
 CDvLastFramePacket *CDextraProtocol::IsValidDvLastFramePacket(const CBuffer &Buffer)
 {
     CDvLastFramePacket *dvframe = NULL;
-    
+
     if ( (Buffer.size() == 27) && (Buffer.Compare((uint8 *)"DSVT", 4) == 0) &&
          (Buffer.data()[4] == 0x20) && (Buffer.data()[8] == 0x20) &&
          ((Buffer.data()[14] & 0x40) != 0) )
@@ -660,41 +660,41 @@ bool CDextraProtocol::EncodeDvHeaderPacket(const CDvHeaderPacket &Packet, CBuffe
 {
     uint8 tag[]	= { 'D','S','V','T',0x10,0x00,0x00,0x00,0x20,0x00,0x01,0x02 };
     struct dstar_header DstarHeader;
-    
+
     Packet.ConvertToDstarStruct(&DstarHeader);
-    
+
     Buffer->Set(tag, sizeof(tag));
     Buffer->Append(Packet.GetStreamId());
     Buffer->Append((uint8)0x80);
     Buffer->Append((uint8 *)&DstarHeader, sizeof(struct dstar_header));
-    
+
     return true;
 }
 
 bool CDextraProtocol::EncodeDvFramePacket(const CDvFramePacket &Packet, CBuffer *Buffer) const
 {
     uint8 tag[] = { 'D','S','V','T',0x20,0x00,0x00,0x00,0x20,0x00,0x01,0x02 };
-    
+
     Buffer->Set(tag, sizeof(tag));
     Buffer->Append(Packet.GetStreamId());
     Buffer->Append((uint8)(Packet.GetPacketId() % 21));
     Buffer->Append((uint8 *)Packet.GetAmbe(), AMBE_SIZE);
     Buffer->Append((uint8 *)Packet.GetDvData(), DVDATA_SIZE);
-    
+
     return true;
-    
+
 }
 
 bool CDextraProtocol::EncodeDvLastFramePacket(const CDvLastFramePacket &Packet, CBuffer *Buffer) const
 {
     uint8 tag1[] = { 'D','S','V','T',0x20,0x00,0x00,0x00,0x20,0x00,0x01,0x02 };
     uint8 tag2[] = { 0x55,0xC8,0x7A,0x00,0x00,0x00,0x00,0x00,0x00,0x25,0x1A,0xC6 };
-    
+
     Buffer->Set(tag1, sizeof(tag1));
     Buffer->Append(Packet.GetStreamId());
     Buffer->Append((uint8)((Packet.GetPacketId() % 21) | 0x40));
     Buffer->Append(tag2, sizeof(tag2));
-    
+
     return true;
 }
 
