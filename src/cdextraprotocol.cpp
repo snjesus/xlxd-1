@@ -344,8 +344,10 @@ void CDextraProtocol::HandlePeerLinks(void)
 
 	// check if all ours peers listed by gatekeeper are connected
 	// if not, connect or reconnect
-	for ( unsigned int i = 0; i < list->size(); i++ ) {
-		CCallsignListItem *item = &((list->data())[i]);
+	auto cslit = list->InitCallsignListIterator();
+	CCallsignListItem *item;
+	while (NULL != (item = list->GetCallsignListItem(cslit))) {
+		cslit++;
 		if ( !item->GetCallsign().HasSameCallsignWithWildcard(CCallsign("XRF*")) )
 			continue;
 		if ( strlen(item->GetModules()) != 2 )

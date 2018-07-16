@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
-class CCallsignList : public std::vector<CCallsignListItem>
+class CCallsignList
 {
 public:
     // constructor
@@ -57,8 +57,14 @@ public:
     bool IsCallsignListed(const CCallsign &, char*) const;
 
     // find
+    std::list<CCallsignListItem>::iterator InitCallsignListIterator()	{ return m_Callsigns.begin(); }
+    CCallsignListItem *GetCallsignListItem(std::list<CCallsignListItem>::iterator);
     CCallsignListItem *FindListItem(const CCallsign &);
-    
+
+    // functions
+    bool empty() const	{ return m_Callsigns.empty(); };
+    size_t size() const	{ return m_Callsigns.size(); }
+
 protected:
     //
     bool GetLastModTime(time_t *);
@@ -69,6 +75,7 @@ protected:
     std::mutex      m_Mutex;
     const char *    m_Filename;
     time_t          m_LastModTime;
+    std::list<CCallsignListItem> m_Callsigns;
 };
 
 

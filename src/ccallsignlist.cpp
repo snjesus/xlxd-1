@@ -52,7 +52,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
 		Lock();
 
 		// empty list
-		clear();
+		m_Callsigns.clear();
 		// fill with file content
 		while ( file.getline(sz, sizeof(sz)).good()  ) {
 			// remove leading & trailing spaces
@@ -70,7 +70,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
 						szt = szStar;
 					}
 					// and add to list
-					push_back(CCallsignListItem(callsign, CIp(), szt));
+					m_Callsigns.push_back(CCallsignListItem(callsign, CIp(), szt));
 				}
 			}
 		}
@@ -86,7 +86,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
 		// and done
 		Unlock();
 		ok = true;
-		std::cout << "Gatekeeper loaded " << size() << " lines from " << filename <<  std::endl;
+		std::cout << "Gatekeeper loaded " << m_Callsigns.size() << " lines from " << filename <<  std::endl;
 	} else {
 		std::cout << "Gatekeeper cannot find " << filename <<  std::endl;
 	}
@@ -120,53 +120,48 @@ bool CCallsignList::NeedReload(void)
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign) const
 {
-	bool listed = false;
-
-	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
-		listed = (data()[i]).HasSameCallsignWithWildcard(callsign);
+	for (auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++) {
+		if ((*it).HasSameCallsignWithWildcard(callsign))
+			return true;
 	}
 
-	return listed;
+	return false;
 }
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign, char module) const
 {
-	bool listed = false;
-
-	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
-		const CCallsignListItem *item = &(data()[i]);
-		listed = (item->HasSameCallsignWithWildcard(callsign) &&
-				  ((module == ' ') || item->HasModuleListed(module)) );
+	for (auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++) {
+		const CCallsignListItem *item = &(*it);
+		if (item->HasSameCallsignWithWildcard(callsign) && ((module == ' ') || item->HasModuleListed(module)) )
+			return true;
 
 	}
 
-	return listed;
+	return false;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char module) const
 {
-	bool listed = false;
-
-	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
-		const CCallsignListItem *item = &(data()[i]);
-		listed = (item->HasSameCallsign(callsign) && item->HasModuleListed(module));
+	for (auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++) {
+		const CCallsignListItem *item = &(*it);
+		if (item->HasSameCallsign(callsign) && item->HasModuleListed(module))
+			return true;
 
 	}
 
-	return listed;
+	return false;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) const
 {
-	bool listed = false;
-
-	for ( unsigned int i =  0; (i < size()) && !listed; i++ ) {
-		const CCallsignListItem *item = &(data()[i]);
-		listed = (item->HasSameCallsign(callsign) && item->CheckListedModules(modules));
+	for (auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++) {
+		const CCallsignListItem *item = &(*it);
+		if (item->HasSameCallsign(callsign) && item->CheckListedModules(modules))
+			return true;
 
 	}
 
-	return listed;
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -174,18 +169,20 @@ bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) c
 
 CCallsignListItem *CCallsignList::FindListItem(const CCallsign &Callsign)
 {
-	CCallsignListItem *item = NULL;
-
-	// find client
-	for ( unsigned int i = 0; (i < size()) && (item == NULL); i++ ) {
-		if ( (data()[i]).GetCallsign().HasSameCallsign(Callsign) ) {
-			item = &(data()[i]);
-		}
+	for (auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++) {
+		if ( (*it).GetCallsign().HasSameCallsign(Callsign) )
+			return &(*it);
 	}
 
-	// done
-	return item;
+	return NULL;
+}
 
+CCallsignListItem *CCallsignList::GetCallsignListItem(std::list<CCallsignListItem>::iterator it)
+{
+	if (it == m_Callsigns.end())
+		return NULL;
+	else
+		return &(*it);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

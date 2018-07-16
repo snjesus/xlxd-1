@@ -41,7 +41,7 @@ bool CPeerCallsignList::LoadFromFile(const char *filename)
 		Lock();
 
 		// empty list
-		clear();
+		m_Callsigns.clear();
 		// fill with file content
 		while ( file.getline(sz, sizeof(sz)).good()  ) {
 			// remove leading & trailing spaces
@@ -58,7 +58,7 @@ bool CPeerCallsignList::LoadFromFile(const char *filename)
 						// 3rd token is modules list
 						if ( (szt = ::strtok(NULL, " ,\t")) != NULL ) {
 							// and load
-							push_back(CCallsignListItem(callsign, szip, szt));
+							m_Callsigns.push_back(CCallsignListItem(callsign, szip, szt));
 						}
 					}
 				}
@@ -76,7 +76,7 @@ bool CPeerCallsignList::LoadFromFile(const char *filename)
 		// and done
 		Unlock();
 		ok = true;
-		std::cout << "Gatekeeper loaded " << size() << " lines from " << filename <<  std::endl;
+		std::cout << "Gatekeeper loaded " << m_Callsigns.size() << " lines from " << filename <<  std::endl;
 	} else {
 		std::cout << "Gatekeeper cannot find " << filename <<  std::endl;
 	}
