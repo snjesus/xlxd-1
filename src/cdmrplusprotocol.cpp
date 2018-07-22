@@ -281,9 +281,9 @@ void CDmrplusProtocol::HandleQueue(void)
 		if ( buffer.size() > 0 ) {
 			// and push it to all our clients linked to the module and who are not streaming in
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(PROTOCOL_DMRPLUS, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(PROTOCOL_DMRPLUS, it))) {
 				// is this client busy ?
 				if ( !client->IsAMaster() && (client->GetReflectorModule() == packet->GetModuleId()) ) {
 					// no, send the packet
@@ -307,9 +307,9 @@ void CDmrplusProtocol::SendBufferToClients(const CBuffer &buffer, uint8 module)
 	if ( buffer.size() > 0 ) {
 		// and push it to all our clients linked to the module and who are not streaming in
 		CClients *clients = g_Reflector.GetClients();
-		int index = -1;
-		CClient *client = NULL;
-		while ( (client = clients->FindNextClient(PROTOCOL_DMRPLUS, &index)) != NULL ) {
+		auto it = clients->InitClientIterator();
+		CClient *client;
+		while (NULL != (client = clients->FindNextClient(PROTOCOL_DMRPLUS, it))) {
 			// is this client busy ?
 			if ( !client->IsAMaster() && (client->GetReflectorModule() == module) ) {
 				// no, send the packet
@@ -335,9 +335,9 @@ void CDmrplusProtocol::HandleKeepalives(void)
 
 	// iterate on clients
 	CClients *clients = g_Reflector.GetClients();
-	int index = -1;
-	CClient *client = NULL;
-	while ( (client = clients->FindNextClient(PROTOCOL_DMRPLUS, &index)) != NULL ) {
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while ( (client = clients->FindNextClient(PROTOCOL_DMRPLUS, it))) {
 		// is this client busy ?
 		if ( client->IsAMaster() ) {
 			// yes, just tickle it

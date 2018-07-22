@@ -138,11 +138,10 @@ void CDplusProtocol::Task(void)
 
 			// find all clients with that callsign & ip and keep them alive
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(Ip, PROTOCOL_DPLUS, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(Ip, PROTOCOL_DPLUS, it)))
 				client->Alive();
-			}
 			g_Reflector.ReleaseClients();
 		} else {
 			std::cout << "DPlus packet (" << Buffer.size() << ")" << std::endl;
@@ -254,32 +253,31 @@ void CDplusProtocol::HandleQueue(void)
 			// note that for dplus protocol, all stream of all modules are push to all clients
 			// it's client who decide which stream he's interrrested in
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(PROTOCOL_DPLUS, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(PROTOCOL_DPLUS, it))) {
 				// is this client busy ?
-				if ( !client->IsAMaster() ) {
+				if (! client->IsAMaster()) {
 					// check if client is a dextra dongle
 					// then replace RPT2 with XRF instead of REF
 					// if the client type is not yet known, send bothheaders
-					if ( packet->IsDvHeader() ) {
+					if (packet->IsDvHeader())
 						// sending header in Dplus is client specific
 						SendDvHeader((CDvHeaderPacket *)packet, (CDplusClient *)client);
-					} else if ( packet->IsDvFrame() ) {
+					else if (packet->IsDvFrame()) {
 						// and send the DV frame
 						m_Socket.Send(buffer, client->GetIp());
 
 						// is it time to insert a DVheader copy ?
-						if ( (m_StreamsCache[iModId].m_iSeqCounter++ % 21) == 20 ) {
+						if ((m_StreamsCache[iModId].m_iSeqCounter++ % 21) == 20) {
 							// yes, clone it
 							CDvHeaderPacket packet2(m_StreamsCache[iModId].m_dvHeader);
 							// and send it
 							SendDvHeader(&packet2, (CDplusClient *)client);
 						}
-					} else {
+					} else
 						// otherwise, send the original packet
 						m_Socket.Send(buffer, client->GetIp());
-					}
 				}
 			}
 			g_Reflector.ReleaseClients();
@@ -334,20 +332,19 @@ void CDplusProtocol::HandleKeepalives(void)
 
 	// iterate on clients
 	CClients *clients = g_Reflector.GetClients();
-	int index = -1;
-	CClient *client = NULL;
-	while ( (client = clients->FindNextClient(PROTOCOL_DPLUS, &index)) != NULL ) {
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while (NULL != (client = clients->FindNextClient(PROTOCOL_DPLUS, it))) {
 		// send keepalive
 		//std::cout << "Sending DPlus packet @ " << client->GetIp() << std::endl;
 		m_Socket.Send(keepalive, client->GetIp());
 
 		// is this client busy ?
-		if ( client->IsAMaster() ) {
+		if (client->IsAMaster())
 			// yes, just tickle it
 			client->Alive();
-		}
 		// check it's still with us
-		else if ( !client->IsAlive() ) {
+		else if (! client->IsAlive()) {
 			// no, disconnect
 			CBuffer disconnect;
 			EncodeDisconnectPacket(&disconnect);

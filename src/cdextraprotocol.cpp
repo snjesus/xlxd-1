@@ -169,11 +169,10 @@ void CDextraProtocol::Task(void)
 
 			// find all clients with that callsign & ip and keep them alive
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DEXTRA, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DEXTRA, it)))
 				client->Alive();
-			}
 			g_Reflector.ReleaseClients();
 		} else {
 			std::cout << "DExtra packet (" << Buffer.size() << ")" << std::endl;
@@ -222,9 +221,9 @@ void CDextraProtocol::HandleQueue(void)
 		if ( EncodeDvPacket(*packet, &buffer) ) {
 			// and push it to all our clients linked to the module and who are not streaming in
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(PROTOCOL_DEXTRA, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(PROTOCOL_DEXTRA, it))) {
 				// is this client busy ?
 				if ( !client->IsAMaster() && (client->GetReflectorModule() == packet->GetModuleId()) ) {
 					// no, send the packet
@@ -257,9 +256,9 @@ void CDextraProtocol::HandleKeepalives(void)
 
 	// iterate on clients
 	CClients *clients = g_Reflector.GetClients();
-	int index = -1;
-	CClient *client = NULL;
-	while ( (client = clients->FindNextClient(PROTOCOL_DEXTRA, &index)) != NULL ) {
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while (NULL != (client = clients->FindNextClient(PROTOCOL_DEXTRA, it))) {
 		// send keepalive
 		m_Socket.Send(keepalive, client->GetIp());
 
@@ -292,7 +291,7 @@ void CDextraProtocol::HandleKeepalives(void)
 
 	// iterate on peers
 	CPeers *peers = g_Reflector.GetPeers();
-	index = -1;
+	int index = -1;
 	CPeer *peer = NULL;
 	while ( (peer = peers->FindNextPeer(PROTOCOL_DEXTRA, &index)) != NULL ) {
 		// keepalives are sent between clients

@@ -187,9 +187,9 @@ void CDmrmmdvmProtocol::Task(void)
 
 			// find all clients with that callsign & ip and keep them alive
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DMRMMDVM, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DMRMMDVM, it))) {
 				// acknowledge
 				EncodeKeepAlivePacket(&Buffer, client);
 				m_Socket.Send(Buffer, Ip);
@@ -377,9 +377,9 @@ void CDmrmmdvmProtocol::HandleQueue(void)
 		if ( buffer.size() > 0 ) {
 			// and push it to all our clients linked to the module and who are not streaming in
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(PROTOCOL_DMRMMDVM, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(PROTOCOL_DMRMMDVM, it))) {
 				// is this client busy ?
 				if ( !client->IsAMaster() && (client->GetReflectorModule() == packet->GetModuleId()) ) {
 					// no, send the packet
@@ -407,9 +407,9 @@ void CDmrmmdvmProtocol::HandleKeepalives(void)
 
 	// iterate on clients
 	CClients *clients = g_Reflector.GetClients();
-	int index = -1;
-	CClient *client = NULL;
-	while ( (client = clients->FindNextClient(PROTOCOL_DMRMMDVM, &index)) != NULL ) {
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while (NULL != (client = clients->FindNextClient(PROTOCOL_DMRMMDVM, it))) {
 		// is this client busy ?
 		if ( client->IsAMaster() ) {
 			// yes, just tickle it

@@ -52,7 +52,8 @@ public:
     int     GetSize(void) const         { return (int)m_Clients.size(); }
     void    AddClient(CClient *);
     void    RemoveClient(CClient *);
-    CClient *GetClient(unsigned int);
+    CClient *GetClient(std::list<CClient *>::iterator it)	{ return (it==m_Clients.end()) ? NULL : *it; };
+    std::list<CClient *>::iterator InitClientIterator()		{ return m_Clients.begin(); };
     bool    IsClient(CClient *) const;
 
     // find clients
@@ -64,14 +65,14 @@ public:
     CClient *FindClient(const CCallsign &, int);
 
     // iterate on clients
-    CClient *FindNextClient(int, int*);
-    CClient *FindNextClient(const CIp &, int, int *);
-    CClient *FindNextClient(const CCallsign &, const CIp &, int, int *);
+    CClient *FindNextClient(int, std::list<CClient *>::iterator &);
+    CClient *FindNextClient(const CIp &, int, std::list<CClient *>::iterator &);
+    CClient *FindNextClient(const CCallsign &, const CIp &, int, std::list<CClient *>::iterator &);
 
 protected:
     // data
-    std::mutex               m_Mutex;
-    std::vector<CClient *>   m_Clients;
+    std::mutex				m_Mutex;
+    std::list<CClient *>	m_Clients;
 };
 
 

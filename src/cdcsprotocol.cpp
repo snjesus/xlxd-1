@@ -140,11 +140,10 @@ void CDcsProtocol::Task(void)
 
 			// find all clients with that callsign & ip and keep them alive
 			CClients *clients = g_Reflector.GetClients();
-			int index = -1;
-			CClient *client = NULL;
-			while ( (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DCS, &index)) != NULL ) {
+			auto it = clients->InitClientIterator();
+			CClient *client;
+			while (NULL != (client = clients->FindNextClient(Callsign, Ip, PROTOCOL_DCS, it)))
 				client->Alive();
-			}
 			g_Reflector.ReleaseClients();
 		} else if ( IsIgnorePacket(Buffer) ) {
 			// valid but ignore packet
@@ -259,15 +258,13 @@ void CDcsProtocol::HandleQueue(void)
 			if ( buffer.size() > 0 ) {
 				// and push it to all our clients linked to the module and who are not streaming in
 				CClients *clients = g_Reflector.GetClients();
-				int index = -1;
-				CClient *client = NULL;
-				while ( (client = clients->FindNextClient(PROTOCOL_DCS, &index)) != NULL ) {
+				auto it = clients->InitClientIterator();
+				CClient *client;
+				while (NULL != (client = clients->FindNextClient(PROTOCOL_DCS, it))) {
 					// is this client busy ?
-					if ( !client->IsAMaster() && (client->GetReflectorModule() == packet->GetModuleId()) ) {
+					if ( !client->IsAMaster() && (client->GetReflectorModule() == packet->GetModuleId()) )
 						// no, send the packet
 						m_Socket.Send(buffer, client->GetIp());
-
-					}
 				}
 				g_Reflector.ReleaseClients();
 			}
@@ -292,9 +289,9 @@ void CDcsProtocol::HandleKeepalives(void)
 
 	// iterate on clients
 	CClients *clients = g_Reflector.GetClients();
-	int index = -1;
-	CClient *client = NULL;
-	while ( (client = clients->FindNextClient(PROTOCOL_DCS, &index)) != NULL ) {
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while (NULL != (client = clients->FindNextClient(PROTOCOL_DCS, it))) {
 		// encode client's specific keepalive packet
 		CBuffer keepalive2;
 		EncodeKeepAlivePacket(&keepalive2, client);
@@ -304,12 +301,11 @@ void CDcsProtocol::HandleKeepalives(void)
 		m_Socket.Send(keepalive2, client->GetIp());
 
 		// is this client busy ?
-		if ( client->IsAMaster() ) {
+		if (client->IsAMaster())
 			// yes, just tickle it
 			client->Alive();
-		}
 		// check it's still with us
-		else if ( !client->IsAlive() ) {
+		else if (! client->IsAlive()) {
 			// no, disconnect
 			CBuffer disconnect;
 			EncodeDisconnectPacket(&disconnect, client);
