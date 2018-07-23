@@ -173,7 +173,7 @@ CClient *CClients::FindNextClient(int Protocol, std::list<CClient *>::iterator &
 {
 	while (it != m_Clients.end()) {
 		if ((*it)->GetProtocol()==Protocol)
-			return *it;
+			return *it++;
 		it++;
 	}
 	return NULL;
@@ -183,7 +183,7 @@ CClient *CClients::FindNextClient(const CIp &Ip, int Protocol, std::list<CClient
 {
 	while (it != m_Clients.end()) {
 		if ((*it)->GetProtocol()==Protocol && (*it)->GetIp()==Ip)
-			return *it;
+			return *it++;
 		it++;
 	}
 	return NULL;
@@ -193,7 +193,7 @@ CClient *CClients::FindNextClient(const CCallsign &Callsign, const CIp &Ip, int 
 {
 	while (it != m_Clients.end()) {
 		if ( (*it)->GetProtocol()==Protocol && (*it)->GetIp()==Ip && (*it)->GetCallsign().HasSameCallsign(Callsign))
-			return *it;
+			return *it++;
 		it++;
 	}
 	return NULL;
