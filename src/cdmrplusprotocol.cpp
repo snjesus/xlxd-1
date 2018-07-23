@@ -337,7 +337,7 @@ void CDmrplusProtocol::HandleKeepalives(void)
 	CClients *clients = g_Reflector.GetClients();
 	auto it = clients->InitClientIterator();
 	CClient *client;
-	while ( (client = clients->FindNextClient(PROTOCOL_DMRPLUS, it))) {
+	while (NULL != (client = clients->FindNextClient(PROTOCOL_DMRPLUS, it))) {
 		// is this client busy ?
 		if ( client->IsAMaster() ) {
 			// yes, just tickle it

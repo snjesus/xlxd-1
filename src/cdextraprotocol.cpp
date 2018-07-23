@@ -165,7 +165,7 @@ void CDextraProtocol::Task(void)
 			}
 			g_Reflector.ReleaseClients();
 		} else if ( IsValidKeepAlivePacket(Buffer, &Callsign) ) {
-			//std::cout << "DExtra keepalive packet from " << Callsign << " at " << Ip << std::endl;
+			std::cout << "DExtra keepalive packet from " << Callsign << " at " << Ip << std::endl;
 
 			// find all clients with that callsign & ip and keep them alive
 			CClients *clients = g_Reflector.GetClients();
@@ -260,6 +260,7 @@ void CDextraProtocol::HandleKeepalives(void)
 	CClient *client;
 	while (NULL != (client = clients->FindNextClient(PROTOCOL_DEXTRA, it))) {
 		// send keepalive
+		std::cout << "Sending keepalive to " << client->GetCallsign() << " at " << client->GetIp() << std::endl;
 		m_Socket.Send(keepalive, client->GetIp());
 
 		// client busy ?
