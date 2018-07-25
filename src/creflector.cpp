@@ -571,6 +571,7 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 	while (NULL != (client = clients->GetClient(it))) {
 		if (client->IsNode())
 			client->WriteXml(xmlFile);
+		it++;
 	}
 	// unlock
 	ReleaseClients();
