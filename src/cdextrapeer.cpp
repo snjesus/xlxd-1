@@ -54,15 +54,9 @@ CDextraPeer::CDextraPeer(const CCallsign &callsign, const CIp &ip, const char *m
 CDextraPeer::CDextraPeer(const CDextraPeer &peer)
 	: CPeer(peer)
 {
-	for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ ) {
-		CDextraClient *client = new CDextraClient((const CDextraClient &)*(peer.m_Clients[i]));
-		// grow vector capacity if needed
-		if ( m_Clients.capacity() == m_Clients.size() ) {
-			m_Clients.reserve(m_Clients.capacity()+10);
-		}
-		// and append
+	for (auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++) {
+		CDextraClient *client = new CDextraClient((const CDextraClient &)*(*it));
 		m_Clients.push_back(client);
-
 	}
 }
 
@@ -78,11 +72,11 @@ CDextraPeer::~CDextraPeer()
 
 bool CDextraPeer::IsAlive(void) const
 {
-	bool alive = true;
-	for ( unsigned int i = 0; (i < m_Clients.size()) && alive ; i++ ) {
-		alive &= m_Clients[i]->IsAlive();
+	for (auto it=m_Clients.begin(); it!=m_Clients.end(); it++) {
+		if (! (*it)->IsAlive())
+			return false;
 	}
-	return alive;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

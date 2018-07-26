@@ -35,7 +35,6 @@
 CPeer::CPeer()
 {
 	::memset(m_ReflectorModules, 0, sizeof(m_ReflectorModules));
-	m_Clients.reserve(100);
 	m_ConnectTime = std::time(NULL);
 	m_LastHeardTime = std::time(NULL);
 }
@@ -68,10 +67,11 @@ CPeer::CPeer(const CPeer &peer)
 
 CPeer::~CPeer()
 {
-	for ( unsigned int i = 0; i < m_Clients.size(); i++ ) {
-		delete m_Clients[i];
+	while (! m_Clients.empty()) {
+		auto it = m_Clients.begin();
+		delete *it;
+		m_Clients.erase(it);
 	}
-	m_Clients.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -84,8 +84,12 @@ bool CPeer::operator ==(const CPeer &peer) const
 	same &= (peer.m_Callsign == m_Callsign);
 	same &= (peer.m_Ip == m_Ip);
 	same &= (peer.m_Version == m_Version);
-	for ( unsigned int i = 0; (i < m_Clients.size()) && same ; i++ ) {
-		same &= (peer.m_Clients[i] == m_Clients[i]);
+	same &= (peer.m_Clients.size() == m_Clients.size());
+	if (same) {
+		auto pit = peer.m_Clients.begin();
+		auto it = m_Clients.begin();
+		while (same && it!=m_Clients.end())
+			same &= (*pit++ == *it++);
 	}
 	return same;
 }
@@ -96,36 +100,19 @@ bool CPeer::operator ==(const CPeer &peer) const
 
 bool CPeer::IsAMaster(void) const
 {
-	bool master = false;
-	for ( unsigned int i = 0; (i < m_Clients.size()) && !master ; i++ ) {
-		master |= m_Clients[i]->IsAMaster();
+	for (auto it=m_Clients.begin(); it!=m_Clients.end(); it++) {
+		if ((*it)->IsAMaster())
+			return true;
 	}
-	return master;
+	return false;
 }
 
 void CPeer::Alive(void)
 {
-	m_LastKeepaliveTime.Now();;
-	for ( unsigned int i = 0; i < m_Clients.size(); i++ ) {
-		m_Clients[i]->Alive();
-	}
+	m_LastKeepaliveTime.Now();
+	for (auto it=m_Clients.begin(); it!=m_Clients.end(); it++)
+		(*it)->Alive();
 }
-
-////////////////////////////////////////////////////////////////////////////////////////
-// manage clients
-
-CClient *CPeer::GetClient(unsigned int i)
-{
-	if (i < m_Clients.size()) {
-		return m_Clients[i];
-	} else {
-		return NULL;
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-// reporting
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // reporting

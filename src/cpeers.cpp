@@ -84,8 +84,11 @@ void CPeers::AddPeer(CPeer *peer)
 		// and append all peer's client to reflector client list
 		// it is double lock safe to lock Clients list after Peers list
 		CClients *clients = g_Reflector.GetClients();
-		for ( unsigned int i = 0; i < peer->GetNbClients(); i++ ) {
-			clients->AddClient(peer->GetClient(i));
+		CClient *client;
+		auto it = peer->InitClientIterator();
+		while (NULL != (client = peer->GetClient(it))) {
+			clients->AddClient(client);
+			it++;
 		}
 		g_Reflector.ReleaseClients();
 
@@ -102,21 +105,20 @@ void CPeers::RemovePeer(CPeer *peer)
 		// compare object pointers
 		if ( (m_Peers[i]) ==  peer ) {
 			// found it !
-			if ( !m_Peers[i]->IsAMaster() ) {
+			if (! m_Peers[i]->IsAMaster()) {
 				// remove all clients from reflector client list
 				// it is double lock safe to lock Clients list after Peers list
 				CClients *clients = g_Reflector.GetClients();
-				for ( unsigned int i = 0; i < peer->GetNbClients(); i++ ) {
-					// this also delete the client object
-					clients->RemoveClient(peer->GetClient(i));
+				CClient *client;
+				auto cit = peer->InitClientIterator();
+				while (NULL != (client = peer->GetClient(cit))) {
+					clients->RemoveClient(client);
+					cit++;
 				}
-				// so clear it then
-				m_Peers[i]->ClearClients();
 				g_Reflector.ReleaseClients();
 
 				// remove it
-				std::cout << "Peer " << m_Peers[i]->GetCallsign() << " at " << m_Peers[i]->GetIp()
-						  << " removed" << std::endl;
+				std::cout << "Peer " << m_Peers[i]->GetCallsign() << " at " << m_Peers[i]->GetIp() << " removed" << std::endl;
 				delete m_Peers[i];
 				m_Peers.erase(m_Peers.begin()+i);
 				found = true;

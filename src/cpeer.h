@@ -70,9 +70,8 @@ public:
     virtual void Heard(void)                            { m_LastHeardTime = std::time(NULL); }
 
     // clients access
-    unsigned int GetNbClients(void) const                    { return m_Clients.size(); }
-    void    ClearClients(void)                          { m_Clients.clear(); }
-    CClient *GetClient(unsigned int);
+    std::list<CClient *>::iterator InitClientIterator()		{ return m_Clients.begin(); }
+    CClient *GetClient(std::list<CClient *>::iterator it)	{ return (it==m_Clients.end()) ? NULL : *it; }
 
     // reporting
     virtual void WriteXml(std::ofstream &);
@@ -80,11 +79,11 @@ public:
 
 protected:
     // data
-    CCallsign               m_Callsign;
-    CIp                     m_Ip;
-    char                    m_ReflectorModules[NB_MODULES_MAX+1];
-    CVersion                m_Version;
-    std::vector<CClient *>  m_Clients;
+    CCallsign				m_Callsign;
+    CIp						m_Ip;
+    char					m_ReflectorModules[NB_MODULES_MAX+1];
+    CVersion				m_Version;
+    std::list<CClient *>	m_Clients;
 
     // status
     CTimePoint              m_LastKeepaliveTime;

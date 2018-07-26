@@ -56,13 +56,8 @@ CXlxPeer::CXlxPeer(const CCallsign &callsign, const CIp &ip, const char *modules
 CXlxPeer::CXlxPeer(const CXlxPeer &peer)
 	: CPeer(peer)
 {
-	for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ ) {
-		CXlxClient *client = new CXlxClient((const CXlxClient &)*(peer.m_Clients[i]));
-		// grow vector capacity if needed
-		if ( m_Clients.capacity() == m_Clients.size() ) {
-			m_Clients.reserve(m_Clients.capacity()+10);
-		}
-		// and append
+	for (auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++) {
+		CXlxClient *client = new CXlxClient((const CXlxClient &)*(*it));
 		m_Clients.push_back(client);
 
 	}

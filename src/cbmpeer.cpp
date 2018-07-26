@@ -51,13 +51,8 @@ CBmPeer::CBmPeer(const CCallsign &callsign, const CIp &ip, const char *modules, 
 CBmPeer::CBmPeer(const CBmPeer &peer)
 	: CPeer(peer)
 {
-	for ( unsigned int i = 0; i < peer.m_Clients.size(); i++ ) {
-		CBmClient *client = new CBmClient((const CBmClient &)*(peer.m_Clients[i]));
-		// grow vector capacity if needed
-		if ( m_Clients.capacity() == m_Clients.size() ) {
-			m_Clients.reserve(m_Clients.capacity()+10);
-		}
-		// and append
+	for (auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++) {
+		CBmClient *client = new CBmClient((const CBmClient &)*(*it));
 		m_Clients.push_back(client);
 
 	}
