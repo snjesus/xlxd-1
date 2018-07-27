@@ -584,14 +584,19 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 
 	// last heard users
 	xmlFile << "<" << m_Callsign << "heard users>" << std::endl;
-	// lock
-	CUsers *users = GetUsers();
-	// iterate on users
-	for ( int i = 0; i < users->GetSize(); i++ ) {
-		users->GetUser(i)->WriteXml(xmlFile);
+
+	CUsers *users = GetUsers();	// lock
+	if (users) {
+		// iterate on users
+		auto it = users->InitUserIterator();
+		CUser *user;
+		while (NULL != (user = users->GetUser(it))) {
+			user->WriteXml(xmlFile);
+			it++;
+		}
+		ReleaseUsers();	// unlock
 	}
-	// unlock
-	ReleaseUsers();
+
 	xmlFile << "</" << m_Callsign << "heard users>" << std::endl;
 }
 
@@ -662,19 +667,20 @@ void CReflector::SendJsonStationsObject(CUdpSocket &Socket, CIp &Ip)
 	// lock
 	CUsers *users = GetUsers();
 	// iterate on users
-	for ( int i = 0; i < users->GetSize(); i++ ) {
-		users->GetUser(i)->GetJsonObject(Buffer);
-		if ( i < users->GetSize()-1 ) {
-			::strcat(Buffer, ",");
+	if (users) {
+		auto it = users->InitUserIterator();
+		CUser *user;
+		while (NULL != (user = users->GetUser(it))) {
+			user->GetJsonObject(Buffer);
+			it++;
+			if (NULL != users->GetUser(it))
+				::strcat(Buffer, ",");
 		}
+		ReleaseUsers();	// unlock
 	}
-	// unlock
-	ReleaseUsers();
 
 	::strcat(Buffer, "]}");
 
-	// and send
-	//std::cout << Buffer << std::endl;
 	Socket.Send(Buffer, Ip);
 }
 

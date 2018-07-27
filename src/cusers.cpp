@@ -31,7 +31,6 @@
 
 CUsers::CUsers()
 {
-	m_Users.reserve(LASTHEARD_USERS_MAX_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -40,15 +39,11 @@ CUsers::CUsers()
 void CUsers::AddUser(const CUser &user)
 {
 	// add
-	m_Users.push_back(user);
-
-	// sort list by descending time (fisrt is youngest)
-	std::sort(m_Users.begin(), m_Users.end());
+	m_Users.push_front(user);
 
 	// if list size too big, remove oldest
-	if ( m_Users.size() >= (LASTHEARD_USERS_MAX_SIZE-1) ) {
-		m_Users.resize(m_Users.size()-1);
-	}
+	while (m_Users.size() > LASTHEARD_USERS_MAX_SIZE)
+		m_Users.pop_back();
 
 	// notify
 	g_Reflector.OnUsersChanged();
@@ -66,21 +61,15 @@ void CUsers::Hearing(const CCallsign &my, const CCallsign &rpt1, const CCallsign
 {
 	CUser heard(my, rpt1, rpt2, xlx);
 
-	// first check if we have this user listed yet
-	bool found = false;
-	for ( unsigned int i = 0; (i < m_Users.size()) && !found; i++ ) {
-		found = (m_Users[i] == heard);
-		if ( found ) {
-			m_Users[i].HeardNow();
+	for (auto it=m_Users.begin(); it!=m_Users.end(); it++) {
+		if (*it == heard) {
+			(*it).HeardNow();
+			m_Users.sort();
+			return;
 		}
 	}
 
-	// if not found, add user to list
-	// otherwise just re-sort the list
-	if ( !found ) {
-		AddUser(heard);
-	} else {
-		std::sort(m_Users.begin(), m_Users.end());
-	}
+	// if not found, add user to list (it will go on the front as the most recent)
+	AddUser(heard);
 }
 
