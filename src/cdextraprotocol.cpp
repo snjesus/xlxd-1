@@ -292,9 +292,9 @@ void CDextraProtocol::HandleKeepalives(void)
 
 	// iterate on peers
 	CPeers *peers = g_Reflector.GetPeers();
-	int index = -1;
-	CPeer *peer = NULL;
-	while ( (peer = peers->FindNextPeer(PROTOCOL_DEXTRA, &index)) != NULL ) {
+	auto pit = peers->InitPeerIterator();
+	CPeer *peer;
+	while (NULL != (peer = peers->FindNextPeer(PROTOCOL_DEXTRA, pit))) {
 		// keepalives are sent between clients
 
 		// some client busy or still with us ?
@@ -332,9 +332,9 @@ void CDextraProtocol::HandlePeerLinks(void)
 
 	// check if all our connected peers are still listed by gatekeeper
 	// if not, disconnect
-	int index = -1;
-	CPeer *peer = NULL;
-	while ( (peer = peers->FindNextPeer(PROTOCOL_DEXTRA, &index)) != NULL ) {
+	auto pit = peers->InitPeerIterator();
+	CPeer *peer;
+	while (NULL != (peer = peers->FindNextPeer(PROTOCOL_DEXTRA, pit))) {
 		if ( list->FindListItem(peer->GetCallsign()) == NULL ) {
 			// send disconnect packet
 			EncodeDisconnectPacket(&buffer, peer->GetReflectorModules()[0]);

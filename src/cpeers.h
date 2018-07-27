@@ -52,7 +52,8 @@ public:
     int     GetSize(void) const         { return (int)m_Peers.size(); }
     void    AddPeer(CPeer *);
     void    RemovePeer(CPeer *);
-    CPeer   *GetPeer(unsigned int);
+    std::list<CPeer *>::iterator InitPeerIterator()		{ return m_Peers.begin(); }
+    CPeer   *GetPeer(std::list<CPeer *>::iterator it)	{ return (it==m_Peers.end()) ? NULL : *it; }
 
     // find peers
     CPeer *FindPeer(const CIp &, int);
@@ -60,12 +61,12 @@ public:
     CPeer *FindPeer(const CCallsign &, int);
 
     // iterate on peers
-    CPeer *FindNextPeer(int, int*);
+    CPeer *FindNextPeer(int, std::list<CPeer *>::iterator &);
 
 protected:
     // data
-    std::mutex               m_Mutex;
-    std::vector<CPeer *>     m_Peers;
+    std::mutex			m_Mutex;
+    std::list<CPeer *>	m_Peers;
 };
 
 

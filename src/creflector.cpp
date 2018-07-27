@@ -554,11 +554,16 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 	// lock
 	CPeers *peers = GetPeers();
 	// iterate on peers
-	for ( int i = 0; i < peers->GetSize(); i++ ) {
-		peers->GetPeer(i)->WriteXml(xmlFile);
+	if (peers) {
+		auto it = peers->InitPeerIterator();
+		CPeer *peer;
+		while (NULL != (peer = peers->GetPeer(it))) {
+			peer->WriteXml(xmlFile);
+			it++;
+		}
+		ReleasePeers();	// unlock
 	}
-	// unlock
-	ReleasePeers();
+
 	xmlFile << "</" << m_Callsign << "linked peers>" << std::endl;
 
 	// linked nodes

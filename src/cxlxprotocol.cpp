@@ -278,9 +278,9 @@ void CXlxProtocol::HandleKeepalives(void)
 
 	// iterate on peers
 	CPeers *peers = g_Reflector.GetPeers();
-	int index = -1;
-	CPeer *peer = NULL;
-	while ( (peer = peers->FindNextPeer(PROTOCOL_XLX, &index)) != NULL ) {
+	auto it = peers->InitPeerIterator();
+	CPeer *peer;
+	while (NULL != (peer = peers->FindNextPeer(PROTOCOL_XLX, it))) {
 		// send keepalive
 		m_Socket.Send(keepalive, peer->GetIp());
 
@@ -317,9 +317,9 @@ void CXlxProtocol::HandlePeerLinks(void)
 
 	// check if all our connected peers are still listed by gatekeeper
 	// if not, disconnect
-	int index = -1;
-	CPeer *peer = NULL;
-	while ( (peer = peers->FindNextPeer(PROTOCOL_XLX, &index)) != NULL ) {
+	auto pit = peers->InitPeerIterator();
+	CPeer *peer;
+	while (NULL != (peer = peers->FindNextPeer(PROTOCOL_XLX, pit))) {
 		if ( list->FindListItem(peer->GetCallsign()) == NULL ) {
 			// send disconnect packet
 			EncodeDisconnectPacket(&buffer);
