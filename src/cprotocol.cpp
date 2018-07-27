@@ -167,7 +167,7 @@ CPacketStream *CProtocol::GetStream(uint16 uiStreamId, const CIp *Ip)
 void CProtocol::CheckStreamsTimeout(void)
 {
 	auto it = m_Streams.begin();
-	while (NULL != *it) {
+	while (it != m_Streams.end()) {
 		// time out ?
 		(*it)->Lock();
 		if ((*it)->IsExpired()) {
