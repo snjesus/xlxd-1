@@ -1,31 +1,23 @@
 # Copyright
 
 © 2016 Luc Engelmann LX1IQ
+© 2018 Thomas A. Early, N7TAE (Nearly all std::vector containers have been replaced with std::list containers.)
 
-The XLX Multiprotocol Gateway Reflector Server is part of the software system
-for the D-Star Network.
-The sources are published under GPL Licenses.
+The XLX Multiprotocol Gateway Reflector Server is part of the software system for the D-Star Network. The sources are published under GPL Licenses.
+
 
 # Usage
 
-The packages which are described in this document are designed to install server
-software which is used for the D-Star network infrastructure.
-It requires a 24/7 internet connection which can support 20 voice streams or more
-to connect repeaters and hotspot dongles!!
+The packages which are described in this document are designed to install server software which is used for the D-Star network infrastructure. It requires a 24/7 internet connection which can support 20 voice streams or more to connect repeaters and hotspot dongles!!
 
 - The server requires a fix IP-address !
-- The public IP address should have a DNS record which must be published in the
-common host files.
+- The public IP address should have a DNS record which must be published in the common host files.
 
-If you want to run this software please make sure that you can provide this
-service free of charge, like the developer team provides the software and the
-network infrastructure free of charge!
+If you want to run this software please make sure that you can provide this service free of charge, like the developer team provides the software and the network infrastructure free of charge!
 
 # Requirements
 
-The software packages for Linux are tested on Debian7 (Wheezy) 32 and 64bit or newer.
-Raspbian will work but is not recommended.
-Please use the stable version listed above, we cannot support others.
+The software packages for Linux are tested on Debian7 (Wheezy) 32 and 64bit or newer. Raspbian will work but is not recommended. Please use the stable version listed above, we cannot support others.
 
 # Installation
 
@@ -48,7 +40,7 @@ Please use the stable version listed above, we cannot support others.
 ###### Install g++ compiler
 ```
  # apt-get install build-essential
- # apt-get install g++-4.7 (skip this step on Debian 8.x) 
+ # apt-get install g++-4.7 (skip this step on Debian 8.x)
 ```
 
 ###### Download and compile the XLX sources
@@ -76,7 +68,7 @@ Please use the stable version listed above, we cannot support others.
 
 ###### Check your FTDI driver and install the AMBE service according to the readme in AMBEd
 ```
- 
+
 ```
 
 ###### Last step is to declare the service for automatic startup and shutdown
@@ -95,9 +87,9 @@ Please use the stable version listed above, we cannot support others.
 # cp -r ~/xlxd/dashboard /var/www/db
 ```
 
-###### Give the dashboard read access to the server log file 
+###### Give the dashboard read access to the server log file
 ```
-# chmod +r /var/log/messages 
+# chmod +r /var/log/messages
 ```
 
 ###### Reboot server to see if the auto-start is working

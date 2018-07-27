@@ -1,6 +1,7 @@
 //
 //  cbmpeer.cpp
 //  xlxd
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
