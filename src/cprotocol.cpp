@@ -36,7 +36,6 @@ CProtocol::CProtocol()
 {
 	m_bStopThread = false;
 	m_pThread = NULL;
-	m_Streams.reserve(NB_OF_MODULES);
 }
 
 
@@ -155,34 +154,30 @@ void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
 
 CPacketStream *CProtocol::GetStream(uint16 uiStreamId, const CIp *Ip)
 {
-	CPacketStream *stream = NULL;
-
-	// find if we have a stream with same streamid in our cache
-	for ( unsigned int i = 0; (i < m_Streams.size()) && (stream == NULL); i++ ) {
-		if ( m_Streams[i]->GetStreamId() == uiStreamId ) {
+	for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++) {
+		if ((*it)->GetStreamId() == uiStreamId) {
 			// if Ip not NULL, also check if IP match
-			if ( (Ip != NULL) && (*Ip == *(m_Streams[i]->GetOwnerIp())) ) {
-				stream = m_Streams[i];
-			}
+			if (Ip!=NULL && *Ip==*((*it)->GetOwnerIp()))
+				return *it;
 		}
 	}
-	// done
-	return stream;
+	return NULL;
 }
 
 void CProtocol::CheckStreamsTimeout(void)
 {
-	for ( unsigned int i = 0; i < m_Streams.size(); i++ ) {
+	auto it = m_Streams.begin();
+	while (NULL != *it) {
 		// time out ?
-		m_Streams[i]->Lock();
-		if ( m_Streams[i]->IsExpired() ) {
+		(*it)->Lock();
+		if ((*it)->IsExpired()) {
 			// yes, close it
-			m_Streams[i]->Unlock();
-			g_Reflector.CloseStream(m_Streams[i]);
+			(*it)->Unlock();
+			g_Reflector.CloseStream(*it);
 			// and remove it
-			m_Streams.erase(m_Streams.begin()+i);
+			it = m_Streams.erase(it);
 		} else {
-			m_Streams[i]->Unlock();
+			(*it++)->Unlock();
 		}
 	}
 }

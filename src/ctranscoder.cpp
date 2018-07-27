@@ -48,7 +48,6 @@ CTranscoder::CTranscoder()
 {
 	m_bStopThread = false;
 	m_pThread = NULL;
-	m_Streams.reserve(12);
 	m_bConnected = false;
 	m_LastKeepaliveTime.Now();
 	m_LastActivityTime.Now();
@@ -63,15 +62,13 @@ CTranscoder::CTranscoder()
 CTranscoder::~CTranscoder()
 {
 	// close all streams
-	m_Mutex.lock();
-	{
-		for ( unsigned int i = 0; i < m_Streams.size(); i++ ) {
-			delete m_Streams[i];
-		}
-		m_Streams.clear();
-
+	Lock();
+	while (! m_Streams.empty()) {
+		auto it = m_Streams.begin();
+		delete *it;
+		m_Streams.erase(it);
 	}
-	m_Mutex.unlock();
+	Unlock();
 
 	// kill threads
 	m_bStopThread = true;
@@ -113,15 +110,13 @@ void CTranscoder::Close(void)
 	m_Socket.Close();
 
 	// close all streams
-	m_Mutex.lock();
-	{
-		for ( unsigned int i = 0; i < m_Streams.size(); i++ ) {
-			delete m_Streams[i];
-		}
-		m_Streams.clear();
-
+	Lock();
+	while (! m_Streams.empty()) {
+		auto it = m_Streams.begin();
+		delete *it;
+		m_Streams.erase(it);
 	}
-	m_Mutex.unlock();
+	Unlock();
 
 	// kill threads
 	m_bStopThread = true;
@@ -240,39 +235,32 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 
 	if ( stream != NULL ) {
 		// look for the stream
-		bool found = false;
 		Lock();
-		{
-			for ( unsigned int i = 0; (i < m_Streams.size()) && !found; i++ ) {
-				// compare object pointers
-				if ( (m_Streams[i]) ==  stream ) {
-					// send close packet
-					EncodeClosestreamPacket(&Buffer, m_Streams[i]->GetStreamId());
-					m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
+		for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++) {
+			// compare object pointers
+			if (*it ==  stream) {
+				// send close packet
+				EncodeClosestreamPacket(&Buffer, (*it)->GetStreamId());
+				m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
 
-					// display stats
-					if ( m_Streams[i]->GetPingMin() >= 0.0 ) {
-						char sz[256];
-						sprintf(sz, "ambed stats (ms) : %.1f/%.1f/%.1f",
-								m_Streams[i]->GetPingMin() * 1000.0,
-								m_Streams[i]->GetPingAve() * 1000.0,
-								m_Streams[i]->GetPingMax() * 1000.0);
-						std::cout << sz << std::endl;
-					}
-					if ( m_Streams[i]->GetTimeoutPackets() > 0 ) {
-						char sz[256];
-						sprintf(sz, "ambed %d of %d packets timed out",
-								m_Streams[i]->GetTimeoutPackets(),
-								m_Streams[i]->GetTotalPackets());
-						std::cout << sz << std::endl;
-					}
-
-					// and close it
-					m_Streams[i]->Close();
-					delete m_Streams[i];
-					m_Streams.erase(m_Streams.begin()+i);
-					found = true;
+				// display stats
+				if ((*it)->GetPingMin() >= 0.0) {
+					char sz[256];
+					sprintf(sz, "ambed stats (ms) : %.1f/%.1f/%.1f", (*it)->GetPingMin()*1000.0, (*it)->GetPingAve()*1000.0, (*it)->GetPingMax()*1000.0);
+					std::cout << sz << std::endl;
 				}
+				if ((*it)->GetTimeoutPackets() > 0) {
+					char sz[256];
+					sprintf(sz, "ambed %d of %d packets timed out", (*it)->GetTimeoutPackets(), (*it)->GetTotalPackets());
+					std::cout << sz << std::endl;
+				}
+
+				// and close it
+				(*it)->Close();
+				delete *it;
+				m_Streams.erase(it);
+				Unlock();
+				return;
 			}
 		}
 		Unlock();
