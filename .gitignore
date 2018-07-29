@@ -1,4 +1,36 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
-src/xlxd
-ambed/ambed
-ambedtest/ambedtest
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# removed source
+removed/*
+
+# Executables
+*.exe
+*.out
+*.app
+xlxd
