@@ -1,22 +1,25 @@
 CC=g++
-CFLAGS=-c -std=c++11 -pthread
-LDFLAGS=-std=c++11 -pthread
+CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
+LDFLAGS=-pthread
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
+DEPENDS=$(SOURCES:.cpp=.d)
 EXECUTABLE=xlxd
 
 all: $(SOURCES) $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
+$(EXECUTABLE) : $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-.cpp.o:
+.cpp.o :
 	$(CC) $(CFLAGS) $< -o $@
 
-clean:
-	$(RM) $(EXECUTABLE) *.o
+clean :
+	$(RM) $(EXECUTABLE) *.o *.d
 
-install:
+-include $(DEPENDS)
+
+install :
 	mkdir -p /xlxd
 	cp -f $(EXECUTABLE) /xlxd/
 	[ -f /xlxd/xlxd.blacklist ] && \
@@ -30,5 +33,5 @@ install:
 		cp ../config/xlxd.interlink /xlxd/xlxd.interlink
 	cp -f ../systemd/xlxd.service /lib/systemd/system/
 	systemctl enable xlxd
-	# xlxd is now controlled with systemd. The service has been enabled. You can start it 
+	# xlxd is now controlled with systemd. The service has been enabled. You can start it
 	# with systemctl start xlxd
