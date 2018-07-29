@@ -621,12 +621,15 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
     // lock
     CClients *clients = GetClients();
     // iterate on clients
-    for ( int i = 0; i < clients->GetSize(); i++ )
+    auto cit = clients->InitClientIterator();
+    CClient *client;
+    while ( NULL != (client = clients->GetClient(cit)) )
     {
-        if ( clients->GetClient(i)->IsNode() )
+        if ( client->IsNode() )
         {
-            clients->GetClient(i)->WriteXml(xmlFile);
+            client->WriteXml(xmlFile);
         }
+        cit++;
     }
     // unlock
     ReleaseClients();
@@ -690,10 +693,14 @@ void CReflector::SendJsonNodesObject(CUdpSocket &Socket, CIp &Ip)
     // lock
     CClients *clients = GetClients();
     // iterate on clients
-    for ( int i = 0; (i < clients->GetSize()) && (i < JSON_NBMAX_NODES); i++ )
+    auto it = clients->InitClientIterator();
+    CClient *client = clients->GetClient(it);
+    int i = 0;
+    while ( (NULL != client) && (i < JSON_NBMAX_NODES) )
     {
-        clients->GetClient(i)->GetJsonObject(Buffer);
-        if ( i < clients->GetSize()-1 )
+        client->GetJsonObject(Buffer);
+        client = clients->GetClient(++it);
+        if ( (NULL != client) && (++i < JSON_NBMAX_NODES) )
         {
         	::strcat(Buffer, ",");
         }
