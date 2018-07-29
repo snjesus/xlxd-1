@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -36,31 +36,31 @@ CDvLastFramePacket::CDvLastFramePacket()
 // dstar constructor
 
 CDvLastFramePacket::CDvLastFramePacket(const struct dstar_dvframe *DvFrame, uint16 sid, uint8 pid)
-    : CDvFramePacket(DvFrame, sid, pid)
+	: CDvFramePacket(DvFrame, sid, pid)
 {
 }
 
 // dmr constructor
 
 CDvLastFramePacket::CDvLastFramePacket(const uint8 *ambe, const uint8 *sync, uint16 sid, uint8 pid, uint8 spid)
-    : CDvFramePacket(ambe, sync, sid, pid, spid)
+	: CDvFramePacket(ambe, sync, sid, pid, spid)
 {
 }
 
 // dstar + dmr constructor
 
 CDvLastFramePacket::CDvLastFramePacket
-    (uint16 sid,
-     uint8 dstarpid, const uint8 *dstarambe, const uint8 *dstardvdata,
-     uint8 dmrpid, uint8 dprspid, const uint8 *dmrambe, const uint8 *dmrsync)
-    : CDvFramePacket(sid, dstarpid, dstarambe, dstardvdata, dmrpid, dprspid, dmrambe, dmrsync)
+(uint16 sid,
+ uint8 dstarpid, const uint8 *dstarambe, const uint8 *dstardvdata,
+ uint8 dmrpid, uint8 dprspid, const uint8 *dmrambe, const uint8 *dmrsync)
+	: CDvFramePacket(sid, dstarpid, dstarambe, dstardvdata, dmrpid, dprspid, dmrambe, dmrsync)
 {
 }
 
 // copy constructor
-    
+
 CDvLastFramePacket::CDvLastFramePacket(const CDvLastFramePacket &DvFrame)
-    : CDvFramePacket(DvFrame)
+	: CDvFramePacket(DvFrame)
 {
 }
 
@@ -69,6 +69,6 @@ CDvLastFramePacket::CDvLastFramePacket(const CDvLastFramePacket &DvFrame)
 
 CPacket *CDvLastFramePacket::Duplicate(void) const
 {
-    return new CDvLastFramePacket(*this);
+	return new CDvLastFramePacket(*this);
 }
 

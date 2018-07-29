@@ -34,19 +34,18 @@
 
 CDmridDir::CDmridDir()
 {
-    m_bStopThread = false;
-    m_pThread = NULL;
+	m_bStopThread = false;
+	m_pThread = NULL;
 }
 
 CDmridDir::~CDmridDir()
 {
-    // kill threads
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-    }
+	// kill threads
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+	}
 }
 
 
@@ -57,25 +56,24 @@ bool CDmridDir::Init(void)
 {
 	// load content
 	Reload();
-	
-    // reset stop flag
-    m_bStopThread = false;
-    
-    // start  thread;
-    m_pThread = new std::thread(CDmridDir::Thread, this);
 
-    return true;
+	// reset stop flag
+	m_bStopThread = false;
+
+	// start  thread;
+	m_pThread = new std::thread(CDmridDir::Thread, this);
+
+	return true;
 }
 
 void CDmridDir::Close(void)
 {
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-        m_pThread = NULL;
-    }
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+		m_pThread = NULL;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -83,17 +81,15 @@ void CDmridDir::Close(void)
 
 void CDmridDir::Thread(CDmridDir *This)
 {
-    while ( !This->m_bStopThread )
-    {
-        // Wait 30 seconds
-        CTimePoint::TaskSleepFor(DMRIDDB_REFRESH_RATE * 60000);
+	while ( !This->m_bStopThread ) {
+		// Wait 30 seconds
+		CTimePoint::TaskSleepFor(DMRIDDB_REFRESH_RATE * 60000);
 
-        // have lists files changed ?
-        if ( This->NeedReload() )
-        {
-           	This->Reload();
-        }
-     }
+		// have lists files changed ?
+		if ( This->NeedReload() ) {
+			This->Reload();
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -101,18 +97,17 @@ void CDmridDir::Thread(CDmridDir *This)
 
 bool CDmridDir::Reload(void)
 {
-    CBuffer buffer;
-    bool ok = false;
-    
-    if ( LoadContent(&buffer) )
-    {
-        Lock();
-        {
-            ok = RefreshContent(buffer);
-        }
-        Unlock();
-    }
-    return ok;
+	CBuffer buffer;
+	bool ok = false;
+
+	if ( LoadContent(&buffer) ) {
+		Lock();
+		{
+			ok = RefreshContent(buffer);
+		}
+		Unlock();
+	}
+	return ok;
 }
 
 
@@ -121,22 +116,20 @@ bool CDmridDir::Reload(void)
 
 const CCallsign *CDmridDir::FindCallsign(uint32 dmrid)
 {
-    auto found = m_CallsignMap.find(dmrid);
-    if ( found != m_CallsignMap.end() )
-    {
-        return &(found->second);
-    }
-    return NULL;
+	auto found = m_CallsignMap.find(dmrid);
+	if ( found != m_CallsignMap.end() ) {
+		return &(found->second);
+	}
+	return NULL;
 }
 
 uint32 CDmridDir::FindDmrid(const CCallsign &callsign)
 {
-    auto found = m_DmridMap.find(callsign);
-    if ( found != m_DmridMap.end() )
-    {
-        return (found->second);
-    }
-    return 0;
+	auto found = m_DmridMap.find(callsign);
+	if ( found != m_DmridMap.end() ) {
+		return (found->second);
+	}
+	return 0;
 }
 
 
@@ -145,16 +138,14 @@ uint32 CDmridDir::FindDmrid(const CCallsign &callsign)
 
 bool CDmridDir::IsValidDmrid(const char *sz)
 {
-    bool ok = false;
-    size_t n = ::strlen(sz);
-    if ( (n > 0) && (n <= 8) )
-    {
-        ok = true;
-        for ( size_t i = 0; (i < n) && ok; i++ )
-        {
-            ok &= ::isdigit(sz[i]);
-        }
-    }
-    return ok;
+	bool ok = false;
+	size_t n = ::strlen(sz);
+	if ( (n > 0) && (n <= 8) ) {
+		ok = true;
+		for ( size_t i = 0; (i < n) && ok; i++ ) {
+			ok &= ::isdigit(sz[i]);
+		}
+	}
+	return ok;
 }
 

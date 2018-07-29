@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 13/11/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -34,18 +35,18 @@ class CUsers
 public:
     // constructor
     CUsers();
-    
+
     // destructor
     virtual ~CUsers() {}
 
     // locks
     void Lock(void)                     { m_Mutex.lock(); }
     void Unlock(void)                   { m_Mutex.unlock(); }
-    
+
     // management
-    int    GetSize(void) const          { return (int)m_Users.size(); }
     void   AddUser(const CUser &);
-    CUser *GetUser(int i)               { return &m_Users[i]; }
+    std::list<CUser>::iterator InitUserIterator()	{ return m_Users.begin(); }
+    CUser *GetUser(std::list<CUser>::iterator it)	{ return (it==m_Users.end()) ? NULL : &(*it); }
 
     // operation
     void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &);
@@ -53,8 +54,8 @@ public:
 
 protected:
     // data
-    std::mutex          m_Mutex;
-    std::vector<CUser>  m_Users;
+    std::mutex			m_Mutex;
+    std::list<CUser>	m_Users;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

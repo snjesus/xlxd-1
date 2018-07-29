@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cbuffer_h
@@ -33,10 +33,10 @@ public:
     // constructor
     CBuffer() {};
     CBuffer(uint8 *, int);
-    
+
     // destructor
     virtual ~CBuffer() {};
-    
+
     // set
     void Set(uint8 *, int);
     void Set(const char *);
@@ -46,20 +46,20 @@ public:
     void Append(uint16);
     void Append(uint32);
     void Append(const char *);
-    void ReplaceAt(int, uint8);
-    void ReplaceAt(int, uint16);
-    void ReplaceAt(int, uint32);
-    void ReplaceAt(int, const uint8 *, int);
-    
+    void ReplaceAt(unsigned int, uint8);
+    void ReplaceAt(unsigned int, uint16);
+    void ReplaceAt(unsigned int, uint32);
+    void ReplaceAt(unsigned int, const uint8 *, unsigned int);
+
     // operation
-    int Compare(uint8 *, int) const;
-    int Compare(uint8 *, int, int) const;
-    
+    int Compare(uint8 *, unsigned int) const;
+    int Compare(uint8 *, unsigned int, unsigned int) const;
+
     // operator
     bool operator ==(const CBuffer &) const;
     bool operator ==(const char *) const;
     operator const char *() const;
-    
+
     // debug
     void DebugDump(std::ofstream &) const;
 };

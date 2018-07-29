@@ -30,23 +30,23 @@
 
 CNotification::CNotification()
 {
-    // init variables
-    m_iId = NOTIFICATION_NONE;
+	// init variables
+	m_iId = NOTIFICATION_NONE;
 }
 
 CNotification::CNotification(const CNotification &Notification)
 {
-    m_iId = Notification.m_iId;
-    m_Callsign = Notification.m_Callsign;
+	m_iId = Notification.m_iId;
+	m_Callsign = Notification.m_Callsign;
 }
 
 CNotification::CNotification(int iId)
 {
-    m_iId = iId;
+	m_iId = iId;
 }
 
 CNotification::CNotification(int iId, const CCallsign &Callsign)
 {
-    m_iId = iId;
-    m_Callsign = Callsign;
+	m_iId = iId;
+	m_Callsign = Callsign;
 }

@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 31/10/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -35,31 +36,29 @@
 
 CReflector::CReflector()
 {
-    m_bStopThreads = false;
-    m_XmlReportThread = NULL;
-    m_JsonReportThread = NULL;
-    for ( int i = 0; i < NB_OF_MODULES; i++ )
-    {
-        m_RouterThreads[i] = NULL;
-    }
+	m_bStopThreads = false;
+	m_XmlReportThread = NULL;
+	m_JsonReportThread = NULL;
+	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+		m_RouterThreads[i] = NULL;
+	}
 #ifdef DEBUG_DUMPFILE
-    m_DebugFile.open("/Users/jeanluc/Desktop/dmrdebug.txt");
+	m_DebugFile.open("/Users/jeanluc/Desktop/dmrdebug.txt");
 #endif
 }
 
 CReflector::CReflector(const CCallsign &callsign)
 {
 #ifdef DEBUG_DUMPFILE
-    m_DebugFile.close();
+	m_DebugFile.close();
 #endif
-    m_bStopThreads = false;
-    m_XmlReportThread = NULL;
-    m_JsonReportThread = NULL;
-    for ( int i = 0; i < NB_OF_MODULES; i++ )
-    {
-        m_RouterThreads[i] = NULL;
-    }
-    m_Callsign = callsign;
+	m_bStopThreads = false;
+	m_XmlReportThread = NULL;
+	m_JsonReportThread = NULL;
+	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+		m_RouterThreads[i] = NULL;
+	}
+	m_Callsign = callsign;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -67,25 +66,21 @@ CReflector::CReflector(const CCallsign &callsign)
 
 CReflector::~CReflector()
 {
-    m_bStopThreads = true;
-    if ( m_XmlReportThread != NULL )
-    {
-        m_XmlReportThread->join();
-        delete m_XmlReportThread;
-    }
-    if ( m_JsonReportThread != NULL )
-    {
-        m_JsonReportThread->join();
-        delete m_JsonReportThread;
-    }
-    for ( int i = 0; i < NB_OF_MODULES; i++ )
-    {
-        if ( m_RouterThreads[i] != NULL )
-        {
-             m_RouterThreads[i]->join();
-             delete m_RouterThreads[i];
-        }
-    }
+	m_bStopThreads = true;
+	if ( m_XmlReportThread != NULL ) {
+		m_XmlReportThread->join();
+		delete m_XmlReportThread;
+	}
+	if ( m_JsonReportThread != NULL ) {
+		m_JsonReportThread->join();
+		delete m_JsonReportThread;
+	}
+	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+		if ( m_RouterThreads[i] != NULL ) {
+			m_RouterThreads[i]->join();
+			delete m_RouterThreads[i];
+		}
+	}
 }
 
 
@@ -94,213 +89,194 @@ CReflector::~CReflector()
 
 bool CReflector::Start(void)
 {
-    bool ok = true;
+	bool ok = true;
 
-    // reset stop flag
-    m_bStopThreads = false;
+	// reset stop flag
+	m_bStopThreads = false;
 
-    // init gate keeper
-    ok &= g_GateKeeper.Init();
-    
-    // init dmrid directory
-    g_DmridDir.Init();
-    
-    // init the transcoder
-    g_Transcoder.Init();
-    
-    // create protocols
-    ok &= m_Protocols.Init();
-    
-    // if ok, start threads
-    if ( ok )
-    {
-        // start one thread per reflector module
-        for ( int i = 0; i < NB_OF_MODULES; i++ )
-        {
-            m_RouterThreads[i] = new std::thread(CReflector::RouterThread, this, &(m_Streams[i]));
-        }
+	// init gate keeper
+	ok &= g_GateKeeper.Init();
 
-        // start the reporting threads
-        m_XmlReportThread = new std::thread(CReflector::XmlReportThread, this);
+	// init dmrid directory
+	g_DmridDir.Init();
+
+	// init the transcoder
+	g_Transcoder.Init();
+
+	// create protocols
+	ok &= m_Protocols.Init();
+
+	// if ok, start threads
+	if ( ok ) {
+		// start one thread per reflector module
+		for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+			m_RouterThreads[i] = new std::thread(CReflector::RouterThread, this, &(m_Streams[i]));
+		}
+
+		// start the reporting threads
+		m_XmlReportThread = new std::thread(CReflector::XmlReportThread, this);
 #ifdef JSON_MONITOR
-        m_JsonReportThread = new std::thread(CReflector::JsonReportThread, this);
+		m_JsonReportThread = new std::thread(CReflector::JsonReportThread, this);
 #endif
-    }
-    else
-    {
-        m_Protocols.Close();
-    }
-    
-    // done
-    return ok;
+	} else {
+		m_Protocols.Close();
+	}
+
+	// done
+	return ok;
 }
 
 void CReflector::Stop(void)
 {
-    // stop & delete all threads
-    m_bStopThreads = true;
+	// stop & delete all threads
+	m_bStopThreads = true;
 
-    // stop & delete report threads
-    if ( m_XmlReportThread != NULL )
-    {
-        m_XmlReportThread->join();
-        delete m_XmlReportThread;
-        m_XmlReportThread = NULL;
-    }
-    if ( m_JsonReportThread != NULL )
-    {
-        m_JsonReportThread->join();
-        delete m_JsonReportThread;
-        m_JsonReportThread = NULL;
-    }
+	// stop & delete report threads
+	if ( m_XmlReportThread != NULL ) {
+		m_XmlReportThread->join();
+		delete m_XmlReportThread;
+		m_XmlReportThread = NULL;
+	}
+	if ( m_JsonReportThread != NULL ) {
+		m_JsonReportThread->join();
+		delete m_JsonReportThread;
+		m_JsonReportThread = NULL;
+	}
 
-    // stop & delete all router thread
-    for ( int i = 0; i < NB_OF_MODULES; i++ )
-    {
-        if ( m_RouterThreads[i] != NULL )
-        {
-            m_RouterThreads[i]->join();
-            delete m_RouterThreads[i];
-            m_RouterThreads[i] = NULL;
-        }
-    }
+	// stop & delete all router thread
+	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+		if ( m_RouterThreads[i] != NULL ) {
+			m_RouterThreads[i]->join();
+			delete m_RouterThreads[i];
+			m_RouterThreads[i] = NULL;
+		}
+	}
 
-    // close protocols
-    m_Protocols.Close();
+	// close protocols
+	m_Protocols.Close();
 
-    // close transcoder
-    g_Transcoder.Close();
-    
-    // close gatekeeper
-    g_GateKeeper.Close();
+	// close transcoder
+	g_Transcoder.Close();
+
+	// close gatekeeper
+	g_GateKeeper.Close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // stream opening & closing
 
-bool CReflector::IsStreaming(char module)
+bool CReflector::IsStreaming(char /*module*/)
 {
-    return false;
+	return false;
 }
 
 CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client)
 {
-    CPacketStream *retStream = NULL;
-    
-    // clients MUST have bee locked by the caller
-    // so we can freely access it within the fuction
-    
-    // check sid is not NULL
-    if ( DvHeader->GetStreamId() != 0 )
-    {
-        // check if client is valid candidate
-        if ( m_Clients.IsClient(client) && !client->IsAMaster() )
-        {
-            // check if no stream with same streamid already open
-            // to prevent loops
-            if ( !IsStreamOpen(DvHeader) )
-            {
-                // get the module's queue
-                char module = DvHeader->GetRpt2Module();
-                CPacketStream *stream = GetStream(module);
-                if ( stream != NULL )
-                {
-                    // lock it
-                    stream->Lock();
-                    // is it available ?
-                    if ( stream->Open(*DvHeader, client) )
-                    {
-                        // stream open, mark client as master
-                        // so that it can't be deleted
-                        client->SetMasterOfModule(module);
-                        
-                        // update last heard time
-                        client->Heard();
-                        retStream = stream;
-                        
-                        // and push header packet
-                        stream->Push(DvHeader);
-                        
-                        // report
-                        std::cout << "Opening stream on module " << module << " for client " << client->GetCallsign()
-                                  << " with sid " << DvHeader->GetStreamId() << std::endl;
-                        
-                        // notify
-                        g_Reflector.OnStreamOpen(stream->GetUserCallsign());
-                        
-                    }
-                    // unlock now
-                    stream->Unlock();
-                }
-            }
-            else
-            {
-                // report
-                std::cout << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign()
-                          << " with sid " << DvHeader->GetStreamId() << std::endl;
-            }
-        }
-    }
-    
-    // done
-    return retStream;
+	CPacketStream *retStream = NULL;
+
+	// clients MUST have bee locked by the caller
+	// so we can freely access it within the fuction
+
+	// check sid is not NULL
+	if ( DvHeader->GetStreamId() != 0 ) {
+		// check if client is valid candidate
+		if ( m_Clients.IsClient(client) && !client->IsAMaster() ) {
+			// check if no stream with same streamid already open
+			// to prevent loops
+			if ( !IsStreamOpen(DvHeader) ) {
+				// get the module's queue
+				char module = DvHeader->GetRpt2Module();
+				CPacketStream *stream = GetStream(module);
+				if ( stream != NULL ) {
+					// lock it
+					stream->Lock();
+					// is it available ?
+					if ( stream->Open(*DvHeader, client) ) {
+						// stream open, mark client as master
+						// so that it can't be deleted
+						client->SetMasterOfModule(module);
+
+						// update last heard time
+						client->Heard();
+						retStream = stream;
+
+						// and push header packet
+						stream->Push(DvHeader);
+
+						// report
+						std::cout << "Opening stream on module " << module << " for client " << client->GetCallsign()
+								  << " with sid " << DvHeader->GetStreamId() << std::endl;
+
+						// notify
+						g_Reflector.OnStreamOpen(stream->GetUserCallsign());
+
+					}
+					// unlock now
+					stream->Unlock();
+				}
+			} else {
+				// report
+				std::cout << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign()
+						  << " with sid " << DvHeader->GetStreamId() << std::endl;
+			}
+		}
+	}
+
+	// done
+	return retStream;
 }
 
 void CReflector::CloseStream(CPacketStream *stream)
 {
-    //
-    if ( stream != NULL )
-    {
-        // wait queue is empty
-        // this waits forever
-        bool bEmpty = false;
-        do
-        {
-            stream->Lock();
-            // do not use stream->IsEmpty() has this "may" never succeed
-            // and anyway, the DvLastFramPacket short-circuit the transcoder
-            // loop queues
-            bEmpty = stream->empty();
-            stream->Unlock();
-            if ( !bEmpty )
-            {
-                // wait a bit
-                CTimePoint::TaskSleepFor(10);
-            }
-        } while (!bEmpty);
-        
-        // lock clients
-        GetClients();
-        
-        // lock stream
-        stream->Lock();
+	//
+	if ( stream != NULL ) {
+		// wait queue is empty
+		// this waits forever
+		bool bEmpty = false;
+		do {
+			stream->Lock();
+			// do not use stream->IsEmpty() has this "may" never succeed
+			// and anyway, the DvLastFramPacket short-circuit the transcoder
+			// loop queues
+			bEmpty = stream->empty();
+			stream->Unlock();
+			if ( !bEmpty ) {
+				// wait a bit
+				CTimePoint::TaskSleepFor(10);
+			}
+		} while (!bEmpty);
 
-        // get and check the master
-        CClient *client = stream->GetOwnerClient();
-        if ( client != NULL )
-        {
-            // client no longer a master
-            client->NotAMaster();
+		// lock clients
+		GetClients();
 
-            // notify
-            g_Reflector.OnStreamClose(stream->GetUserCallsign());
+		// lock stream
+		stream->Lock();
 
-            std::cout << "Closing stream of module " << GetStreamModule(stream) << std::endl;
-        }
+		// get and check the master
+		CClient *client = stream->GetOwnerClient();
+		if ( client != NULL ) {
+			// client no longer a master
+			client->NotAMaster();
 
-        // release clients
-        ReleaseClients();
-        
-        // unlock before closing
-        // to avoid double lock in assiociated
-        // codecstream close/thread-join
-        stream->Unlock();
-        
-        // and stop the queue
-        stream->Close();
+			// notify
+			g_Reflector.OnStreamClose(stream->GetUserCallsign());
+
+			std::cout << "Closing stream of module " << GetStreamModule(stream) << std::endl;
+		}
+
+		// release clients
+		ReleaseClients();
+
+		// unlock before closing
+		// to avoid double lock in assiociated
+		// codecstream close/thread-join
+		stream->Unlock();
+
+		// and stop the queue
+		stream->Close();
 
 
-    }
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -308,67 +284,58 @@ void CReflector::CloseStream(CPacketStream *stream)
 
 void CReflector::RouterThread(CReflector *This, CPacketStream *streamIn)
 {
-    // get our module
-    uint8 uiModuleId = This->GetStreamModule(streamIn);
+	// get our module
+	uint8 uiModuleId = This->GetStreamModule(streamIn);
 
-    // get on input queue
-    CPacket *packet;
+	// get on input queue
+	CPacket *packet;
 
-    while ( !This->m_bStopThreads )
-    {
-        // any packet in our input queue ?
-        streamIn->Lock();
-        if ( !streamIn->empty() )
-        {
-            // get the packet
-            packet = streamIn->front();
-            streamIn->pop();
-        }
-        else
-        {
-            packet = NULL;
-        }
-        streamIn->Unlock();
+	while ( !This->m_bStopThreads ) {
+		// any packet in our input queue ?
+		streamIn->Lock();
+		if ( !streamIn->empty() ) {
+			// get the packet
+			packet = streamIn->front();
+			streamIn->pop();
+		} else {
+			packet = NULL;
+		}
+		streamIn->Unlock();
 
-        // route it
-        if ( packet != NULL )
-        {
-            // set origin
-            packet->SetModuleId(uiModuleId);
+		// route it
+		if ( packet != NULL ) {
+			// set origin
+			packet->SetModuleId(uiModuleId);
 
-            // iterate on all protocols
-            for ( int i = 0; i < This->m_Protocols.Size(); i++ )
-            {
-                // duplicate packet
-                CPacket *packetClone = packet->Duplicate();
+			// iterate on all protocols
+			for ( int i = 0; i < This->m_Protocols.Size(); i++ ) {
+				// duplicate packet
+				CPacket *packetClone = packet->Duplicate();
 
-                // get protocol
-                CProtocol *protocol = This->m_Protocols.GetProtocol(i);
+				// get protocol
+				CProtocol *protocol = This->m_Protocols.GetProtocol(i);
 
-                // if packet is header, update RPT2 according to protocol
-                if ( packetClone->IsDvHeader() )
-                {
-                    // get our callsign
-                    CCallsign csRPT = protocol->GetReflectorCallsign();
-                    csRPT.SetModule(This->GetStreamModule(streamIn));
-                    ((CDvHeaderPacket *)packetClone)->SetRpt2Callsign(csRPT);
-                }
+				// if packet is header, update RPT2 according to protocol
+				if ( packetClone->IsDvHeader() ) {
+					// get our callsign
+					CCallsign csRPT = protocol->GetReflectorCallsign();
+					csRPT.SetModule(This->GetStreamModule(streamIn));
+					((CDvHeaderPacket *)packetClone)->SetRpt2Callsign(csRPT);
+				}
 
-                // and push it
-                CPacketQueue *queue = protocol->GetQueue();
-                queue->push(packetClone);
-                protocol->ReleaseQueue();
-            }
-            // done
-            delete packet;
-            packet = NULL;
-        }
-        else
-        {
-            // wait a bit
-            CTimePoint::TaskSleepFor(10);
-        }
-    }
+				// and push it
+				CPacketQueue *queue = protocol->GetQueue();
+				queue->push(packetClone);
+				protocol->ReleaseQueue();
+			}
+			// done
+			delete packet;
+			packet = NULL;
+		} else {
+			// wait a bit
+			CTimePoint::TaskSleepFor(10);
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -376,121 +343,107 @@ void CReflector::RouterThread(CReflector *This, CPacketStream *streamIn)
 
 void CReflector::XmlReportThread(CReflector *This)
 {
-    while ( !This->m_bStopThreads )
-    {
-        // report to xml file
-        std::ofstream xmlFile;
-        xmlFile.open(XML_PATH, std::ios::out | std::ios::trunc);
-        if ( xmlFile.is_open() )
-        {
-            // write xml file
-            This->WriteXmlFile(xmlFile);
+	while ( !This->m_bStopThreads ) {
+		// report to xml file
+		std::ofstream xmlFile;
+		xmlFile.open(XML_PATH, std::ios::out | std::ios::trunc);
+		if ( xmlFile.is_open() ) {
+			// write xml file
+			This->WriteXmlFile(xmlFile);
 
-            // and close file
-            xmlFile.close();
-        }
+			// and close file
+			xmlFile.close();
+		}
 #ifndef NO_ERROR_ON_XML_OPEN_FAIL
-        else
-        {
-            std::cout << "Failed to open " << XML_PATH  << std::endl;
-        }
+		else {
+			std::cout << "Failed to open " << XML_PATH  << std::endl;
+		}
 #endif
 
-        // and wait a bit
-        CTimePoint::TaskSleepFor(XML_UPDATE_PERIOD * 1000);
-    }
+		// and wait a bit
+		CTimePoint::TaskSleepFor(XML_UPDATE_PERIOD * 1000);
+	}
 }
 
 void CReflector::JsonReportThread(CReflector *This)
 {
-    CUdpSocket Socket;
-    CBuffer    Buffer;
-    CIp        Ip;
-    bool       bOn;
+	CUdpSocket Socket;
+	CBuffer    Buffer;
+	CIp        Ip;
+	bool       bOn;
 
-    // init variable
-    bOn = false;
+	// init variable
+	bOn = false;
 
-    // create listening socket
-    if ( Socket.Open(JSON_PORT) )
-    {
-        // and loop
-        while ( !This->m_bStopThreads )
-        {
-            // any command ?
-            if ( Socket.Receive(&Buffer, &Ip, 50) != -1 )
-            {
-                // check verb
-                if ( Buffer.Compare((uint8 *)"hello", 5) == 0 )
-                {
-                    std::cout << "Monitor socket connected with " << Ip << std::endl;
+	// create listening socket
+	if ( Socket.Open(JSON_PORT) ) {
+		// and loop
+		while ( !This->m_bStopThreads ) {
+			// any command ?
+			if ( Socket.Receive(&Buffer, &Ip, 50) != -1 ) {
+				// check verb
+				if ( Buffer.Compare((uint8 *)"hello", 5) == 0 ) {
+					std::cout << "Monitor socket connected with " << Ip << std::endl;
 
-                    // connected
-                    bOn = true;
+					// connected
+					bOn = true;
 
-                    // announce ourselves
-                    This->SendJsonReflectorObject(Socket, Ip);
+					// announce ourselves
+					This->SendJsonReflectorObject(Socket, Ip);
 
 					// dump tables
 					This->SendJsonNodesObject(Socket, Ip);
 					This->SendJsonStationsObject(Socket, Ip);
-                }
-                else if ( Buffer.Compare((uint8 *)"bye", 3) == 0 )
-                {
-                    std::cout << "Monitor socket disconnected" << std::endl;
+				} else if ( Buffer.Compare((uint8 *)"bye", 3) == 0 ) {
+					std::cout << "Monitor socket disconnected" << std::endl;
 
-                    // diconnected
-                    bOn = false;
-                }
-            }
+					// diconnected
+					bOn = false;
+				}
+			}
 
-            // any notifications ?
-            CNotification notification;
-            This->m_Notifications.Lock();
-            if ( !This->m_Notifications.empty() )
-            {
-                // get the packet
-                notification = This->m_Notifications.front();
-                This->m_Notifications.pop();
-            }
-            This->m_Notifications.Unlock();
+			// any notifications ?
+			CNotification notification;
+			This->m_Notifications.Lock();
+			if ( !This->m_Notifications.empty() ) {
+				// get the packet
+				notification = This->m_Notifications.front();
+				This->m_Notifications.pop();
+			}
+			This->m_Notifications.Unlock();
 
-            // handle it
-            if ( bOn )
-            {
-                switch ( notification.GetId() )
-                {
-                    case NOTIFICATION_CLIENTS:
-                    case NOTIFICATION_PEERS:
-                        //std::cout << "Monitor updating nodes table" << std::endl;
-                        This->SendJsonNodesObject(Socket, Ip);
-                        break;
-                    case NOTIFICATION_USERS:
-                        //std::cout << "Monitor updating stations table" << std::endl;
-                        This->SendJsonStationsObject(Socket, Ip);
-                        break;
-                    case NOTIFICATION_STREAM_OPEN:
-                        //std::cout << "Monitor notify station " << notification.GetCallsign() << "going ON air" << std::endl;
-                        This->SendJsonStationsObject(Socket, Ip);
-                        This->SendJsonOnairObject(Socket, Ip, notification.GetCallsign());
-                        break;
-                    case NOTIFICATION_STREAM_CLOSE:
-                        //std::cout << "Monitor notify station " << notification.GetCallsign() << "going OFF air" << std::endl;
-                        This->SendJsonOffairObject(Socket, Ip, notification.GetCallsign());
-                        break;
-                   case NOTIFICATION_NONE:
-                    default:
-                        // nothing to do, just sleep a bit
-                        CTimePoint::TaskSleepFor(250);
-                        break;
-                }
-            }
-        }
-    }
-    else
-    {
-        std::cout << "Error creating monitor socket" << std::endl;
-    }
+			// handle it
+			if ( bOn ) {
+				switch ( notification.GetId() ) {
+				case NOTIFICATION_CLIENTS:
+				case NOTIFICATION_PEERS:
+					//std::cout << "Monitor updating nodes table" << std::endl;
+					This->SendJsonNodesObject(Socket, Ip);
+					break;
+				case NOTIFICATION_USERS:
+					//std::cout << "Monitor updating stations table" << std::endl;
+					This->SendJsonStationsObject(Socket, Ip);
+					break;
+				case NOTIFICATION_STREAM_OPEN:
+					//std::cout << "Monitor notify station " << notification.GetCallsign() << "going ON air" << std::endl;
+					This->SendJsonStationsObject(Socket, Ip);
+					This->SendJsonOnairObject(Socket, Ip, notification.GetCallsign());
+					break;
+				case NOTIFICATION_STREAM_CLOSE:
+					//std::cout << "Monitor notify station " << notification.GetCallsign() << "going OFF air" << std::endl;
+					This->SendJsonOffairObject(Socket, Ip, notification.GetCallsign());
+					break;
+				case NOTIFICATION_NONE:
+				default:
+					// nothing to do, just sleep a bit
+					CTimePoint::TaskSleepFor(250);
+					break;
+				}
+			}
+		}
+	} else {
+		std::cout << "Error creating monitor socket" << std::endl;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -498,47 +451,47 @@ void CReflector::JsonReportThread(CReflector *This)
 
 void CReflector::OnPeersChanged(void)
 {
-    CNotification notification(NOTIFICATION_PEERS);
-    
-    m_Notifications.Lock();
-    m_Notifications.push(notification);
-    m_Notifications.Unlock();
+	CNotification notification(NOTIFICATION_PEERS);
+
+	m_Notifications.Lock();
+	m_Notifications.push(notification);
+	m_Notifications.Unlock();
 }
 
 void CReflector::OnClientsChanged(void)
 {
-    CNotification notification(NOTIFICATION_CLIENTS);
+	CNotification notification(NOTIFICATION_CLIENTS);
 
-    m_Notifications.Lock();
-    m_Notifications.push(notification);
-    m_Notifications.Unlock();
+	m_Notifications.Lock();
+	m_Notifications.push(notification);
+	m_Notifications.Unlock();
 }
 
 void CReflector::OnUsersChanged(void)
 {
-    CNotification notification(NOTIFICATION_USERS);
+	CNotification notification(NOTIFICATION_USERS);
 
-    m_Notifications.Lock();
-    m_Notifications.push(notification);
-    m_Notifications.Unlock();
+	m_Notifications.Lock();
+	m_Notifications.push(notification);
+	m_Notifications.Unlock();
 }
 
 void CReflector::OnStreamOpen(const CCallsign &callsign)
 {
-    CNotification notification(NOTIFICATION_STREAM_OPEN, callsign);
+	CNotification notification(NOTIFICATION_STREAM_OPEN, callsign);
 
-    m_Notifications.Lock();
-    m_Notifications.push(notification);
-    m_Notifications.Unlock();
+	m_Notifications.Lock();
+	m_Notifications.push(notification);
+	m_Notifications.Unlock();
 }
 
 void CReflector::OnStreamClose(const CCallsign &callsign)
 {
-    CNotification notification(NOTIFICATION_STREAM_CLOSE, callsign);
+	CNotification notification(NOTIFICATION_STREAM_CLOSE, callsign);
 
-    m_Notifications.Lock();
-    m_Notifications.push(notification);
-    m_Notifications.Unlock();
+	m_Notifications.Lock();
+	m_Notifications.push(notification);
+	m_Notifications.Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -546,47 +499,42 @@ void CReflector::OnStreamClose(const CCallsign &callsign)
 
 int CReflector::GetModuleIndex(char module) const
 {
-    int i = (int)module - (int)'A';
-    if ( (i < 0) || (i >= NB_OF_MODULES) )
-    {
-        i = -1;
-    }
-    return i;
+	int i = (int)module - (int)'A';
+	if ( (i < 0) || (i >= NB_OF_MODULES) ) {
+		i = -1;
+	}
+	return i;
 }
 
 CPacketStream *CReflector::GetStream(char module)
 {
-    CPacketStream *stream = NULL;
-    int i = GetModuleIndex(module);
-    if ( i >= 0 )
-    {
-        stream = &(m_Streams[i]);
-    }
-    return stream;
+	CPacketStream *stream = NULL;
+	int i = GetModuleIndex(module);
+	if ( i >= 0 ) {
+		stream = &(m_Streams[i]);
+	}
+	return stream;
 }
 
 bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 {
-    bool open = false;
-    for ( int i = 0; (i < m_Streams.size()) && !open; i++  )
-    {
-        open =  ( (m_Streams[i].GetStreamId() == DvHeader->GetStreamId()) &&
-                  (m_Streams[i].IsOpen()));
-    }
-    return open;
+	bool open = false;
+	for ( unsigned int i = 0; (i < m_Streams.size()) && !open; i++  ) {
+		open =  ( (m_Streams[i].GetStreamId() == DvHeader->GetStreamId()) &&
+				  (m_Streams[i].IsOpen()));
+	}
+	return open;
 }
 
 char CReflector::GetStreamModule(CPacketStream *stream)
 {
-    char module = ' ';
-    for ( int i = 0; (i < m_Streams.size()) && (module == ' '); i++ )
-    {
-        if ( &(m_Streams[i]) == stream )
-        {
-            module = GetModuleLetter(i);
-        }
-    }
-    return module;
+	char module = ' ';
+	for ( unsigned int i = 0; (i < m_Streams.size()) && (module == ' '); i++ ) {
+		if ( &(m_Streams[i]) == stream ) {
+			module = GetModuleLetter(i);
+		}
+	}
+	return module;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -594,55 +542,63 @@ char CReflector::GetStreamModule(CPacketStream *stream)
 
 void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 {
-    // write header
-    xmlFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-    
-    // software version
-    char sz[64];
-    ::sprintf(sz, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
-    xmlFile << "<Version>" << sz << "</Version>" << std::endl;
-    
-    // linked peers
-    xmlFile << "<" << m_Callsign << "linked peers>" << std::endl;
-    // lock
-    CPeers *peers = GetPeers();
-    // iterate on peers
-    for ( int i = 0; i < peers->GetSize(); i++ )
-    {
-        peers->GetPeer(i)->WriteXml(xmlFile);
-    }
-    // unlock
-    ReleasePeers();
-    xmlFile << "</" << m_Callsign << "linked peers>" << std::endl;
-    
-    // linked nodes
-    xmlFile << "<" << m_Callsign << "linked nodes>" << std::endl;
-    // lock
-    CClients *clients = GetClients();
-    // iterate on clients
-    for ( int i = 0; i < clients->GetSize(); i++ )
-    {
-        if ( clients->GetClient(i)->IsNode() )
-        {
-            clients->GetClient(i)->WriteXml(xmlFile);
-        }
-    }
-    // unlock
-    ReleaseClients();
-    xmlFile << "</" << m_Callsign << "linked nodes>" << std::endl;
-    
-    // last heard users
-    xmlFile << "<" << m_Callsign << "heard users>" << std::endl;
-    // lock
-    CUsers *users = GetUsers();
-    // iterate on users
-    for ( int i = 0; i < users->GetSize(); i++ )
-    {
-        users->GetUser(i)->WriteXml(xmlFile);
-    }
-    // unlock
-    ReleaseUsers();
-    xmlFile << "</" << m_Callsign << "heard users>" << std::endl;
+	// write header
+	xmlFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+
+	// software version
+	char sz[64];
+	::sprintf(sz, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION);
+	xmlFile << "<Version>" << sz << "</Version>" << std::endl;
+
+	// linked peers
+	xmlFile << "<" << m_Callsign << "linked peers>" << std::endl;
+	// lock
+	CPeers *peers = GetPeers();
+	// iterate on peers
+	if (peers) {
+		auto it = peers->InitPeerIterator();
+		CPeer *peer;
+		while (NULL != (peer = peers->GetPeer(it))) {
+			peer->WriteXml(xmlFile);
+			it++;
+		}
+		ReleasePeers();	// unlock
+	}
+
+	xmlFile << "</" << m_Callsign << "linked peers>" << std::endl;
+
+	// linked nodes
+	xmlFile << "<" << m_Callsign << "linked nodes>" << std::endl;
+	// lock
+	CClients *clients = GetClients();
+	// iterate on clients
+	auto it = clients->InitClientIterator();
+	CClient *client;
+	while (NULL != (client = clients->GetClient(it))) {
+		if (client->IsNode())
+			client->WriteXml(xmlFile);
+		it++;
+	}
+	// unlock
+	ReleaseClients();
+	xmlFile << "</" << m_Callsign << "linked nodes>" << std::endl;
+
+	// last heard users
+	xmlFile << "<" << m_Callsign << "heard users>" << std::endl;
+
+	CUsers *users = GetUsers();	// lock
+	if (users) {
+		// iterate on users
+		auto it = users->InitUserIterator();
+		CUser *user;
+		while (NULL != (user = users->GetUser(it))) {
+			user->WriteXml(xmlFile);
+			it++;
+		}
+		ReleaseUsers();	// unlock
+	}
+
+	xmlFile << "</" << m_Callsign << "heard users>" << std::endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -651,28 +607,26 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 void CReflector::SendJsonReflectorObject(CUdpSocket &Socket, CIp &Ip)
 {
 	char Buffer[1024];
- 	char cs[CALLSIGN_LEN+1];
- 	char mod[8] = "\"A\"";
+	char cs[CALLSIGN_LEN+1];
+	char mod[8] = "\"A\"";
 
- 	// get reflector callsign
-    m_Callsign.GetCallsign((uint8 *)cs);
-    cs[CALLSIGN_LEN] = 0;
+	// get reflector callsign
+	m_Callsign.GetCallsign((uint8 *)cs);
+	cs[CALLSIGN_LEN] = 0;
 
 	// build string
 	::sprintf(Buffer, "{\"reflector\":\"%s\",\"modules\":[", cs);
-    for ( int i = 0; i < NB_OF_MODULES; i++ )
-    {
-    	::strcat(Buffer, mod);
-    	mod[1]++;
-        if ( i < NB_OF_MODULES-1 )
-        {
-        	::strcat(Buffer, ",");
-        }
-    }
-    ::strcat(Buffer, "]}");
+	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+		::strcat(Buffer, mod);
+		mod[1]++;
+		if ( i < NB_OF_MODULES-1 ) {
+			::strcat(Buffer, ",");
+		}
+	}
+	::strcat(Buffer, "]}");
 
-    // and send
-    Socket.Send(Buffer, Ip);
+	// and send
+	Socket.Send(Buffer, Ip);
 }
 
 #define JSON_NBMAX_NODES	250
@@ -681,80 +635,80 @@ void CReflector::SendJsonNodesObject(CUdpSocket &Socket, CIp &Ip)
 {
 	char Buffer[12+(JSON_NBMAX_NODES*94)];
 
-    // nodes object table
-    ::sprintf(Buffer, "{\"nodes\":[");
-    // lock
-    CClients *clients = GetClients();
-    // iterate on clients
-    for ( int i = 0; (i < clients->GetSize()) && (i < JSON_NBMAX_NODES); i++ )
-    {
-        clients->GetClient(i)->GetJsonObject(Buffer);
-        if ( i < clients->GetSize()-1 )
-        {
-        	::strcat(Buffer, ",");
-        }
-    }
-    // unlock
-    ReleaseClients();
-    ::strcat(Buffer, "]}");
+	// nodes object table
+	::sprintf(Buffer, "{\"nodes\":[");
+	// lock
+	CClients *clients = GetClients();
+	auto it = clients->InitClientIterator();
+	CClient *client = clients->GetClient(it);
+	// iterate on clients
+	while (NULL != client) {
+		client->GetJsonObject(Buffer);
+		client = clients->GetClient(++it);
+		if (NULL != client) {
+			::strcat(Buffer, ",");
+		}
+	}
+	// unlock
+	ReleaseClients();
+	::strcat(Buffer, "]}");
 
-    // and send
-    //std::cout << Buffer << std::endl;
-    Socket.Send(Buffer, Ip);
+	// and send
+	//std::cout << Buffer << std::endl;
+	Socket.Send(Buffer, Ip);
 }
 
 void CReflector::SendJsonStationsObject(CUdpSocket &Socket, CIp &Ip)
 {
 	char Buffer[15+(LASTHEARD_USERS_MAX_SIZE*94)];
 
-    // stations object table
-    ::sprintf(Buffer, "{\"stations\":[");
+	// stations object table
+	::sprintf(Buffer, "{\"stations\":[");
 
-    // lock
-    CUsers *users = GetUsers();
-    // iterate on users
-    for ( int i = 0; i < users->GetSize(); i++ )
-    {
-        users->GetUser(i)->GetJsonObject(Buffer);
-        if ( i < users->GetSize()-1 )
-        {
-        	::strcat(Buffer, ",");
-        }
-    }
-    // unlock
-    ReleaseUsers();
+	// lock
+	CUsers *users = GetUsers();
+	// iterate on users
+	if (users) {
+		auto it = users->InitUserIterator();
+		CUser *user;
+		while (NULL != (user = users->GetUser(it))) {
+			user->GetJsonObject(Buffer);
+			it++;
+			if (NULL != users->GetUser(it))
+				::strcat(Buffer, ",");
+		}
+		ReleaseUsers();	// unlock
+	}
 
-    ::strcat(Buffer, "]}");
+	::strcat(Buffer, "]}");
 
-    // and send
-    //std::cout << Buffer << std::endl;
-    Socket.Send(Buffer, Ip);
+	Socket.Send(Buffer, Ip);
 }
 
 void CReflector::SendJsonOnairObject(CUdpSocket &Socket, CIp &Ip, const CCallsign &Callsign)
 {
-    char Buffer[128];
-    char sz[CALLSIGN_LEN+1];
+	char Buffer[128];
+	char sz[CALLSIGN_LEN+1];
 
-    // onair object
-    Callsign.GetCallsignString(sz);
-    ::sprintf(Buffer, "{\"onair\":\"%s\"}", sz);
+	// onair object
+	Callsign.GetCallsignString(sz);
+	::sprintf(Buffer, "{\"onair\":\"%s\"}", sz);
 
-    // and send
-    //std::cout << Buffer << std::endl;
-    Socket.Send(Buffer, Ip);
+	// and send
+	//std::cout << Buffer << std::endl;
+	Socket.Send(Buffer, Ip);
 }
 
 void CReflector::SendJsonOffairObject(CUdpSocket &Socket, CIp &Ip, const CCallsign &Callsign)
 {
-    char Buffer[128];
-    char sz[CALLSIGN_LEN+1];
+	char Buffer[128];
+	char sz[CALLSIGN_LEN+1];
 
-    // offair object
-    Callsign.GetCallsignString(sz);
-    ::sprintf(Buffer, "{\"offair\":\"%s\"}", sz);
+	// offair object
+	Callsign.GetCallsignString(sz);
+	::sprintf(Buffer, "{\"offair\":\"%s\"}", sz);
 
-    // and send
-    //std::cout << Buffer << std::endl;
-    Socket.Send(Buffer, Ip);
+	// and send
+	//std::cout << Buffer << std::endl;
+	Socket.Send(Buffer, Ip);
 }
