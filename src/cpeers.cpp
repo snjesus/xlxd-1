@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 10/12/2016.
 //  Copyright © 2016 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -48,7 +49,7 @@ CPeers::~CPeers()
             delete m_Peers[i];
         }
         m_Peers.clear();
-        
+
     }
     m_Mutex.unlock();
 }
@@ -73,7 +74,7 @@ void CPeers::AddPeer(CPeer *peer)
             //std::cout << "Adding existing peer " << peer->GetCallsign() << " at " << peer->GetIp() << std::endl;
         }
     }
-    
+
     // if not, append to the vector
     if ( !found )
     {
@@ -89,12 +90,15 @@ void CPeers::AddPeer(CPeer *peer)
         // and append all peer's client to reflector client list
         // it is double lock safe to lock Clients list after Peers list
         CClients *clients = g_Reflector.GetClients();
-        for ( int i = 0; i < peer->GetNbClients(); i++ )
+        auto it = peer->InitClientIterator();
+        CClient *client;
+        while ( NULL != (client = peer->GetClient(it)) )
         {
-            clients->AddClient(peer->GetClient(i));
+            clients->AddClient(client);
+            it++;
         }
         g_Reflector.ReleaseClients();
-        
+
         // notify
         g_Reflector.OnPeersChanged();
     }
@@ -115,15 +119,16 @@ void CPeers::RemovePeer(CPeer *peer)
                 // remove all clients from reflector client list
                 // it is double lock safe to lock Clients list after Peers list
                 CClients *clients = g_Reflector.GetClients();
-                for ( int i = 0; i < peer->GetNbClients(); i++ )
+                auto cit = peer->InitClientIterator();
+                CClient *client;
+                while ( NULL != (client = peer->GetClient(cit)) )
                 {
                     // this also delete the client object
-                    clients->RemoveClient(peer->GetClient(i));
+                    clients->RemoveClient(client);
+                    cit++;
                 }
-                // so clear it then
-                m_Peers[i]->ClearClients();
                 g_Reflector.ReleaseClients();
-                
+
                 // remove it
                 std::cout << "Peer " << m_Peers[i]->GetCallsign() << " at " << m_Peers[i]->GetIp()
                          << " removed" << std::endl;
@@ -155,7 +160,7 @@ CPeer *CPeers::GetPeer(int i)
 CPeer *CPeers::FindPeer(const CIp &Ip, int Protocol)
 {
     CPeer *peer = NULL;
-    
+
     // find peer
     for ( int i = 0; (i < m_Peers.size()) && (peer == NULL); i++ )
     {
@@ -164,7 +169,7 @@ CPeer *CPeers::FindPeer(const CIp &Ip, int Protocol)
             peer = m_Peers[i];
         }
     }
-    
+
     // done
     return peer;
 }
@@ -172,7 +177,7 @@ CPeer *CPeers::FindPeer(const CIp &Ip, int Protocol)
 CPeer *CPeers::FindPeer(const CCallsign &Callsign, const CIp &Ip, int Protocol)
 {
     CPeer *peer = NULL;
-    
+
     // find peer
     for ( int i = 0; (i < m_Peers.size()) && (peer == NULL); i++ )
     {
@@ -183,7 +188,7 @@ CPeer *CPeers::FindPeer(const CCallsign &Callsign, const CIp &Ip, int Protocol)
             peer = m_Peers[i];
         }
     }
-    
+
     // done
     return peer;
 }
@@ -191,7 +196,7 @@ CPeer *CPeers::FindPeer(const CCallsign &Callsign, const CIp &Ip, int Protocol)
 CPeer *CPeers::FindPeer(const CCallsign &Callsign, int Protocol)
 {
     CPeer *peer = NULL;
-    
+
     // find peer
     for ( int i = 0; (i < m_Peers.size()) && (peer == NULL); i++ )
     {
@@ -201,7 +206,7 @@ CPeer *CPeers::FindPeer(const CCallsign &Callsign, int Protocol)
             peer = m_Peers[i];
         }
     }
-    
+
     // done
     return peer;
 }
@@ -213,7 +218,7 @@ CPeer *CPeers::FindPeer(const CCallsign &Callsign, int Protocol)
 CPeer *CPeers::FindNextPeer(int Protocol, int *index)
 {
     CPeer *peer = NULL;
-    
+
     // find next peer
     bool found = false;
     for ( int i = *index+1; (i < m_Peers.size()) && !found; i++ )

@@ -2,6 +2,10 @@
 //  cbmpeer.cpp
 //  xlxd
 //
+//  Created by Jean-Luc Deltombe (LX3JL) on 10/12/2016.
+//  Copyright © 2016 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
+//
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
 //
@@ -38,7 +42,7 @@ CBmPeer::CBmPeer(const CCallsign &callsign, const CIp &ip, char *modules, const 
 : CPeer(callsign, ip, modules, version)
 {
     std::cout << "Adding BM peer" << std::endl;
-    
+
     // and construct all xlx clients
     for ( int i = 0; i < ::strlen(modules); i++ )
     {
@@ -52,17 +56,11 @@ CBmPeer::CBmPeer(const CCallsign &callsign, const CIp &ip, char *modules, const 
 CBmPeer::CBmPeer(const CBmPeer &peer)
 : CPeer(peer)
 {
-    for ( int i = 0; i < peer.m_Clients.size(); i++ )
+    for (auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++ )
     {
-        CBmClient *client = new CBmClient((const CBmClient &)*(peer.m_Clients[i]));
-        // grow vector capacity if needed
-        if ( m_Clients.capacity() == m_Clients.size() )
-        {
-            m_Clients.reserve(m_Clients.capacity()+10);
-        }
-        // and append
+        CBmClient *client = new CBmClient((const CBmClient &)*(*it));
         m_Clients.push_back(client);
-        
+
     }
 }
 

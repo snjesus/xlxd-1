@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 10/12/2016.
 //  Copyright © 2016 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -43,7 +44,7 @@ CXlxPeer::CXlxPeer(const CCallsign &callsign, const CIp &ip, char *modules, cons
     // get protocol revision
     int protrev = GetProtocolRevision(version);
     //std::cout << "Adding XLX peer with protocol revision " << protrev << std::endl;
-    
+
     // and construct all xlx clients
     for ( int i = 0; i < ::strlen(modules); i++ )
     {
@@ -57,17 +58,11 @@ CXlxPeer::CXlxPeer(const CCallsign &callsign, const CIp &ip, char *modules, cons
 CXlxPeer::CXlxPeer(const CXlxPeer &peer)
 : CPeer(peer)
 {
-    for ( int i = 0; i < peer.m_Clients.size(); i++ )
+    for ( auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++ )
     {
-        CXlxClient *client = new CXlxClient((const CXlxClient &)*(peer.m_Clients[i]));
-        // grow vector capacity if needed
-        if ( m_Clients.capacity() == m_Clients.size() )
-        {
-            m_Clients.reserve(m_Clients.capacity()+10);
-        }
-        // and append
+        CXlxClient *client = new CXlxClient((const CXlxClient &)*(*it));
         m_Clients.push_back(client);
-        
+
     }
 }
 
@@ -92,7 +87,7 @@ bool CXlxPeer::IsAlive(void) const
 int CXlxPeer::GetProtocolRevision(const CVersion &version)
 {
     int protrev = XLX_PROTOCOL_REVISION_0;
-    
+
     if ( version.IsEqualOrHigherTo(CVersion(2,2,0)) )
     {
         protrev = XLX_PROTOCOL_REVISION_2;
