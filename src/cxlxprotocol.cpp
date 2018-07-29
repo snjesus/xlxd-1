@@ -323,9 +323,9 @@ void CXlxProtocol::HandleKeepalives(void)
 
     // iterate on peers
     CPeers *peers = g_Reflector.GetPeers();
-    int index = -1;
-    CPeer *peer = NULL;
-    while ( (peer = peers->FindNextPeer(PROTOCOL_XLX, &index)) != NULL )
+    auto it = peers->InitPeerIterator();
+    CPeer *peer;
+    while ( NULL != (peer = peers->FindNextPeer(PROTOCOL_XLX, it)) )
     {
         // send keepalive
         m_Socket.Send(keepalive, peer->GetIp());
@@ -348,6 +348,7 @@ void CXlxProtocol::HandleKeepalives(void)
             std::cout << "XLX peer " << peer->GetCallsign() << " keepalive timeout" << std::endl;
             peers->RemovePeer(peer);
         }
+        it++;
     }
     g_Reflector.ReleasePeers();
 }
@@ -365,9 +366,9 @@ void CXlxProtocol::HandlePeerLinks(void)
 
     // check if all our connected peers are still listed by gatekeeper
     // if not, disconnect
-    int index = -1;
-    CPeer *peer = NULL;
-    while ( (peer = peers->FindNextPeer(PROTOCOL_XLX, &index)) != NULL )
+    auto pit = peers->InitPeerIterator();
+    CPeer *peer;
+    while ( NULL != (peer = peers->FindNextPeer(PROTOCOL_XLX, pit)) )
     {
         if ( list->FindListItem(peer->GetCallsign()) == NULL )
         {
@@ -378,13 +379,14 @@ void CXlxProtocol::HandlePeerLinks(void)
             // remove client
             peers->RemovePeer(peer);
         }
+        pit++;
     }
 
     // check if all ours peers listed by gatekeeper are connected
     // if not, connect or reconnect
-    auto it = list->InitCallsignIterator();
+    auto cit = list->InitCallsignIterator();
     CCallsignListItem *item;
-    while ( NULL != (item = list->GetCallsignItem(it)) )
+    while ( NULL != (item = list->GetCallsignItem(cit)) )
     {
         if ( peers->FindPeer(item->GetCallsign(), PROTOCOL_XLX) == NULL )
         {
@@ -395,7 +397,7 @@ void CXlxProtocol::HandlePeerLinks(void)
             m_Socket.Send(buffer, item->GetIp(), XLX_PORT);
             std::cout << "Sending connect packet to XLX peer " << item->GetCallsign() << " @ " << item->GetIp() << " for modules " << item->GetModules() << std::endl;
         }
-        it++;
+        cit++;
     }
 
     // done

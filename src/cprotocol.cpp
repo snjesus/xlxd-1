@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 01/11/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -19,7 +20,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -36,7 +37,6 @@ CProtocol::CProtocol()
 {
     m_bStopThread = false;
     m_pThread = NULL;
-    m_Streams.reserve(NB_OF_MODULES);
 }
 
 
@@ -52,7 +52,7 @@ CProtocol::~CProtocol()
         m_pThread->join();
         delete m_pThread;
     }
-    
+
     // empty queue
     m_Queue.Lock();
     while ( !m_Queue.empty() )
@@ -69,13 +69,13 @@ bool CProtocol::Init(void)
 {
     // init reflector apparent callsign
     m_ReflectorCallsign = g_Reflector.GetCallsign();
-    
+
     // reset stop flag
     m_bStopThread = false;
 
     // start  thread;
     m_pThread = new std::thread(CProtocol::Thread, this);
-    
+
     // done
     return true;
 }
@@ -158,7 +158,7 @@ void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
         stream->Lock();
         stream->Push(Frame);
         stream->Unlock();
-        
+
         // and close the stream
         g_Reflector.CloseStream(stream);
     }
@@ -169,41 +169,40 @@ void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
 
 CPacketStream *CProtocol::GetStream(uint16 uiStreamId, const CIp *Ip)
 {
-    CPacketStream *stream = NULL;
-    
     // find if we have a stream with same streamid in our cache
-    for ( int i = 0; (i < m_Streams.size()) && (stream == NULL); i++ )
+    for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ )
     {
-        if ( m_Streams[i]->GetStreamId() == uiStreamId )
+        if ( (*it)->GetStreamId() == uiStreamId )
         {
             // if Ip not NULL, also check if IP match
-            if ( (Ip != NULL) && (*Ip == *(m_Streams[i]->GetOwnerIp())) )
+            if ( (Ip != NULL) && (*Ip == *((*it)->GetOwnerIp())) )
             {
-                stream = m_Streams[i];
+                return *it;
             }
         }
     }
     // done
-    return stream;
+    return NULL;
 }
 
 void CProtocol::CheckStreamsTimeout(void)
 {
-    for ( int i = 0; i < m_Streams.size(); i++ )
+	auto it=m_Streams.begin();
+    while ( it != m_Streams.end() )
     {
         // time out ?
-        m_Streams[i]->Lock();
-        if ( m_Streams[i]->IsExpired() )
+        (*it)->Lock();
+        if ( (*it)->IsExpired() )
         {
             // yes, close it
-            m_Streams[i]->Unlock();
-            g_Reflector.CloseStream(m_Streams[i]);
+            (*it)->Unlock();
+            g_Reflector.CloseStream(*it);
             // and remove it
-            m_Streams.erase(m_Streams.begin()+i);
+            it = m_Streams.erase(it);
         }
         else
         {
-            m_Streams[i]->Unlock();
+            (*it++)->Unlock();
         }
     }
 }
