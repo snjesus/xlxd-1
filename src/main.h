@@ -26,6 +26,7 @@
 #define main_h
 
 #include <vector>
+#include <list>
 #include <array>
 #include <map>
 #include <queue>

@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 30/12/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -53,13 +54,13 @@ bool CCallsignList::LoadFromFile(const char *filename)
         Lock();
 
         // empty list
-        clear();
+        m_Callsigns.clear();
         // fill with file content
         while ( file.getline(sz, sizeof(sz)).good()  )
         {
             // remove leading & trailing spaces
             char *szt = TrimWhiteSpaces(sz);
-            
+
             // crack it
             if ( (::strlen(szt) > 0) && (szt[0] != '#') )
             {
@@ -75,7 +76,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
                         szt = szStar;
                     }
                     // and add to list
-                    push_back(CCallsignListItem(callsign, CIp(), szt));
+                    m_Callsigns.push_back(CCallsignListItem(callsign, CIp(), szt));
                 }
             }
         }
@@ -91,7 +92,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
         // and done
         Unlock();
         ok = true;
-        std::cout << "Gatekeeper loaded " << size() << " lines from " << filename <<  std::endl;
+        std::cout << "Gatekeeper loaded " << m_Callsigns.size() << " lines from " << filename <<  std::endl;
     }
     else
     {
@@ -129,57 +130,49 @@ bool CCallsignList::NeedReload(void)
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign) const
 {
-    bool listed = false;
-
-    for ( int i =  0; (i < size()) && !listed; i++ )
+    for ( auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++ )
     {
-        listed = (data()[i]).HasSameCallsignWithWildcard(callsign);
+        if ((*it).HasSameCallsignWithWildcard(callsign))
+			return true;
     }
 
-    return listed;
+    return false;
 }
 
 bool CCallsignList::IsCallsignListedWithWildcard(const CCallsign &callsign, char module) const
 {
-    bool listed = false;
-    
-    for ( int i =  0; (i < size()) && !listed; i++ )
+    for ( auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++ )
     {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsignWithWildcard(callsign) &&
-                  ((module == ' ') || item->HasModuleListed(module)) );
-
+        const CCallsignListItem *item = &(*it);
+        if ( item->HasSameCallsignWithWildcard(callsign) && ((module == ' ') || item->HasModuleListed(module)) )
+			return true;
     }
-    
-    return listed;
+
+    return false;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char module) const
 {
-    bool listed = false;
-    
-    for ( int i =  0; (i < size()) && !listed; i++ )
+    for ( auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++ )
     {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsign(callsign) && item->HasModuleListed(module));
-
+        const CCallsignListItem *item = &(*it);
+        if ( item->HasSameCallsign(callsign) && item->HasModuleListed(module) )
+			return true;
     }
-    
-    return listed;
+
+    return false;
 }
 
 bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) const
 {
-    bool listed = false;
-    
-    for ( int i =  0; (i < size()) && !listed; i++ )
+    for ( auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++ )
     {
-        const CCallsignListItem *item = &(data()[i]);
-        listed = (item->HasSameCallsign(callsign) && item->CheckListedModules(modules));
-        
+        const CCallsignListItem *item = &(*it);
+        if ( item->HasSameCallsign(callsign) && item->CheckListedModules(modules) )
+			return true;
     }
-    
-    return listed;
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -187,20 +180,14 @@ bool CCallsignList::IsCallsignListed(const CCallsign &callsign, char *modules) c
 
 CCallsignListItem *CCallsignList::FindListItem(const CCallsign &Callsign)
 {
-    CCallsignListItem *item = NULL;
-    
-    // find client
-    for ( int i = 0; (i < size()) && (item == NULL); i++ )
+    for ( auto it=m_Callsigns.begin(); it!=m_Callsigns.end(); it++ )
     {
-        if ( (data()[i]).GetCallsign().HasSameCallsign(Callsign) )
-        {
-            item = &(data()[i]);
-        }
+        if ( (*it).GetCallsign().HasSameCallsign(Callsign) )
+            return &(*it);
     }
-    
-    // done
-    return item;
-    
+
+    return NULL;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

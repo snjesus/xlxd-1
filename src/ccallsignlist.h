@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 30/12/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -32,7 +33,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
-class CCallsignList : public std::vector<CCallsignListItem>
+class CCallsignList
 {
 public:
     // constructor
@@ -56,9 +57,14 @@ public:
     bool IsCallsignListed(const CCallsign &, char) const;
     bool IsCallsignListed(const CCallsign &, char*) const;
 
+    // access
+    std::list<CCallsignListItem>::iterator InitCallsignIterator() { return m_Callsigns.begin(); }
+    CCallsignListItem *GetCallsignItem(std::list<CCallsignListItem>::iterator it) { return (it==m_Callsigns.end()) ? NULL : &(*it); }
+    bool empty() const { return m_Callsigns.empty(); }
+
     // find
     CCallsignListItem *FindListItem(const CCallsign &);
-    
+
 protected:
     //
     bool GetLastModTime(time_t *);
@@ -69,6 +75,7 @@ protected:
     std::mutex      m_Mutex;
     const char *    m_Filename;
     time_t          m_LastModTime;
+    std::list<CCallsignListItem> m_Callsigns;
 };
 
 
