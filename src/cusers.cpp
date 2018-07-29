@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 13/11/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -31,7 +32,6 @@
 
 CUsers::CUsers()
 {
-    m_Users.reserve(LASTHEARD_USERS_MAX_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -40,15 +40,15 @@ CUsers::CUsers()
 void CUsers::AddUser(const CUser &user)
 {
     // add
-    m_Users.push_back(user);
-   
+    m_Users.push_front(user);
+
     // sort list by descending time (fisrt is youngest)
-    std::sort(m_Users.begin(), m_Users.end());
-    
+    //std::sort(m_Users.begin(), m_Users.end());
+
     // if list size too big, remove oldest
-    if ( m_Users.size() >= (LASTHEARD_USERS_MAX_SIZE-1) )
+    while ( m_Users.size() > LASTHEARD_USERS_MAX_SIZE )
     {
-        m_Users.resize(m_Users.size()-1);
+        m_Users.pop_back();
     }
 
     // notify
@@ -66,27 +66,28 @@ void CUsers::Hearing(const CCallsign &my, const CCallsign &rpt1, const CCallsign
 void CUsers::Hearing(const CCallsign &my, const CCallsign &rpt1, const CCallsign &rpt2, const CCallsign &xlx)
 {
     CUser heard(my, rpt1, rpt2, xlx);
-    
+
     // first check if we have this user listed yet
-    bool found = false;
-    for ( int i = 0; (i < m_Users.size()) && !found; i++ )
+    auto it = m_Users.begin();
+    while ( it != m_Users.end() )
     {
-        found = (m_Users[i] == heard);
-        if ( found )
+        if (*it == heard)
         {
-            m_Users[i].HeardNow();
+            (*it).HeardNow();
+            break;
         }
+        it++;
     }
-    
+
     // if not found, add user to list
     // otherwise just re-sort the list
-    if ( !found )
+    if ( it == m_Users.end() )
     {
         AddUser(heard);
     }
     else
     {
-        std::sort(m_Users.begin(), m_Users.end());
+        m_Users.sort();
     }
 }
 

@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 31/01/2016.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -38,10 +39,10 @@ class CPeerCallsignList : public CCallsignList
 public:
     // constructor
     CPeerCallsignList() {};
-    
+
     // destructor
     virtual ~CPeerCallsignList() {};
-    
+
     // file io
     bool LoadFromFile(const char *);
 };
