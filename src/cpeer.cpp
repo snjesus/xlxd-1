@@ -90,9 +90,9 @@ bool CPeer::operator ==(const CPeer &peer) const
 		return false;
 	auto it = m_Clients.begin();
 	auto pit = peer.m_Clients.begin();
-    for ( ; same && (it!=m_Clients.end()); it++, pit++)
+    while ( same && (it!=m_Clients.end()) )
     {
-        same &= (*pit == *it);
+        same &= (*pit++ == *it++);
     }
     return same;
 }

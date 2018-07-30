@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-c -std=c++11 -W -Wall -MMD -MD
-LDFLAGS=-pthread 
+CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
+LDFLAGS=-pthread
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(SOUCESS:.cpp-.d)
