@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -54,7 +54,7 @@ bool CCallsign::IsValid(void) const
 {
     bool valid = true;
     int i;
-    
+
     // callsign
     // first 3 chars are letter or number but cannot be all number
     int iNum = 0;
@@ -72,7 +72,7 @@ bool CCallsign::IsValid(void) const
     {
         valid &= IsLetter(m_Callsign[i]) || IsNumber(m_Callsign[i]) || IsSpace(m_Callsign[i]);
     }
-    
+
     // done
     return valid;
 }
@@ -92,8 +92,8 @@ void CCallsign::SetCallsign(const uint8 *buffer, int len)
 {
     // set callsign
     ::memset(m_Callsign, ' ', sizeof(m_Callsign));
-    ::memcpy(m_Callsign, buffer, MIN(len, sizeof(m_Callsign)));
-    for ( int i = 0; i < sizeof(m_Callsign); i++ )
+    ::memcpy(m_Callsign, buffer, MIN((unsigned int)len, sizeof(m_Callsign)));
+    for ( unsigned int i = 0; i < sizeof(m_Callsign); i++ )
     {
         if ( m_Callsign[i] == 0 )
         {
@@ -108,9 +108,9 @@ void CCallsign::SetCallsign(const uint8 *buffer, int len)
 
 void CCallsign::PatchCallsign(int off, const uint8 *patch, int len)
 {
-    if ( off < sizeof(m_Callsign) )
+    if ( (unsigned int)off < sizeof(m_Callsign) )
     {
-        ::memcpy(m_Callsign, patch, MIN(len, sizeof(m_Callsign) - off));
+        ::memcpy(m_Callsign, patch, MIN((unsigned int)len, sizeof(m_Callsign) - off));
     }
 }
 
@@ -125,7 +125,7 @@ void CCallsign::GetCallsign(uint8 *buffer) const
 
 void CCallsign::GetCallsignString(char *sz) const
 {
-    int i;
+    unsigned int i;
     for ( i = 0; (i < sizeof(m_Callsign)) && (m_Callsign[i] != ' '); i++ )
     {
         sz[i] = m_Callsign[i];
@@ -145,8 +145,8 @@ bool CCallsign::HasSameCallsignWithWildcard(const CCallsign &callsign) const
 {
     bool same = true;
     bool done = false;
-    
-    for ( int i = 0; (i < sizeof(m_Callsign)) && same && !done; i++ )
+
+    for ( unsigned int i = 0; (i < sizeof(m_Callsign)) && same && !done; i++ )
     {
         if ( !(done = ((m_Callsign[i] == '*') || (callsign[i] == '*'))) )
         {
@@ -168,13 +168,13 @@ bool CCallsign::operator ==(const CCallsign &callsign) const
 CCallsign::operator const char *() const
 {
 	char *sz = (char *)(const char *)m_sz;
-	
+
 	// empty
-	::memset(sz, 0, sizeof(m_sz));	
+	::memset(sz, 0, sizeof(m_sz));
     // callsign
     sz[CALLSIGN_LEN] = 0;
     ::memcpy(sz, m_Callsign, sizeof(m_Callsign));
-      
+
     // done
     return m_sz;
 }

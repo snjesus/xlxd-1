@@ -1,8 +1,9 @@
 CC=g++
-CFLAGS=-c -std=c++11 -pthread
-LDFLAGS=-std=c++11 -pthread 
+CFLAGS=-c -std=c++11 -W -Wall -MMD -MD
+LDFLAGS=-pthread 
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
+DEPENDS=$(SOUCESS:.cpp-.d)
 EXECUTABLE=ambed
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -14,7 +15,9 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	$(RM) $(EXECUTABLE) *.o
+	$(RM) $(EXECUTABLE) *.o *.d
+
+-include $(DEPENDS)
 
 install:
 	mkdir -p /ambed
