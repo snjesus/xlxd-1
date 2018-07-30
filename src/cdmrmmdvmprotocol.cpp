@@ -47,7 +47,7 @@
 
 static uint8 g_DmrSyncBSVoice[]    = { 0x07,0x55,0xFD,0x7D,0xF7,0x5F,0x70 };
 static uint8 g_DmrSyncBSData[]     = { 0x0D,0xFF,0x57,0xD7,0x5D,0xF5,0xD0 };
-static uint8 g_DmrSyncMSVoice[]    = { 0x07,0xF7,0xD5,0xDD,0x57,0xDF,0xD0 };
+//static uint8 g_DmrSyncMSVoice[]    = { 0x07,0xF7,0xD5,0xDD,0x57,0xDF,0xD0 };
 static uint8 g_DmrSyncMSData[]     = { 0x0D,0x5D,0x7F,0x77,0xFD,0x75,0x70 };
 
 
@@ -607,7 +607,7 @@ bool CDmrmmdvmProtocol::IsValidOptionPacket(const CBuffer &Buffer, CCallsign *ca
     return valid;
 }
 
-bool CDmrmmdvmProtocol::IsValidRssiPacket(const CBuffer &Buffer, CCallsign *callsign, int *rssi)
+bool CDmrmmdvmProtocol::IsValidRssiPacket(const CBuffer &Buffer, CCallsign */*callsign*/, int */*rssi*/)
 {
     uint8 tag[] = { 'R','P','T','I','N','T','R' };
 
@@ -842,14 +842,14 @@ void CDmrmmdvmProtocol::EncodeKeepAlivePacket(CBuffer *Buffer, CClient *Client)
     Buffer->Append((uint8 *)&uiDmrId, 4);
 }
 
-void CDmrmmdvmProtocol::EncodeAckPacket(CBuffer *Buffer, const CCallsign &Callsign)
+void CDmrmmdvmProtocol::EncodeAckPacket(CBuffer *Buffer, const CCallsign &/*Callsign*/)
 {
     uint8 tag[] = { 'R','P','T','A','C','K' };
 
     Buffer->Set(tag, sizeof(tag));
 }
 
-void CDmrmmdvmProtocol::EncodeConnectAckPacket(CBuffer *Buffer, const CCallsign &Callsign, uint32 AuthSeed)
+void CDmrmmdvmProtocol::EncodeConnectAckPacket(CBuffer *Buffer, const CCallsign &/*Callsign*/, uint32 AuthSeed)
 {
     uint8 tag[] = { 'R','P','T','A','C','K' };
 
@@ -857,14 +857,14 @@ void CDmrmmdvmProtocol::EncodeConnectAckPacket(CBuffer *Buffer, const CCallsign 
     Buffer->Append(AuthSeed);
 }
 
-void CDmrmmdvmProtocol::EncodeNackPacket(CBuffer *Buffer, const CCallsign &Callsign)
+void CDmrmmdvmProtocol::EncodeNackPacket(CBuffer *Buffer, const CCallsign &/*Callsign*/)
 {
     uint8 tag[] = { 'M','S','T','N','A','K' };
 
     Buffer->Set(tag, sizeof(tag));
 }
 
-void CDmrmmdvmProtocol::EncodeClosePacket(CBuffer *Buffer, CClient *Client)
+void CDmrmmdvmProtocol::EncodeClosePacket(CBuffer *Buffer, CClient */*Client*/)
 {
     uint8 tag[] = { 'M','S','T','C','L' };
 

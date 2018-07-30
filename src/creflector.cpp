@@ -179,7 +179,7 @@ void CReflector::Stop(void)
 ////////////////////////////////////////////////////////////////////////////////////////
 // stream opening & closing
 
-bool CReflector::IsStreaming(char module)
+bool CReflector::IsStreaming(char /*module*/)
 {
     return false;
 }
@@ -569,7 +569,7 @@ CPacketStream *CReflector::GetStream(char module)
 bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 {
     bool open = false;
-    for ( int i = 0; (i < m_Streams.size()) && !open; i++  )
+    for ( unsigned int i = 0; (i < m_Streams.size()) && !open; i++  )
     {
         open =  ( (m_Streams[i].GetStreamId() == DvHeader->GetStreamId()) &&
                   (m_Streams[i].IsOpen()));
@@ -580,7 +580,7 @@ bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 char CReflector::GetStreamModule(CPacketStream *stream)
 {
     char module = ' ';
-    for ( int i = 0; (i < m_Streams.size()) && (module == ' '); i++ )
+    for ( unsigned int i = 0; (i < m_Streams.size()) && (module == ' '); i++ )
     {
         if ( &(m_Streams[i]) == stream )
         {

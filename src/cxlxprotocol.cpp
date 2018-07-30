@@ -506,7 +506,7 @@ bool CXlxProtocol::IsValidConnectPacket(const CBuffer &Buffer, CCallsign *callsi
         ::strcpy(modules, (const char *)&(Buffer.data()[12]));
         valid = callsign->IsValid();
         *version = CVersion(Buffer.data()[9], Buffer.data()[10], Buffer.data()[11]);
-        for ( int i = 0; i < ::strlen(modules); i++ )
+        for ( unsigned int i = 0; i < ::strlen(modules); i++ )
         {
             valid &= IsLetter(modules[i]);
         }
@@ -534,7 +534,7 @@ bool CXlxProtocol::IsValidAckPacket(const CBuffer &Buffer, CCallsign *callsign, 
         ::strcpy(modules, (const char *)&(Buffer.data()[12]));
         valid = callsign->IsValid();
         *version = CVersion(Buffer.data()[9], Buffer.data()[10], Buffer.data()[11]);
-        for ( int i = 0; i < ::strlen(modules); i++ )
+        for ( unsigned int i = 0; i < ::strlen(modules); i++ )
         {
             valid &= IsLetter(modules[i]);
         }

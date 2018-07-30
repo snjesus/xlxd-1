@@ -45,14 +45,14 @@ CCallsignListItem::CCallsignListItem(const CCallsign &callsign, const CIp &ip, c
         ::memset(m_Modules, 0, sizeof(m_Modules));
         if ( modules[0] == '*' )
         {
-            for ( char i = 0; i < NB_OF_MODULES; i++ )
+            for ( int i = 0; i < NB_OF_MODULES; i++ )
             {
                 m_Modules[i] = 'A' + i;
             }
         }
         else
         {
-            int n = MIN((int)::strlen(modules), sizeof(m_Modules)-1);
+            int n = MIN((int)::strlen(modules), (int)sizeof(m_Modules)-1);
             int j = 0;
             for ( int i = 0; i < n; i++ )
             {
@@ -75,14 +75,14 @@ CCallsignListItem::CCallsignListItem(const CCallsign &callsign, const char *url,
         ::memset(m_Modules, 0, sizeof(m_Modules));
         if ( modules[0] == '*' )
         {
-            for ( char i = 0; i < NB_OF_MODULES; i++ )
+            for ( int i = 0; i < NB_OF_MODULES; i++ )
             {
                 m_Modules[i] = 'A' + i;
             }
         }
         else
         {
-            int n = MIN((int)::strlen(modules), sizeof(m_Modules)-1);
+            int n = MIN((int)::strlen(modules), (int)sizeof(m_Modules)-1);
             int j = 0;
             for ( int i = 0; i < n; i++ )
             {
@@ -125,14 +125,14 @@ bool CCallsignListItem::HasModuleListed(char module) const
 bool CCallsignListItem::CheckListedModules(char *Modules) const
 {
     bool listed = false;
-    
+
     if ( Modules != NULL )
     {
         // build a list of common modules
         char list[NB_MODULES_MAX+1];
         list[0] = 0;
         //
-        for ( int i = 0; i < ::strlen(Modules); i++ )
+        for ( unsigned int i = 0; i < ::strlen(Modules); i++ )
         {
             if ( HasModuleListed(Modules[i]) )
             {
