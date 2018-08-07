@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cpacketqueue_h
@@ -35,27 +35,35 @@
 
 class CClient;
 
-class CPacketQueue : public std::queue<CPacket *>
+class CPacketQueue
 {
 public:
     // constructor
-    CPacketQueue() {};
-    
+    CPacketQueue() {}
+
     // destructor
-    ~CPacketQueue() {};
-    
+    virtual ~CPacketQueue() { while (! q.empty()) { delete front(); pop(); } }
+
     // lock
     void Lock()                 { m_Mutex.lock(); }
     void Unlock()               { m_Mutex.unlock(); }
-    
+
+    // methods
+    bool empty() const				{ return q.empty(); }
+    CPacket *front()				{ return q.front(); }
+    const CPacket *front() const	{ return q.front(); }
+    void pop()						{ q.pop(); }
+    void push(CPacket *packet)		{ q.push(packet); }
+
 protected:
     // status
     bool        m_bOpen;
     uint16      m_uiStreamId;
     std::mutex  m_Mutex;
-    
+
     // owner
     CClient     *m_Client;
+    std::queue<CPacket *> q;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
