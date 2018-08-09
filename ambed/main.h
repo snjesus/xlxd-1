@@ -26,6 +26,7 @@
 #define main_h
 
 #include <vector>
+#include <list>
 #include <array>
 #include <map>
 #include <queue>
@@ -105,6 +106,6 @@ extern CAmbeServer  g_AmbeServer;
 class CVocodecs;
 extern CVocodecs    g_Vocodecs;
 
- 
+
 ////////////////////////////////////////////////////////////////////////////////////////
 #endif /* main_h */

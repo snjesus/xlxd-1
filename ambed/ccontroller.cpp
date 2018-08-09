@@ -50,11 +50,11 @@ CController::~CController()
     // close all streams
     m_Mutex.lock();
     {
-        for ( unsigned int i = 0; i < m_Streams.size(); i++ )
-        {
-            delete m_Streams[i];
-        }
-        m_Streams.clear();
+        while (! m_Streams.empty()) {
+			auto it = m_Streams.begin();
+			delete *it;
+			m_Streams.erase(it);
+		}
 
     }
 
@@ -178,13 +178,13 @@ void CController::Task(void)
         // any inactive streams?
         Lock();
         {
-            for ( unsigned int i = 0; (i < m_Streams.size()) && !timeout; i++ )
+            for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++)
             {
-                if ( !(m_Streams[i]->IsActive()) )
+                if ( ! (*it)->IsActive() )
                 {
                     timeout = true;
-                    stream = m_Streams[i];
-                    std::cout << "Stream " << (int)m_Streams[i]->GetId() << " activity timeout " << std::endl;
+                    stream = *it;
+                    std::cout << "Stream " << (int)((*it)->GetId()) << " activity timeout " << std::endl;
                 }
             }
         }
@@ -233,19 +233,18 @@ void CController::CloseStream(CStream *stream)
     Lock();
     {
         // look for the stream
-        bool found = false;
-        for ( unsigned int i = 0; (i < m_Streams.size()) && !found; i++ )
+        for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++)
         {
             // compare object pointers
-            if ( (m_Streams[i]) ==  stream )
+            if ( *it == stream )
             {
                 // close it
-                m_Streams[i]->Close();
+                (*it)->Close();
                 // remove it
                 //std::cout << "Stream " << m_Streams[i]->GetId() << " removed" << std::endl;
-                delete m_Streams[i];
-                m_Streams.erase(m_Streams.begin()+i);
-                found = true;
+                delete *it;
+                m_Streams.erase(it);
+                break;
             }
         }
     }
@@ -257,19 +256,18 @@ void CController::CloseStream(uint16 StreamId)
     Lock();
     {
         // look for the stream
-        bool found = false;
-        for ( unsigned int i = 0; (i < m_Streams.size()) && !found; i++ )
+        for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++)
         {
             // compare object pointers
-            if ( (m_Streams[i]->GetId()) ==  StreamId )
+            if ( (*it)->GetId() == StreamId )
             {
                 // close it
-                m_Streams[i]->Close();
+                (*it)->Close();
                 // remove it
                 //std::cout << "Stream " << m_Streams[i]->GetId() << " removed" << std::endl;
-                delete m_Streams[i];
-                m_Streams.erase(m_Streams.begin()+i);
-                found = true;
+                delete *it;
+                m_Streams.erase(it);
+                break;
             }
         }
     }
