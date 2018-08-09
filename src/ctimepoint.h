@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 05/11/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 by Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -19,7 +20,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef ctimepoint_h
@@ -29,22 +30,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
-class CTimePoint : public std::chrono::steady_clock::time_point
+class CTimePoint
 {
 public:
     // constructor
     CTimePoint();
-    
+
     // destructor
     virtual ~CTimePoint() {}
-    
+
     // operation
-    void   Now(void)                        { m_TimePoint = std::chrono::steady_clock::now(); }
+    void   Now(void) { m_TimePoint = std::chrono::steady_clock::now(); }
     double DurationSinceNow(void) const;
-    
+
     // task
     static void TaskSleepFor(uint);
-    
+
 protected:
     // data
     std::chrono::steady_clock::time_point m_TimePoint;
