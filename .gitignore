@@ -26,11 +26,9 @@
 *.a
 *.lib
 
-# removed source
-removed/*
-
 # Executables
 *.exe
 *.out
 *.app
 xlxd
+ambed
