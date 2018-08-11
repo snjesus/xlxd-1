@@ -273,7 +273,7 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 				// send close packet
 				EncodeClosestreamPacket(&Buffer, (*it)->GetStreamId());
 				m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
-
+std::cout << "DEBUG CTranscoder::ReleaseStream() with streamid " << stream->GetStreamId() << std::endl;
 				// display stats
 				if ( (*it)->GetPingMin() >= 0.0 )
 				{
