@@ -4,7 +4,7 @@ After=systemd-user-session.service
 
 [Service]
 Type=forking
-ExecStart=/xlxd/xlxd XLX308 104.131.81.32 127.0.0.1
+ExecStart=/xlxd/xlxd XLX587 10.1.10.61 127.0.0.1
 Restart=always
 
 [Install]
