@@ -132,7 +132,7 @@ void CController::Task(void)
     // anything coming in from codec client ?
     if ( m_Socket.Receive(&Buffer, &Ip, 20) != -1 )
     {
-std::cout << "TAE Buffer " << Buffer[5] << Buffer[6] << std::endl;
+if (::memcmp(Buffer.data(), "AMBEDPI", 7)) std::cout << "TAE Buffer " << Buffer[5] << Buffer[6] << std::endl;
         // crack packet
         if ( IsValidOpenstreamPacket(Buffer, &Callsign, &CodecIn, &CodecOut) )
         {
