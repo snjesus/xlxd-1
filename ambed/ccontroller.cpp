@@ -132,6 +132,7 @@ void CController::Task(void)
     // anything coming in from codec client ?
     if ( m_Socket.Receive(&Buffer, &Ip, 20) != -1 )
     {
+std::cout << "TAE Buffer " << Buffer[4] << Buffer[5] << std::endl;
         // crack packet
         if ( IsValidOpenstreamPacket(Buffer, &Callsign, &CodecIn, &CodecOut) )
         {
@@ -167,37 +168,20 @@ void CController::Task(void)
         }
     }
 
-
     // HandleTimout/keepalive
-    bool timeout;
-    do
-    {
-        // init loop stuffs
-        timeout = false;
-        CStream *stream = NULL;
-
-        // any inactive streams?
-        Lock();
-        {
-            for (auto it=m_Streams.begin(); it!=m_Streams.end(); it++)
-            {
-                if ( ! (*it)->IsActive() )
-                {
-                    timeout = true;
-                    stream = *it;
-                    std::cout << "Stream " << (int)((*it)->GetId()) << " activity timeout " << std::endl;
-                }
-            }
+    Lock();
+    auto it = m_Streams.begin();
+    while (it != m_Streams.end()) {
+		if ((*it)->IsActive()) {
+			it++;
+		} else {
+            std::cout << "Stream " << (int)((*it)->GetId()) << " activity timeout " << std::endl;
+			(*it)->Close();
+			delete *it;
+			it = m_Streams.erase(it);
         }
-        Unlock();
-
-        // if any streams timeout, close it
-        // this cannot be done in above loop as it suppress it from array
-        if ( timeout )
-        {
-            CloseStream(stream);
-        }
-    } while (timeout);
+	}
+    Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
