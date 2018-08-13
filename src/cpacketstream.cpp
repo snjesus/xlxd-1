@@ -66,10 +66,11 @@ bool CPacketStream::Open(const CDvHeaderPacket &DvHeader, CClient *client)
 void CPacketStream::Close(void)
 {
     // update status
-std::cout << "TAE Closing this CPacketStream it = " << m_uiStreamId << std::endl;
+std::cout << "TAE Closing this CPacketStream streamid = " << m_uiStreamId << std::endl;
     m_bOpen = false;
     m_uiStreamId = 0;
     m_OwnerClient = NULL;
+std::cout << "TAE calling g_Transcoder.ReleaseStream(), m_CodecStream=" << (long long)m_CodecStream << std::endl;
     g_Transcoder.ReleaseStream(m_CodecStream);
     m_CodecStream = NULL;
 }
