@@ -262,7 +262,7 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
     if ( stream != NULL )
 	    return;
 
-std::cout << "TAE CTranscoder::ReleaseStream() with streamid " << stream->GetStreamId() << std::endl;
+std::cout << "TAE CTranscoder::ReleaseStream()" << std::endl;
 	// look for the stream
 	Lock();
 	{
@@ -302,7 +302,7 @@ std::cout << "comparing stream=" << (long long)stream << " with " << (long long)
 				return;
 			}
 		}
-std::cout << "TAE Couldn't find stream with id " << stream->GetStreamId() << std::endl;
+std::cout << "TAE Couldn't find stream" << std::endl;
 	}
 	Unlock();
 }
