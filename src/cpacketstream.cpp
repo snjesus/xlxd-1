@@ -66,6 +66,7 @@ bool CPacketStream::Open(const CDvHeaderPacket &DvHeader, CClient *client)
 void CPacketStream::Close(void)
 {
     // update status
+std::cout << "TAE Closing this CPacketStream it = " << m_uiStreamId << std::cout;
     m_bOpen = false;
     m_uiStreamId = 0;
     m_OwnerClient = NULL;
