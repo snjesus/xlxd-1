@@ -262,18 +262,19 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
     if ( stream != NULL )
 	    return;
 
+std::cout << "TAE CTranscoder::ReleaseStream() with streamid " << stream->GetStreamId() << std::endl;
 	// look for the stream
 	Lock();
 	{
 		for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ )
 		{
+std::cout << "TAE Looking at stream with id " << (*it)->GetStreamId() << std::endl;
 			// compare object pointers
 			if ( *it == stream )
 			{
 				// send close packet
 				EncodeClosestreamPacket(&Buffer, (*it)->GetStreamId());
 				m_Socket.Send(Buffer, m_Ip, TRANSCODER_PORT);
-std::cout << "DEBUG CTranscoder::ReleaseStream() with streamid " << stream->GetStreamId() << std::endl;
 				// display stats
 				if ( (*it)->GetPingMin() >= 0.0 )
 				{
@@ -301,6 +302,7 @@ std::cout << "DEBUG CTranscoder::ReleaseStream() with streamid " << stream->GetS
 				return;
 			}
 		}
+std::cout << "TAE Couldn't find stream with id " << stream->GetStreamId() << std::endl;
 	}
 	Unlock();
 }
