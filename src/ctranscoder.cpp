@@ -259,16 +259,14 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 {
     CBuffer Buffer;
 
-    if ( stream != NULL )
+    if ( stream == NULL )
 	    return;
 
-std::cout << "TAE CTranscoder::ReleaseStream()" << std::endl;
 	// look for the stream
 	Lock();
 	{
 		for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ )
 		{
-std::cout << "comparing stream=" << (long long)stream << " with " << (long long)(*it) << std::endl;
 			// compare object pointers
 			if ( *it == stream )
 			{
@@ -302,7 +300,6 @@ std::cout << "comparing stream=" << (long long)stream << " with " << (long long)
 				return;
 			}
 		}
-std::cout << "TAE Couldn't find stream" << std::endl;
 	}
 	Unlock();
 }
