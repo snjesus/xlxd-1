@@ -268,7 +268,7 @@ std::cout << "TAE CTranscoder::ReleaseStream() with streamid " << stream->GetStr
 	{
 		for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ )
 		{
-std::cout << "TAE Looking at stream with id " << (*it)->GetStreamId() << std::endl;
+std::cout << "comparing stream=" << (long long)stream << " with " << (long long)(*it) << std::endl;
 			// compare object pointers
 			if ( *it == stream )
 			{
