@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -42,7 +42,7 @@ CReflector  g_Reflector;
 int main(int argc, const char * argv[])
 {
 #ifdef RUN_AS_DAEMON
-    
+
     // redirect cout, cerr and clog to syslog
     syslog::redirect cout_redir(std::cout);
     syslog::redirect cerr_redir(std::cerr);
@@ -61,29 +61,29 @@ int main(int argc, const char * argv[])
     {
         exit(EXIT_SUCCESS);
     }
-    
+
     // Change File Mask
     ::umask(0);
-    
+
     //Create a new Signature Id for our child
     sid = ::setsid();
     if (sid < 0)
     {
         exit(EXIT_FAILURE);
     }
-    
+
     // Change Directory
     // If we cant find the directory we exit with failure.
     if ( (::chdir("/")) < 0)
     {
         exit(EXIT_FAILURE);
     }
-    
+
     // Close Standard File Descriptors
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-    
+
 #endif
 
     // check arguments
@@ -95,13 +95,13 @@ int main(int argc, const char * argv[])
     }
 
     // splash
-    std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+    std::cout << "Starting xlxd Q" << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
 
     // initialize reflector
     g_Reflector.SetCallsign(argv[1]);
     g_Reflector.SetListenIp(CIp(argv[2]));
     g_Reflector.SetTranscoderIp(CIp(CIp(argv[3])));
-  
+
     // and let it run
     if ( !g_Reflector.Start() )
     {
@@ -110,7 +110,7 @@ int main(int argc, const char * argv[])
     }
     std::cout << "Reflector " << g_Reflector.GetCallsign()
               << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
-    
+
 #ifdef RUN_AS_DAEMON
 	// run forever
     while ( true )
@@ -129,11 +129,11 @@ int main(int argc, const char * argv[])
 #endif
     }
 #endif
-    
+
     // and wait for end
     g_Reflector.Stop();
     std::cout << "Reflector stopped" << std::endl;
-    
+
     // done
     exit(EXIT_SUCCESS);
 }
