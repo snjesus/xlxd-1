@@ -1,5 +1,3 @@
-CPeer
-	CBmPeer
 CBPTC19696
 CBuffer
 CCallsign
@@ -37,6 +35,7 @@ CPacketQueue
 	CCodecStream
 	CPacketStream
 CPeer
+	CBmPeer
 	CXlxPeer
 CPeers
 CProtocol

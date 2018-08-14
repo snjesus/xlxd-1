@@ -123,16 +123,13 @@ int main(int argc, const char * argv[])
     for (;;)
     {
         std::cin.get();
-#ifdef DEBUG_DUMPFILE
-        g_Reflector.m_DebugFile.close();
-        g_Reflector.m_DebugFile.open("/Users/jeanluc/Desktop/dmrdebug.txt");
-#endif
     }
 #endif
 
     // and wait for end
+    std::cout << "Stopping Reflector..." << std::endl;
     g_Reflector.Stop();
-    std::cout << "Reflector stopped" << std::endl;
+    std::cout << "Done" << std::endl;
 
     // done
     exit(EXIT_SUCCESS);

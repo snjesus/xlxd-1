@@ -55,15 +55,13 @@
 
 // global ------------------------------------------------------
 
-#define RUN_AS_DAEMON
+//#define RUN_AS_DAEMON
 #define JSON_MONITOR
-//#define NO_ERROR_ON_XML_OPEN_FAIL
-//#define DEBUG_DUMPFILE
 
 // reflector ---------------------------------------------------
 
-//#define NB_OF_MODULES                 10
-#define NB_OF_MODULES                   NB_MODULES_MAX
+#define NB_OF_MODULES                 10
+//#define NB_OF_MODULES                   NB_MODULES_MAX
 
 // protocols ---------------------------------------------------
 
