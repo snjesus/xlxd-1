@@ -55,7 +55,7 @@
 
 // global ------------------------------------------------------
 
-//#define RUN_AS_DAEMON
+#define RUN_AS_DAEMON
 #define JSON_MONITOR
 
 // reflector ---------------------------------------------------
