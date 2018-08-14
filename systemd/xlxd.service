@@ -3,7 +3,7 @@ Description=xlxd
 After=systemd-user-session.service
 
 [Service]
-Type=simple
+Type=forking
 ExecStart=/xlxd/xlxd XLX587 10.1.10.61 127.0.0.1
 Restart=always
 

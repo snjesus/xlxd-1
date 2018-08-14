@@ -19,28 +19,28 @@ $Reflector->SetXMLFile($Service['XMLFile']);
 
 $Reflector->LoadXML();
 
-if ($CallingHome['Active']) { 
-   
+if ($CallingHome['Active']) {
+
    $CallHomeNow = false;
    $LastSync = 0;
    $Hash = "";
-   
+
    if (!file_exists($CallingHome['HashFile'])) {
-      $Ressource = fopen($CallingHome['HashFile'], "w+"); 
-      if ($Ressource) { 
+      $Ressource = fopen($CallingHome['HashFile'], "w+");
+      if ($Ressource) {
          $Hash = CreateCode(16);
-		   @fwrite($Ressource, "<?php\n"); 
-		   @fwrite($Ressource, "\n".'$Hash = "'.$Hash.'";'); 
-		   @fwrite($Ressource, "\n\n".'?>'); 
-		   @fflush($Ressource); 
-		   @fclose($Ressource); 
-		   @chmod($HashFile, 0777); 
+		   @fwrite($Ressource, "<?php\n");
+		   @fwrite($Ressource, "\n".'$Hash = "'.$Hash.'";');
+		   @fwrite($Ressource, "\n\n".'?>');
+		   @fflush($Ressource);
+		   @fclose($Ressource);
+		   @chmod($HashFile, 0777);
 		}
    }
    else {
       require_once($CallingHome['HashFile']);
    }
-   
+
    if (@file_exists($CallingHome['LastCallHomefile'])) {
       if (@is_readable($CallingHome['LastCallHomefile'])) {
          $tmp      = @file($CallingHome['LastCallHomefile']);
@@ -50,18 +50,18 @@ if ($CallingHome['Active']) {
          unset($tmp);
       }
    }
-         
-   if ($LastSync < (time() - $CallingHome['PushDelay'])) { 
+
+   if ($LastSync < (time() - $CallingHome['PushDelay'])) {
       $CallHomeNow = true;
-      $Ressource = @fopen($CallingHome['LastCallHomefile'], "w+"); 
-	   if ($Ressource) { 
-	      @fwrite($Ressource, time()); 
-		   @fflush($Ressource); 
-		   @fclose($Ressource); 
-		   @chmod($HashFile, 0777); 
+      $Ressource = @fopen($CallingHome['LastCallHomefile'], "w+");
+	   if ($Ressource) {
+	      @fwrite($Ressource, time());
+		   @fflush($Ressource);
+		   @fclose($Ressource);
+		   @chmod($HashFile, 0777);
 		}
-   }  
-   
+   }
+
    if ($CallHomeNow || isset($_GET['callhome'])) {
       $Reflector->SetCallingHome($CallingHome, $Hash);
       $Reflector->ReadInterlinkFile();
@@ -69,7 +69,7 @@ if ($CallingHome['Active']) {
       $Reflector->PrepareReflectorXML();
       $Reflector->CallHome();
    }
-   
+
 }
 else {
    $Hash = "";
@@ -86,7 +86,7 @@ else {
    <meta name="author"      content="<?php echo $PageOptions['MetaAuthor']; ?>" />
    <meta name="revisit"     content="<?php echo $PageOptions['MetaRevisit']; ?>" />
    <meta name="robots"      content="<?php echo $PageOptions['MetaAuthor']; ?>" />
-   
+
    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
    <title><?php echo $Reflector->GetReflectorName(); ?> Reflector Dashboard</title>
    <link rel="stylesheet" type="text/css" href="./css/layout.css">
@@ -96,7 +96,7 @@ else {
       echo '
    <script>
       var PageRefresh;
-      
+
       function ReloadPage() {';
      if (($_SERVER['REQUEST_METHOD'] === 'POST') || isset($_GET['do'])) {
        echo '
@@ -123,14 +123,14 @@ else {
       }
    </script>';
    }
-   
+
    if (!isset($_GET['show'])) $_GET['show'] = "";
 ?>
 </head>
 <body>
    <?php if (file_exists("./tracking.php")) { include_once("tracking.php"); }?>
    <div id="top"><img src="./img/header.jpg" alt="XLX Multiprotocol Gateway Reflector" style="margin-top:15px;" />
-      <br />&nbsp;&nbsp;&nbsp;<?php echo $Reflector->GetReflectorName(); ?>&nbsp;v<?php echo $Reflector->GetVersion(); ?>&nbsp;-&nbsp;Dashboard v<?php echo $PageOptions['DashboardVersion']; ?>&nbsp;&nbsp;/&nbsp;&nbsp;Service uptime: <span id="suptime"><?php echo FormatSeconds($Reflector->GetServiceUptime()); ?></span></div>
+      <br />&nbsp;&nbsp;&nbsp;<?php echo $Reflector->GetReflectorName(); ?>&nbsp;V# Q<?php echo $Reflector->GetVersion(); ?>&nbsp;-&nbsp;Dashboard v<?php echo $PageOptions['DashboardVersion']; ?>&nbsp;&nbsp;/&nbsp;&nbsp;Service uptime: <span id="suptime"><?php echo FormatSeconds($Reflector->GetServiceUptime()); ?></span></div>
    <div id="menubar">
       <div id="menu">
          <table border="0">
@@ -141,14 +141,14 @@ else {
                <td><a href="./index.php?show=reflectors" class="menulink<?php if ($_GET['show'] == 'reflectors') { echo 'active'; } ?>">Reflectorlist</a></td>
                <td><a href="./index.php?show=liveircddb" class="menulink<?php if ($_GET['show'] == 'liveircddb') { echo 'active'; } ?>">D-Star live</a></td>
                <?php
-               
+
                if ($PageOptions['Traffic']['Show']) {
                    echo '
                <td><a href="./index.php?show=traffic" class="menulink';
                    if ($_GET['show'] == 'traffic') { echo 'active'; }
                    echo '">Traffic statistics</a></td>';
                }
-               
+
                ?>
             </tr>
           </table>

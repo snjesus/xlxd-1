@@ -55,7 +55,7 @@
 
 // global ------------------------------------------------------
 
-//#define RUN_AS_DAEMON
+#define RUN_AS_DAEMON
 #define JSON_MONITOR
 //#define NO_ERROR_ON_XML_OPEN_FAIL
 //#define DEBUG_DUMPFILE
