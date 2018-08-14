@@ -25,8 +25,9 @@
 #include "main.h"
 #include "creflector.h"
 
-#include "syslog.h"
 #include <sys/stat.h>
+#include <signal.h>
+#include <atomic>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -37,65 +38,47 @@ CReflector  g_Reflector;
 ////////////////////////////////////////////////////////////////////////////////////////
 // function declaration
 
-#include "cusers.h"
+static std::atomic<bool> keep_running;
+
+// signal catching function
+static void sigCatch(int signum)
+{
+	/* do NOT do any serious work here */
+	if ((signum == SIGTERM) || (signum == SIGINT))
+		keep_running = false;
+	return;
+}
 
 int main(int argc, const char * argv[])
 {
-#ifdef RUN_AS_DAEMON
+	keep_running = true;
 
-    // redirect cout, cerr and clog to syslog
-    syslog::redirect cout_redir(std::cout);
-    syslog::redirect cerr_redir(std::cerr);
-    syslog::redirect clog_redir(std::clog);
+	struct sigaction act;
 
-    //Fork the Parent Process
-    pid_t pid, sid;
-    pid = ::fork();
-    if ( pid < 0 )
-    {
-        exit(EXIT_FAILURE);
-    }
+	act.sa_handler = sigCatch;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_RESTART;
 
-    // We got a good pid, Close the Parent Process
-    if (pid > 0)
-    {
-        exit(EXIT_SUCCESS);
-    }
+	if (sigaction(SIGTERM, &act, 0) != 0) {
+		std::cout << "sigaction-TERM failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-    // Change File Mask
-    ::umask(0);
-
-    //Create a new Signature Id for our child
-    sid = ::setsid();
-    if (sid < 0)
-    {
-        exit(EXIT_FAILURE);
-    }
-
-    // Change Directory
-    // If we cant find the directory we exit with failure.
-    if ( (::chdir("/")) < 0)
-    {
-        exit(EXIT_FAILURE);
-    }
-
-    // Close Standard File Descriptors
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
-
-#endif
+	if (sigaction(SIGINT, &act, 0) != 0) {
+		std::cout << "sigaction-INT failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
     // check arguments
     if ( argc != 4 )
     {
         std::cout << "Usage: xlxd callsign xlxdip ambedip" << std::endl;
         std::cout << "example: xlxd XLX999 192.168.178.212 127.0.0.1" << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     // splash
-    std::cout << "Starting xlxd Q" << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+    std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
 
     // initialize reflector
     g_Reflector.SetCallsign(argv[1]);
@@ -108,23 +91,13 @@ int main(int argc, const char * argv[])
         std::cout << "Error starting reflector" << std::endl;
         exit(EXIT_FAILURE);
     }
-    std::cout << "Reflector " << g_Reflector.GetCallsign()
-              << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
+    std::cout << "Reflector " << g_Reflector.GetCallsign() << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
 
-#ifdef RUN_AS_DAEMON
-	// run forever
-    while ( true )
+    while ( keep_running )
     {
-        // sleep 60 seconds
-        CTimePoint::TaskSleepFor(60000);
+        // sleep 10 seconds
+        CTimePoint::TaskSleepFor(10000);
     }
-#else
-    // wait any key
-    for (;;)
-    {
-        std::cin.get();
-    }
-#endif
 
     // and wait for end
     std::cout << "Stopping Reflector..." << std::endl;
