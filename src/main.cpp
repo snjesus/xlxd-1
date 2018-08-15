@@ -4,6 +4,7 @@
 //
 //  Created by Jean-Luc Deltombe (LX3JL) on 31/10/2015.
 //  Copyright © 2015 Jean-Luc Deltombe (LX3JL). All rights reserved.
+//  Copyright © 2018 by Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -27,7 +28,7 @@
 
 #include <sys/stat.h>
 #include <signal.h>
-#include <atomic>
+#include <unistd.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -38,21 +39,17 @@ CReflector  g_Reflector;
 ////////////////////////////////////////////////////////////////////////////////////////
 // function declaration
 
-static std::atomic<bool> keep_running;
-
 // signal catching function
 static void sigCatch(int signum)
 {
 	/* do NOT do any serious work here */
 	if ((signum == SIGTERM) || (signum == SIGINT))
-		keep_running = false;
+		std::cout << "Signal caught, hutting down reflector..." << std::endl;
 	return;
 }
 
 int main(int argc, const char * argv[])
 {
-	keep_running = true;
-
 	struct sigaction act;
 
 	act.sa_handler = sigCatch;
@@ -93,17 +90,9 @@ int main(int argc, const char * argv[])
     }
     std::cout << "Reflector " << g_Reflector.GetCallsign() << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
 
-    while ( keep_running )
-    {
-        // sleep 10 seconds
-        CTimePoint::TaskSleepFor(10000);
-    }
+    pause(); // wait on a signal
 
-    // and wait for end
-    std::cout << "Stopping Reflector..." << std::endl;
-    g_Reflector.Stop();
-    std::cout << "Done" << std::endl;
+    g_Reflector.Stop();	// clean-up!
 
-    // done
     exit(EXIT_SUCCESS);
 }
