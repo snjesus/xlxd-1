@@ -181,11 +181,11 @@ class CGateKeeper;
 extern CGateKeeper g_GateKeeper;
 
 #if (DMRIDDB_USE_RLX_SERVER == 1)
-    class CDmridDirHttp;
-    extern CDmridDirHttp   g_DmridDir;
+class CDmridDirHttp;
+extern CDmridDirHttp   g_DmridDir;
 #else
-    class CDmridDirFile;
-    extern CDmridDirFile   g_DmridDir;
+class CDmridDirFile;
+extern CDmridDirFile   g_DmridDir;
 #endif
 
 class CTranscoder;

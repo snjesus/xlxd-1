@@ -37,14 +37,14 @@
 class CPeerCallsignList : public CCallsignList
 {
 public:
-    // constructor
-    CPeerCallsignList() {};
+	// constructor
+	CPeerCallsignList() {};
 
-    // destructor
-    virtual ~CPeerCallsignList() {};
+	// destructor
+	virtual ~CPeerCallsignList() {};
 
-    // file io
-    bool LoadFromFile(const char *);
+	// file io
+	bool LoadFromFile(const char *);
 };
 
 

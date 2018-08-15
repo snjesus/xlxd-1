@@ -36,8 +36,10 @@
 
 struct CallsignCompare
 {
-    bool operator() (const CCallsign &cs1, const CCallsign &cs2) const
-    { return cs1.HasLowerCallsign(cs2);}
+	bool operator() (const CCallsign &cs1, const CCallsign &cs2) const
+	{
+		return cs1.HasLowerCallsign(cs2);
+	}
 };
 
 
@@ -46,48 +48,58 @@ struct CallsignCompare
 class CDmridDir
 {
 public:
-    // constructor
-    CDmridDir();
-    
-    // destructor
-    ~CDmridDir();
-    
-    // init & close
-    virtual bool Init(void);
-    virtual void Close(void);
-    
-    // locks
-    void Lock(void)                                 { m_Mutex.lock(); }
-    void Unlock(void)                               { m_Mutex.unlock(); }
-    
-    // refresh
-    virtual bool LoadContent(CBuffer *)             { return false; }
-    virtual bool RefreshContent(const CBuffer &)    { return false; }
-    
-    // find
-    const CCallsign *FindCallsign(uint32);
-    uint32 FindDmrid(const CCallsign &);
-    
-protected:
-    // thread
-    static void Thread(CDmridDir *);
+	// constructor
+	CDmridDir();
 
-    // reload helpers
-    bool Reload(void);
-    virtual bool NeedReload(void)                    { return false; }
-    bool IsValidDmrid(const char *);
-    
+	// destructor
+	~CDmridDir();
+
+	// init & close
+	virtual bool Init(void);
+	virtual void Close(void);
+
+	// locks
+	void Lock(void)                                 {
+		m_Mutex.lock();
+	}
+	void Unlock(void)                               {
+		m_Mutex.unlock();
+	}
+
+	// refresh
+	virtual bool LoadContent(CBuffer *)             {
+		return false;
+	}
+	virtual bool RefreshContent(const CBuffer &)    {
+		return false;
+	}
+
+	// find
+	const CCallsign *FindCallsign(uint32);
+	uint32 FindDmrid(const CCallsign &);
+
+protected:
+	// thread
+	static void Thread(CDmridDir *);
+
+	// reload helpers
+	bool Reload(void);
+	virtual bool NeedReload(void)                    {
+		return false;
+	}
+	bool IsValidDmrid(const char *);
+
 protected:
 	// data
-    std::map <uint32, CCallsign> m_CallsignMap;
-    std::map <CCallsign, uint32, CallsignCompare> m_DmridMap;
-    
-    // Lock()
-    std::mutex          m_Mutex;
-           
-    // thread
-    bool                m_bStopThread;
-    std::thread         *m_pThread;
+	std::map <uint32, CCallsign> m_CallsignMap;
+	std::map <CCallsign, uint32, CallsignCompare> m_DmridMap;
+
+	// Lock()
+	std::mutex          m_Mutex;
+
+	// thread
+	bool                m_bStopThread;
+	std::thread         *m_pThread;
 
 };
 

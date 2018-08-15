@@ -39,34 +39,42 @@
 class CPeers
 {
 public:
-    // constructors
-    CPeers();
+	// constructors
+	CPeers();
 
-    // destructors
-    virtual ~CPeers();
+	// destructors
+	virtual ~CPeers();
 
-    // locks
-    void Lock(void)                     { m_Mutex.lock(); }
-    void Unlock(void)                   { m_Mutex.unlock(); }
+	// locks
+	void Lock(void)                     {
+		m_Mutex.lock();
+	}
+	void Unlock(void)                   {
+		m_Mutex.unlock();
+	}
 
-    // manage peers
-    void    AddPeer(CPeer *);
-    void    RemovePeer(CPeer *);
-    CPeer   *GetPeer(std::list<CPeer *>::iterator it) { return (it==m_Peers.end()) ? NULL : *it; }
-    std::list<CPeer *>::iterator InitPeerIterator()   { return m_Peers.begin(); }
+	// manage peers
+	void    AddPeer(CPeer *);
+	void    RemovePeer(CPeer *);
+	CPeer   *GetPeer(std::list<CPeer *>::iterator it) {
+		return (it==m_Peers.end()) ? NULL : *it;
+	}
+	std::list<CPeer *>::iterator InitPeerIterator()   {
+		return m_Peers.begin();
+	}
 
-    // find peers
-    CPeer *FindPeer(const CIp &, int);
-    CPeer *FindPeer(const CCallsign &, const CIp &, int);
-    CPeer *FindPeer(const CCallsign &, int);
+	// find peers
+	CPeer *FindPeer(const CIp &, int);
+	CPeer *FindPeer(const CCallsign &, const CIp &, int);
+	CPeer *FindPeer(const CCallsign &, int);
 
-    // iterate on peers
-    CPeer *FindNextPeer(int, std::list<CPeer *>::iterator &);
+	// iterate on peers
+	CPeer *FindNextPeer(int, std::list<CPeer *>::iterator &);
 
 protected:
-    // data
-    std::mutex         m_Mutex;
-    std::list<CPeer *> m_Peers;
+	// data
+	std::mutex         m_Mutex;
+	std::list<CPeer *> m_Peers;
 };
 
 

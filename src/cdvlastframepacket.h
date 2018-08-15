@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cdvlastframepacket_h
@@ -38,22 +38,26 @@
 class CDvLastFramePacket : public CDvFramePacket
 {
 public:
-    // constructor
-    CDvLastFramePacket();
-    CDvLastFramePacket(const struct dstar_dvframe *, uint16, uint8);
-    CDvLastFramePacket(const uint8 *, const uint8 *, uint16, uint8, uint8);
-    CDvLastFramePacket(uint16, uint8, const uint8 *, const uint8 *, uint8, uint8, const uint8 *, const uint8 *);
-    CDvLastFramePacket(const CDvLastFramePacket &);
-    
-    // destructor
-    virtual ~CDvLastFramePacket() {};
-    
-    // virtual duplication
-    CPacket *Duplicate(void) const;
-    
-    // identity
-    bool IsLastPacket(void) const           { return true; }
-    bool HaveTranscodableAmbe(void) const   { return false; }
+	// constructor
+	CDvLastFramePacket();
+	CDvLastFramePacket(const struct dstar_dvframe *, uint16, uint8);
+	CDvLastFramePacket(const uint8 *, const uint8 *, uint16, uint8, uint8);
+	CDvLastFramePacket(uint16, uint8, const uint8 *, const uint8 *, uint8, uint8, const uint8 *, const uint8 *);
+	CDvLastFramePacket(const CDvLastFramePacket &);
+
+	// destructor
+	virtual ~CDvLastFramePacket() {};
+
+	// virtual duplication
+	CPacket *Duplicate(void) const;
+
+	// identity
+	bool IsLastPacket(void) const           {
+		return true;
+	}
+	bool HaveTranscodableAmbe(void) const   {
+		return false;
+	}
 };
 
 

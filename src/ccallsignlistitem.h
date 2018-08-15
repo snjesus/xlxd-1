@@ -40,35 +40,43 @@
 class CCallsignListItem
 {
 public:
-    // constructor
-    CCallsignListItem();
-    CCallsignListItem(const CCallsign &, const CIp &, const char *);
-    CCallsignListItem(const CCallsign &, const char *, const char *);
-    CCallsignListItem(const CCallsignListItem &);
-    
-    // destructor
-    virtual ~CCallsignListItem() {}
+	// constructor
+	CCallsignListItem();
+	CCallsignListItem(const CCallsign &, const CIp &, const char *);
+	CCallsignListItem(const CCallsign &, const char *, const char *);
+	CCallsignListItem(const CCallsignListItem &);
 
-    // compare
-    bool HasSameCallsign(const CCallsign &) const;
-    bool HasSameCallsignWithWildcard(const CCallsign &) const;
-    bool HasModuleListed(char) const;
-    bool CheckListedModules(char*) const;
-    
-    // get
-    const CCallsign &GetCallsign(void) const        { return m_Callsign; }
-    const CIp &GetIp(void) const                    { return m_Ip; }
-    const char *GetModules(void)                    { return m_Modules; }
-    
-    // update
-    void ResolveIp(void)                            { m_Ip = CIp(m_szUrl); }
-    
+	// destructor
+	virtual ~CCallsignListItem() {}
+
+	// compare
+	bool HasSameCallsign(const CCallsign &) const;
+	bool HasSameCallsignWithWildcard(const CCallsign &) const;
+	bool HasModuleListed(char) const;
+	bool CheckListedModules(char*) const;
+
+	// get
+	const CCallsign &GetCallsign(void) const        {
+		return m_Callsign;
+	}
+	const CIp &GetIp(void) const                    {
+		return m_Ip;
+	}
+	const char *GetModules(void)                    {
+		return m_Modules;
+	}
+
+	// update
+	void ResolveIp(void)                            {
+		m_Ip = CIp(m_szUrl);
+	}
+
 protected:
-    // data
-    CCallsign   m_Callsign;
-    char        m_szUrl[URL_MAXLEN+1];
-    CIp         m_Ip;
-    char        m_Modules[NB_MODULES_MAX+1];
+	// data
+	CCallsign   m_Callsign;
+	char        m_szUrl[URL_MAXLEN+1];
+	CIp         m_Ip;
+	char        m_Modules[NB_MODULES_MAX+1];
 };
 
 

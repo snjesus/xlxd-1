@@ -38,32 +38,51 @@ class CClient;
 class CPacketQueue
 {
 public:
-    // constructor
-    CPacketQueue() {}
+	// constructor
+	CPacketQueue() {}
 
-    // destructor
-    virtual ~CPacketQueue() { while (! q.empty()) { delete front(); pop(); } }
+	// destructor
+	virtual ~CPacketQueue() {
+		while (! q.empty()) {
+			delete front();
+			pop();
+		}
+	}
 
-    // lock
-    void Lock()                 { m_Mutex.lock(); }
-    void Unlock()               { m_Mutex.unlock(); }
+	// lock
+	void Lock()                 {
+		m_Mutex.lock();
+	}
+	void Unlock()               {
+		m_Mutex.unlock();
+	}
 
-    // methods
-    bool empty() const				{ return q.empty(); }
-    CPacket *front()				{ return q.front(); }
-    const CPacket *front() const	{ return q.front(); }
-    void pop()						{ q.pop(); }
-    void push(CPacket *packet)		{ q.push(packet); }
+	// methods
+	bool empty() const				{
+		return q.empty();
+	}
+	CPacket *front()				{
+		return q.front();
+	}
+	const CPacket *front() const	{
+		return q.front();
+	}
+	void pop()						{
+		q.pop();
+	}
+	void push(CPacket *packet)		{
+		q.push(packet);
+	}
 
 protected:
-    // status
-    bool        m_bOpen;
-    uint16      m_uiStreamId;
-    std::mutex  m_Mutex;
+	// status
+	bool        m_bOpen;
+	uint16      m_uiStreamId;
+	std::mutex  m_Mutex;
 
-    // owner
-    CClient     *m_Client;
-    std::queue<CPacket *> q;
+	// owner
+	CClient     *m_Client;
+	std::queue<CPacket *> q;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

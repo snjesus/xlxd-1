@@ -39,23 +39,27 @@
 class CBmPeer : public CPeer
 {
 public:
-    // constructors
-    CBmPeer();
-    CBmPeer(const CCallsign &, const CIp &, char *, const CVersion &);
-    CBmPeer(const CBmPeer &);
-    
-    // destructor
-    ~CBmPeer();
-    
-    // status
-    bool IsAlive(void) const;
-    
-    // identity
-    int GetProtocol(void) const                 { return PROTOCOL_XLX; }
-    const char *GetProtocolName(void) const     { return "XLX"; }
-    
-    // revision helper
-    static int GetProtocolRevision(const CVersion &);
+	// constructors
+	CBmPeer();
+	CBmPeer(const CCallsign &, const CIp &, char *, const CVersion &);
+	CBmPeer(const CBmPeer &);
+
+	// destructor
+	~CBmPeer();
+
+	// status
+	bool IsAlive(void) const;
+
+	// identity
+	int GetProtocol(void) const                 {
+		return PROTOCOL_XLX;
+	}
+	const char *GetProtocolName(void) const     {
+		return "XLX";
+	}
+
+	// revision helper
+	static int GetProtocolRevision(const CVersion &);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

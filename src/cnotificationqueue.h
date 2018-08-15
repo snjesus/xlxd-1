@@ -38,28 +38,46 @@
 class CNotificationQueue
 {
 public:
-    // constructor
-    CNotificationQueue() {}
+	// constructor
+	CNotificationQueue() {}
 
-    // destructor
-    virtual ~CNotificationQueue() { while (! q.empty()) { q.pop(); } }
+	// destructor
+	virtual ~CNotificationQueue() {
+		while (! q.empty()) {
+			q.pop();
+		}
+	}
 
-    // lock
-    void Lock()                 { m_Mutex.lock(); }
-    void Unlock()               { m_Mutex.unlock(); }
+	// lock
+	void Lock()                 {
+		m_Mutex.lock();
+	}
+	void Unlock()               {
+		m_Mutex.unlock();
+	}
 
-    // methods
-    bool empty() const					{ return q.empty(); }
-    CNotification front()				{ return q.front(); }
-    const CNotification front() const	{ return q.front(); }
-    void pop()							{ q.pop(); }
-    void push(CNotification note)		{ q.push(note); }
+	// methods
+	bool empty() const					{
+		return q.empty();
+	}
+	CNotification front()				{
+		return q.front();
+	}
+	const CNotification front() const	{
+		return q.front();
+	}
+	void pop()							{
+		q.pop();
+	}
+	void push(CNotification note)		{
+		q.push(note);
+	}
 
 
 protected:
-    // data
-    std::mutex  m_Mutex;
-    std::queue<CNotification> q;
+	// data
+	std::mutex  m_Mutex;
+	std::queue<CNotification> q;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

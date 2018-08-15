@@ -44,24 +44,28 @@
 class CNotification
 {
 public:
-    // constructor
-    CNotification();
-    CNotification(const CNotification &);
-    CNotification(int);
-    CNotification(int, const CCallsign &);
-    
-    // destructor
-    ~CNotification() {};
-    
-    // get
-    int GetId(void) const                       { return m_iId; }
-    const CCallsign &GetCallsign(void) const    { return m_Callsign; }
-    
+	// constructor
+	CNotification();
+	CNotification(const CNotification &);
+	CNotification(int);
+	CNotification(int, const CCallsign &);
+
+	// destructor
+	~CNotification() {};
+
+	// get
+	int GetId(void) const                       {
+		return m_iId;
+	}
+	const CCallsign &GetCallsign(void) const    {
+		return m_Callsign;
+	}
+
 protected:
-    // data
-    int         m_iId;
-    CCallsign   m_Callsign;
-    
+	// data
+	int         m_iId;
+	CCallsign   m_Callsign;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

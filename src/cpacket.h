@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cpacket_h
@@ -38,48 +38,78 @@
 class CPacket
 {
 public:
-    // constructor
-    CPacket();
-    CPacket(uint16 sid, uint8 dstarpid);
-    CPacket(uint16 sid, uint8 dmrpid, uint8 dmrsubpid);
-    CPacket(uint16 sid, uint8 dstarpid, uint8 dmrpid, uint8 dmrsubpid);
-    
-    // destructor
-    virtual ~CPacket() {};
-    
-    // virtual duplication
-    virtual CPacket *Duplicate(void) const;
-    
-    // identity
-    virtual bool IsDvHeader(void) const             { return false; }
-    virtual bool IsDvFrame(void) const              { return false; }
-    virtual bool IsLastPacket(void) const           { return false; }
-    virtual bool HaveTranscodableAmbe(void) const   { return false; }
-    
-    // get
-    virtual bool IsValid(void) const                { return true; }
-    uint16 GetStreamId(void) const                  { return m_uiStreamId; }
-    uint8  GetPacketId(void) const                  { return m_uiDstarPacketId; }
-    uint8  GetDstarPacketId(void) const             { return m_uiDstarPacketId; }
-    uint8  GetDmrPacketId(void) const               { return m_uiDmrPacketId; }
-    uint8  GetDmrPacketSubid(void) const            { return m_uiDmrPacketSubid; }
-    uint8  GetModuleId(void) const                  { return m_uiModuleId; }
-    bool   IsLocalOrigin(void) const                { return (m_uiOriginId == ORIGIN_LOCAL); }
-    
-    // set
-    void UpdatePids(uint32);
-    void SetModuleId(uint8 uiId)                    { m_uiModuleId = uiId; }
-    void SetLocalOrigin(void)                       { m_uiOriginId = ORIGIN_LOCAL; }
-    void SetRemotePeerOrigin(void)                  { m_uiOriginId = ORIGIN_PEER; }
-    
+	// constructor
+	CPacket();
+	CPacket(uint16 sid, uint8 dstarpid);
+	CPacket(uint16 sid, uint8 dmrpid, uint8 dmrsubpid);
+	CPacket(uint16 sid, uint8 dstarpid, uint8 dmrpid, uint8 dmrsubpid);
+
+	// destructor
+	virtual ~CPacket() {};
+
+	// virtual duplication
+	virtual CPacket *Duplicate(void) const;
+
+	// identity
+	virtual bool IsDvHeader(void) const             {
+		return false;
+	}
+	virtual bool IsDvFrame(void) const              {
+		return false;
+	}
+	virtual bool IsLastPacket(void) const           {
+		return false;
+	}
+	virtual bool HaveTranscodableAmbe(void) const   {
+		return false;
+	}
+
+	// get
+	virtual bool IsValid(void) const                {
+		return true;
+	}
+	uint16 GetStreamId(void) const                  {
+		return m_uiStreamId;
+	}
+	uint8  GetPacketId(void) const                  {
+		return m_uiDstarPacketId;
+	}
+	uint8  GetDstarPacketId(void) const             {
+		return m_uiDstarPacketId;
+	}
+	uint8  GetDmrPacketId(void) const               {
+		return m_uiDmrPacketId;
+	}
+	uint8  GetDmrPacketSubid(void) const            {
+		return m_uiDmrPacketSubid;
+	}
+	uint8  GetModuleId(void) const                  {
+		return m_uiModuleId;
+	}
+	bool   IsLocalOrigin(void) const                {
+		return (m_uiOriginId == ORIGIN_LOCAL);
+	}
+
+	// set
+	void UpdatePids(uint32);
+	void SetModuleId(uint8 uiId)                    {
+		m_uiModuleId = uiId;
+	}
+	void SetLocalOrigin(void)                       {
+		m_uiOriginId = ORIGIN_LOCAL;
+	}
+	void SetRemotePeerOrigin(void)                  {
+		m_uiOriginId = ORIGIN_PEER;
+	}
+
 protected:
-    // data
-    uint16  m_uiStreamId;
-    uint8   m_uiDstarPacketId;
-    uint8   m_uiDmrPacketId;
-    uint8   m_uiDmrPacketSubid;
-    uint8   m_uiModuleId;
-    uint8   m_uiOriginId;
+	// data
+	uint16  m_uiStreamId;
+	uint8   m_uiDstarPacketId;
+	uint8   m_uiDmrPacketId;
+	uint8   m_uiDmrPacketSubid;
+	uint8   m_uiModuleId;
+	uint8   m_uiOriginId;
 };
 
 

@@ -33,30 +33,36 @@
 class CVersion
 {
 public:
-    // constructor
-    CVersion();
-    CVersion(int, int, int);
-    CVersion(const CVersion &);
-    
-    // destructor
-    virtual ~CVersion() {}
-    
-    // get
-    int GetMajor(void) const        { return m_iMajor; }
-    int GetMinor(void) const        { return m_iMinor; }
-    int GetRevision(void) const     { return m_iRevision; }
+	// constructor
+	CVersion();
+	CVersion(int, int, int);
+	CVersion(const CVersion &);
 
-    // comparaison
-    bool IsEqualOrHigherTo(const CVersion &) const;
-    
-    // operator
-    bool operator ==(const CVersion &) const;
+	// destructor
+	virtual ~CVersion() {}
+
+	// get
+	int GetMajor(void) const        {
+		return m_iMajor;
+	}
+	int GetMinor(void) const        {
+		return m_iMinor;
+	}
+	int GetRevision(void) const     {
+		return m_iRevision;
+	}
+
+	// comparaison
+	bool IsEqualOrHigherTo(const CVersion &) const;
+
+	// operator
+	bool operator ==(const CVersion &) const;
 
 protected:
-    // data
-    int     m_iMajor;
-    int     m_iMinor;
-    int     m_iRevision;
+	// data
+	int     m_iMajor;
+	int     m_iMinor;
+	int     m_iRevision;
 };
 
 

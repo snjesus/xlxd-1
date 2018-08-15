@@ -31,49 +31,61 @@
 class CBuffer
 {
 public:
-    // constructor
-    CBuffer() {};
-    CBuffer(uint8 *, int);
+	// constructor
+	CBuffer() {};
+	CBuffer(uint8 *, int);
 
-    // destructor
-    virtual ~CBuffer() {};
+	// destructor
+	virtual ~CBuffer() {};
 
-    // set
-    void Set(uint8 *, int);
-    void Set(const char *);
-    void Append(uint8 *, int);
-    void Append(uint8, int);
-    void Append(uint8);
-    void Append(uint16);
-    void Append(uint32);
-    void Append(const char *);
-    void ReplaceAt(int, uint8);
-    void ReplaceAt(int, uint16);
-    void ReplaceAt(int, uint32);
-    void ReplaceAt(int, const uint8 *, int);
+	// set
+	void Set(uint8 *, int);
+	void Set(const char *);
+	void Append(uint8 *, int);
+	void Append(uint8, int);
+	void Append(uint8);
+	void Append(uint16);
+	void Append(uint32);
+	void Append(const char *);
+	void ReplaceAt(int, uint8);
+	void ReplaceAt(int, uint16);
+	void ReplaceAt(int, uint32);
+	void ReplaceAt(int, const uint8 *, int);
 
-    // operation
-    int Compare(uint8 *, int) const;
-    int Compare(uint8 *, int, int) const;
+	// operation
+	int Compare(uint8 *, int) const;
+	int Compare(uint8 *, int, int) const;
 
-    // operator
-    bool operator ==(const CBuffer &) const;
-    bool operator ==(const char *) const;
-    operator const char *() const;
+	// operator
+	bool operator ==(const CBuffer &) const;
+	bool operator ==(const char *) const;
+	operator const char *() const;
 
-    // debug
-    void DebugDump(std::ofstream &) const;
+	// debug
+	void DebugDump(std::ofstream &) const;
 
-    // the vector
-    std::vector<uint8> v;
+	// the vector
+	std::vector<uint8> v;
 
-    // methods
-    std::vector<uint8>::size_type size() const { return v.size(); }
-    uint8 *data() { return v.data(); }
-    const uint8 *data() const { return v.data(); }
-    uint8 at(std::vector<uint8>::size_type i) { return v.at(i); }
-    void clear() { v.clear(); }
-    void resize(std::vector<uint8>::size_type len, uint8 val = 0U) { v.resize(len, val); }
+	// methods
+	std::vector<uint8>::size_type size() const {
+		return v.size();
+	}
+	uint8 *data() {
+		return v.data();
+	}
+	const uint8 *data() const {
+		return v.data();
+	}
+	uint8 at(std::vector<uint8>::size_type i) {
+		return v.at(i);
+	}
+	void clear() {
+		v.clear();
+	}
+	void resize(std::vector<uint8>::size_type len, uint8 val = 0U) {
+		v.resize(len, val);
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

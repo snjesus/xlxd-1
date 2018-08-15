@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -32,25 +32,25 @@
 
 CUser::CUser()
 {
-    m_LastHeardTime = std::time(NULL);
+	m_LastHeardTime = std::time(NULL);
 }
 
 CUser::CUser(const CCallsign &my, const CCallsign &rpt1, const CCallsign &rpt2, const CCallsign &xlx)
 {
-    m_My = my;
-    m_Rpt1 = rpt1;
-    m_Rpt2 = rpt2;
-    m_Xlx = xlx;
-    m_LastHeardTime = std::time(NULL);
+	m_My = my;
+	m_Rpt1 = rpt1;
+	m_Rpt2 = rpt2;
+	m_Xlx = xlx;
+	m_LastHeardTime = std::time(NULL);
 }
 
 CUser::CUser(const CUser &user)
 {
-    m_My = user.m_My;
-    m_Rpt1 = user.m_Rpt1;
-    m_Rpt2 = user.m_Rpt2;
-    m_Xlx = user.m_Xlx;
-    m_LastHeardTime = user.m_LastHeardTime;
+	m_My = user.m_My;
+	m_Rpt1 = user.m_Rpt1;
+	m_Rpt2 = user.m_Rpt2;
+	m_Xlx = user.m_Xlx;
+	m_LastHeardTime = user.m_LastHeardTime;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -58,14 +58,14 @@ CUser::CUser(const CUser &user)
 
 bool CUser::operator ==(const CUser &user) const
 {
-    return ((user.m_My == m_My) && (user.m_Rpt1 == m_Rpt1) && (user.m_Rpt2 == m_Rpt2)  && (user.m_Xlx == m_Xlx));
+	return ((user.m_My == m_My) && (user.m_Rpt1 == m_Rpt1) && (user.m_Rpt2 == m_Rpt2)  && (user.m_Xlx == m_Xlx));
 }
 
 
 bool CUser::operator <(const CUser &user) const
 {
-    // smallest is youngest
-    return (std::difftime(m_LastHeardTime, user.m_LastHeardTime) > 0);
+	// smallest is youngest
+	return (std::difftime(m_LastHeardTime, user.m_LastHeardTime) > 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -73,37 +73,35 @@ bool CUser::operator <(const CUser &user) const
 
 void CUser::WriteXml(std::ofstream &xmlFile)
 {
-    xmlFile << "<STATION>" << std::endl;
-    xmlFile << "\t<Callsign>" << m_My << "</Callsign>" << std::endl;
-    xmlFile << "\t<Via node>" << m_Rpt1 << "</Via node>" << std::endl;
-    xmlFile << "\t<On module>" << m_Rpt2.GetModule() << "</On module>" << std::endl;
-    xmlFile << "\t<Via peer>" << m_Xlx << "</Via peer>" << std::endl;
+	xmlFile << "<STATION>" << std::endl;
+	xmlFile << "\t<Callsign>" << m_My << "</Callsign>" << std::endl;
+	xmlFile << "\t<Via node>" << m_Rpt1 << "</Via node>" << std::endl;
+	xmlFile << "\t<On module>" << m_Rpt2.GetModule() << "</On module>" << std::endl;
+	xmlFile << "\t<Via peer>" << m_Xlx << "</Via peer>" << std::endl;
 
-    char mbstr[100];
-    if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime)))
-    {
-        xmlFile << "\t<LastHeardTime>" << mbstr << "</LastHeardTime>" << std::endl;
-    }
-    xmlFile << "</STATION>" << std::endl;
+	char mbstr[100];
+	if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime))) {
+		xmlFile << "\t<LastHeardTime>" << mbstr << "</LastHeardTime>" << std::endl;
+	}
+	xmlFile << "</STATION>" << std::endl;
 }
 
 void CUser::GetJsonObject(char *Buffer)
 {
-    char sz[512];
-    char mbstr[100];
-    char my[16];
-    char rpt1[16];
-    
-    if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime)))
-    {
-        m_My.GetCallsignString(my);
-        m_Rpt1.GetCallsignString(rpt1);
-        
-        ::sprintf(sz, "{\"callsign\":\"%s\",\"node\":\"%s\",\"module\":\"%c\",\"time\":\"%s\"}",
-              my,
-              rpt1,
-              m_Rpt1.GetModule(),
-              mbstr);
-        ::strcat(Buffer, sz);
-    }
+	char sz[512];
+	char mbstr[100];
+	char my[16];
+	char rpt1[16];
+
+	if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&m_LastHeardTime))) {
+		m_My.GetCallsignString(my);
+		m_Rpt1.GetCallsignString(rpt1);
+
+		::sprintf(sz, "{\"callsign\":\"%s\",\"node\":\"%s\",\"module\":\"%c\",\"time\":\"%s\"}",
+				  my,
+				  rpt1,
+				  m_Rpt1.GetModule(),
+				  mbstr);
+		::strcat(Buffer, sz);
+	}
 }

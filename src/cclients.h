@@ -39,40 +39,48 @@
 class CClients
 {
 public:
-    // constructors
-    CClients();
+	// constructors
+	CClients();
 
-    // destructors
-    virtual ~CClients();
+	// destructors
+	virtual ~CClients();
 
-    // locks
-    void Lock(void)                     { m_Mutex.lock(); }
-    void Unlock(void)                   { m_Mutex.unlock(); }
+	// locks
+	void Lock(void)                     {
+		m_Mutex.lock();
+	}
+	void Unlock(void)                   {
+		m_Mutex.unlock();
+	}
 
-    // manage Clients
-    void    AddClient(CClient *);
-    void    RemoveClient(CClient *);
-    std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
-    CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
-    bool    IsClient(CClient *) const;
+	// manage Clients
+	void    AddClient(CClient *);
+	void    RemoveClient(CClient *);
+	std::list<CClient *>::iterator InitClientIterator()   {
+		return m_Clients.begin();
+	}
+	CClient *GetClient(std::list<CClient *>::iterator it) {
+		return (it==m_Clients.end()) ? NULL : *it;
+	}
+	bool    IsClient(CClient *) const;
 
-    // find clients
-    CClient *FindClient(const CIp &);
-    CClient *FindClient(const CIp &, int);
-    CClient *FindClient(const CIp &, int, char);
-    CClient *FindClient(const CCallsign &, const CIp &, int);
-    CClient *FindClient(const CCallsign &, char, const CIp &, int);
-    CClient *FindClient(const CCallsign &, int);
+	// find clients
+	CClient *FindClient(const CIp &);
+	CClient *FindClient(const CIp &, int);
+	CClient *FindClient(const CIp &, int, char);
+	CClient *FindClient(const CCallsign &, const CIp &, int);
+	CClient *FindClient(const CCallsign &, char, const CIp &, int);
+	CClient *FindClient(const CCallsign &, int);
 
-    // iterate on clients
-    CClient *FindNextClient(int, std::list<CClient *>::iterator &);
-    CClient *FindNextClient(const CIp &, int, std::list<CClient *>::iterator &);
-    CClient *FindNextClient(const CCallsign &, const CIp &, int, std::list<CClient *>::iterator &);
+	// iterate on clients
+	CClient *FindNextClient(int, std::list<CClient *>::iterator &);
+	CClient *FindNextClient(const CIp &, int, std::list<CClient *>::iterator &);
+	CClient *FindNextClient(const CCallsign &, const CIp &, int, std::list<CClient *>::iterator &);
 
 protected:
-    // data
-    std::mutex           m_Mutex;
-    std::list<CClient *> m_Clients;
+	// data
+	std::mutex           m_Mutex;
+	std::list<CClient *> m_Clients;
 };
 
 

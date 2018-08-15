@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cudpsocket_h
@@ -48,30 +48,32 @@
 class CUdpSocket
 {
 public:
-    // constructor
-    CUdpSocket();
-    
-    // destructor
-    ~CUdpSocket();
-    
-    // open & close
-    bool Open(uint16);
-    void Close(void);
-    int  GetSocket(void)        { return m_Socket; }
-    
-    // read
-    int Receive(CBuffer *, CIp *, int);
-    
-    // write
-    int Send(const CBuffer &, const CIp &);
-    int Send(const CBuffer &, const CIp &, uint16);
-    int Send(const char *, const CIp &);
-    int Send(const char *, const CIp &, uint16);
-    
+	// constructor
+	CUdpSocket();
+
+	// destructor
+	~CUdpSocket();
+
+	// open & close
+	bool Open(uint16);
+	void Close(void);
+	int  GetSocket(void)        {
+		return m_Socket;
+	}
+
+	// read
+	int Receive(CBuffer *, CIp *, int);
+
+	// write
+	int Send(const CBuffer &, const CIp &);
+	int Send(const CBuffer &, const CIp &, uint16);
+	int Send(const char *, const CIp &);
+	int Send(const char *, const CIp &, uint16);
+
 protected:
-    // data
-    int                 m_Socket;
-    struct sockaddr_in  m_SocketAddr;
+	// data
+	int                 m_Socket;
+	struct sockaddr_in  m_SocketAddr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

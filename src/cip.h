@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cip_h
@@ -32,31 +32,37 @@
 class CIp
 {
 public:
-    // constructors
-    CIp();
-    //CIp(uint8, uint8, uint8, uint8);
-    CIp(const struct sockaddr_in *);
-    CIp(const char *);
-    CIp(const CIp &);
-    
-    // destructor
-    virtual ~CIp() {};
-    
-    // sockaddr
-    void SetSockAddr(struct sockaddr_in *);
-    struct sockaddr_in *GetSockAddr(void)     { return &m_Addr; }
-    
-    // convertor
-    uint32 GetAddr(void) const                { return m_Addr.sin_addr.s_addr; }
-    uint16 GetPort(void) const                { return m_Addr.sin_port; }
-    
-    // operator
-    bool operator ==(const CIp &) const;
-    operator const char *() const;
-    
+	// constructors
+	CIp();
+	//CIp(uint8, uint8, uint8, uint8);
+	CIp(const struct sockaddr_in *);
+	CIp(const char *);
+	CIp(const CIp &);
+
+	// destructor
+	virtual ~CIp() {};
+
+	// sockaddr
+	void SetSockAddr(struct sockaddr_in *);
+	struct sockaddr_in *GetSockAddr(void)     {
+		return &m_Addr;
+	}
+
+	// convertor
+	uint32 GetAddr(void) const                {
+		return m_Addr.sin_addr.s_addr;
+	}
+	uint16 GetPort(void) const                {
+		return m_Addr.sin_port;
+	}
+
+	// operator
+	bool operator ==(const CIp &) const;
+	operator const char *() const;
+
 protected:
-    // data
-    struct sockaddr_in  m_Addr;
+	// data
+	struct sockaddr_in  m_Addr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #include "main.h"
@@ -33,36 +33,34 @@
 
 CIp::CIp()
 {
-    ::memset(&m_Addr, 0, sizeof(m_Addr));
-    m_Addr.sin_family = AF_INET;
+	::memset(&m_Addr, 0, sizeof(m_Addr));
+	m_Addr.sin_family = AF_INET;
 }
 
 CIp::CIp(const char *sz)
 {
-    ::memset(&m_Addr, 0, sizeof(m_Addr));
-    m_Addr.sin_family = AF_INET;
-    // try xxx.xxx.xxx.xxxx first
-    m_Addr.sin_addr.s_addr = inet_addr(sz);
-    if ( m_Addr.sin_addr.s_addr == INADDR_NONE )
-    {
-        // otherwise try to resolve via dns
-        hostent *record = gethostbyname(sz);
-        if( record != NULL )
-        {
-            m_Addr.sin_addr.s_addr = ((in_addr * )record->h_addr)->s_addr;
-        }
-    }
+	::memset(&m_Addr, 0, sizeof(m_Addr));
+	m_Addr.sin_family = AF_INET;
+	// try xxx.xxx.xxx.xxxx first
+	m_Addr.sin_addr.s_addr = inet_addr(sz);
+	if ( m_Addr.sin_addr.s_addr == INADDR_NONE ) {
+		// otherwise try to resolve via dns
+		hostent *record = gethostbyname(sz);
+		if( record != NULL ) {
+			m_Addr.sin_addr.s_addr = ((in_addr * )record->h_addr)->s_addr;
+		}
+	}
 }
 
 CIp::CIp(const struct sockaddr_in *sa)
 {
-    ::memcpy(&m_Addr, sa, sizeof(m_Addr));
+	::memcpy(&m_Addr, sa, sizeof(m_Addr));
 }
 
 
 CIp::CIp(const CIp &ip)
 {
-    ::memcpy(&m_Addr, &ip.m_Addr, sizeof(m_Addr));
+	::memcpy(&m_Addr, &ip.m_Addr, sizeof(m_Addr));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +68,7 @@ CIp::CIp(const CIp &ip)
 
 void CIp::SetSockAddr(struct sockaddr_in *sa)
 {
-    ::memcpy(&m_Addr, sa, sizeof(m_Addr));
+	::memcpy(&m_Addr, sa, sizeof(m_Addr));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -78,14 +76,14 @@ void CIp::SetSockAddr(struct sockaddr_in *sa)
 
 bool CIp::operator ==(const CIp &ip) const
 {
-    return ( (ip.m_Addr.sin_family == m_Addr.sin_family) &&
-             (ip.m_Addr.sin_addr.s_addr == m_Addr.sin_addr.s_addr) &&
-             (ip.m_Addr.sin_port == m_Addr.sin_port)) ;
+	return ( (ip.m_Addr.sin_family == m_Addr.sin_family) &&
+			 (ip.m_Addr.sin_addr.s_addr == m_Addr.sin_addr.s_addr) &&
+			 (ip.m_Addr.sin_port == m_Addr.sin_port)) ;
 }
 
 CIp::operator const char *() const
 {
-    return ::inet_ntoa(m_Addr.sin_addr);
+	return ::inet_ntoa(m_Addr.sin_addr);
 }
 
 

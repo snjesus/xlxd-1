@@ -33,29 +33,37 @@
 class CUsers
 {
 public:
-    // constructor
-    CUsers();
+	// constructor
+	CUsers();
 
-    // destructor
-    virtual ~CUsers() {}
+	// destructor
+	virtual ~CUsers() {}
 
-    // locks
-    void Lock(void)                     { m_Mutex.lock(); }
-    void Unlock(void)                   { m_Mutex.unlock(); }
+	// locks
+	void Lock(void)                     {
+		m_Mutex.lock();
+	}
+	void Unlock(void)                   {
+		m_Mutex.unlock();
+	}
 
-    // management
-    void   AddUser(const CUser &);
-    CUser *GetUser(std::list<CUser>::iterator it) { return (it==m_Users.end()) ? NULL : &(*it); }
-    std::list<CUser>::iterator InitUserIterator() { return m_Users.begin(); }
+	// management
+	void   AddUser(const CUser &);
+	CUser *GetUser(std::list<CUser>::iterator it) {
+		return (it==m_Users.end()) ? NULL : &(*it);
+	}
+	std::list<CUser>::iterator InitUserIterator() {
+		return m_Users.begin();
+	}
 
-    // operation
-    void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &);
-    void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &, const CCallsign &);
+	// operation
+	void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &);
+	void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &, const CCallsign &);
 
 protected:
-    // data
-    std::mutex          m_Mutex;
-    std::list<CUser>  m_Users;
+	// data
+	std::mutex          m_Mutex;
+	std::list<CUser>  m_Users;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

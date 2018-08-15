@@ -41,55 +41,75 @@
 class CPeer
 {
 public:
-    // constructors
-    CPeer();
-    CPeer(const CCallsign &, const CIp &, char *, const CVersion &);
-    CPeer(const CPeer &);
+	// constructors
+	CPeer();
+	CPeer(const CCallsign &, const CIp &, char *, const CVersion &);
+	CPeer(const CPeer &);
 
-    // destructor
-    virtual ~CPeer();
+	// destructor
+	virtual ~CPeer();
 
-    // operators
-    bool operator ==(const CPeer &) const;
+	// operators
+	bool operator ==(const CPeer &) const;
 
-    // get
-    const CCallsign &GetCallsign(void) const            { return m_Callsign; }
-    const CIp &GetIp(void) const                        { return m_Ip; }
-    char *GetModulesModules(void)                       { return m_ReflectorModules; }
+	// get
+	const CCallsign &GetCallsign(void) const            {
+		return m_Callsign;
+	}
+	const CIp &GetIp(void) const                        {
+		return m_Ip;
+	}
+	char *GetModulesModules(void)                       {
+		return m_ReflectorModules;
+	}
 
-    // set
+	// set
 
-    // identity
-    virtual int GetProtocol(void) const                 { return PROTOCOL_NONE; }
-    virtual int GetProtocolRevision(void) const         { return 0; }
-    virtual const char *GetProtocolName(void) const     { return "none"; }
+	// identity
+	virtual int GetProtocol(void) const                 {
+		return PROTOCOL_NONE;
+	}
+	virtual int GetProtocolRevision(void) const         {
+		return 0;
+	}
+	virtual const char *GetProtocolName(void) const     {
+		return "none";
+	}
 
-    // status
-    virtual bool IsAMaster(void) const;
-    virtual void Alive(void);
-    virtual bool IsAlive(void) const                    { return false; }
-    virtual void Heard(void)                            { m_LastHeardTime = std::time(NULL); }
+	// status
+	virtual bool IsAMaster(void) const;
+	virtual void Alive(void);
+	virtual bool IsAlive(void) const                    {
+		return false;
+	}
+	virtual void Heard(void)                            {
+		m_LastHeardTime = std::time(NULL);
+	}
 
-    // clients access
-    CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
-    std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
+	// clients access
+	CClient *GetClient(std::list<CClient *>::iterator it) {
+		return (it==m_Clients.end()) ? NULL : *it;
+	}
+	std::list<CClient *>::iterator InitClientIterator()   {
+		return m_Clients.begin();
+	}
 
-    // reporting
-    virtual void WriteXml(std::ofstream &);
-    virtual void GetJsonObject(char *);
+	// reporting
+	virtual void WriteXml(std::ofstream &);
+	virtual void GetJsonObject(char *);
 
 protected:
-    // data
-    CCallsign            m_Callsign;
-    CIp                  m_Ip;
-    char                 m_ReflectorModules[NB_MODULES_MAX+1];
-    CVersion             m_Version;
-    std::list<CClient *> m_Clients;
+	// data
+	CCallsign            m_Callsign;
+	CIp                  m_Ip;
+	char                 m_ReflectorModules[NB_MODULES_MAX+1];
+	CVersion             m_Version;
+	std::list<CClient *> m_Clients;
 
-    // status
-    CTimePoint           m_LastKeepaliveTime;
-    std::time_t          m_ConnectTime;
-    std::time_t          m_LastHeardTime;
+	// status
+	CTimePoint           m_LastKeepaliveTime;
+	std::time_t          m_ConnectTime;
+	std::time_t          m_LastHeardTime;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

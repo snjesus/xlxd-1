@@ -66,33 +66,31 @@ int main(int argc, const char * argv[])
 		exit(EXIT_FAILURE);
 	}
 
-    // check arguments
-    if ( argc != 4 )
-    {
-        std::cout << "Usage: xlxd callsign xlxdip ambedip" << std::endl;
-        std::cout << "example: xlxd XLX999 192.168.178.212 127.0.0.1" << std::endl;
-        exit(EXIT_FAILURE);
-    }
+	// check arguments
+	if ( argc != 4 ) {
+		std::cout << "Usage: xlxd callsign xlxdip ambedip" << std::endl;
+		std::cout << "example: xlxd XLX999 192.168.178.212 127.0.0.1" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-    // splash
-    std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+	// splash
+	std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
 
-    // initialize reflector
-    g_Reflector.SetCallsign(argv[1]);
-    g_Reflector.SetListenIp(CIp(argv[2]));
-    g_Reflector.SetTranscoderIp(CIp(CIp(argv[3])));
+	// initialize reflector
+	g_Reflector.SetCallsign(argv[1]);
+	g_Reflector.SetListenIp(CIp(argv[2]));
+	g_Reflector.SetTranscoderIp(CIp(CIp(argv[3])));
 
-    // and let it run
-    if ( !g_Reflector.Start() )
-    {
-        std::cout << "Error starting reflector" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    std::cout << "Reflector " << g_Reflector.GetCallsign() << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
+	// and let it run
+	if ( !g_Reflector.Start() ) {
+		std::cout << "Error starting reflector" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	std::cout << "Reflector " << g_Reflector.GetCallsign() << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
 
-    pause(); // wait on a signal
+	pause(); // wait on a signal
 
-    g_Reflector.Stop();	// clean-up!
+	g_Reflector.Stop();	// clean-up!
 
-    exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }

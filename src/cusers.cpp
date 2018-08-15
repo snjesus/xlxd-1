@@ -39,20 +39,19 @@ CUsers::CUsers()
 
 void CUsers::AddUser(const CUser &user)
 {
-    // add
-    m_Users.push_front(user);
+	// add
+	m_Users.push_front(user);
 
-    // sort list by descending time (fisrt is youngest)
-    //std::sort(m_Users.begin(), m_Users.end());
+	// sort list by descending time (fisrt is youngest)
+	//std::sort(m_Users.begin(), m_Users.end());
 
-    // if list size too big, remove oldest
-    while ( m_Users.size() > LASTHEARD_USERS_MAX_SIZE )
-    {
-        m_Users.pop_back();
-    }
+	// if list size too big, remove oldest
+	while ( m_Users.size() > LASTHEARD_USERS_MAX_SIZE ) {
+		m_Users.pop_back();
+	}
 
-    // notify
-    g_Reflector.OnUsersChanged();
+	// notify
+	g_Reflector.OnUsersChanged();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -60,34 +59,29 @@ void CUsers::AddUser(const CUser &user)
 
 void CUsers::Hearing(const CCallsign &my, const CCallsign &rpt1, const CCallsign &rpt2)
 {
-    Hearing(my, rpt1, rpt2, g_Reflector.GetCallsign());
+	Hearing(my, rpt1, rpt2, g_Reflector.GetCallsign());
 }
 
 void CUsers::Hearing(const CCallsign &my, const CCallsign &rpt1, const CCallsign &rpt2, const CCallsign &xlx)
 {
-    CUser heard(my, rpt1, rpt2, xlx);
+	CUser heard(my, rpt1, rpt2, xlx);
 
-    // first check if we have this user listed yet
-    auto it = m_Users.begin();
-    while ( it != m_Users.end() )
-    {
-        if (*it == heard)
-        {
-            (*it).HeardNow();
-            break;
-        }
-        it++;
-    }
+	// first check if we have this user listed yet
+	auto it = m_Users.begin();
+	while ( it != m_Users.end() ) {
+		if (*it == heard) {
+			(*it).HeardNow();
+			break;
+		}
+		it++;
+	}
 
-    // if not found, add user to list
-    // otherwise just re-sort the list
-    if ( it == m_Users.end() )
-    {
-        AddUser(heard);
-    }
-    else
-    {
-        m_Users.sort();
-    }
+	// if not found, add user to list
+	// otherwise just re-sort the list
+	if ( it == m_Users.end() ) {
+		AddUser(heard);
+	} else {
+		m_Users.sort();
+	}
 }
 

@@ -35,8 +35,8 @@
 
 CProtocol::CProtocol()
 {
-    m_bStopThread = false;
-    m_pThread = NULL;
+	m_bStopThread = false;
+	m_pThread = NULL;
 }
 
 
@@ -45,21 +45,19 @@ CProtocol::CProtocol()
 
 CProtocol::~CProtocol()
 {
-    // kill threads
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-    }
+	// kill threads
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+	}
 
-    // empty queue
-    m_Queue.Lock();
-    while ( !m_Queue.empty() )
-    {
-        m_Queue.pop();
-    }
-    m_Queue.Unlock();
+	// empty queue
+	m_Queue.Lock();
+	while ( !m_Queue.empty() ) {
+		m_Queue.pop();
+	}
+	m_Queue.Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -67,28 +65,27 @@ CProtocol::~CProtocol()
 
 bool CProtocol::Init(void)
 {
-    // init reflector apparent callsign
-    m_ReflectorCallsign = g_Reflector.GetCallsign();
+	// init reflector apparent callsign
+	m_ReflectorCallsign = g_Reflector.GetCallsign();
 
-    // reset stop flag
-    m_bStopThread = false;
+	// reset stop flag
+	m_bStopThread = false;
 
-    // start  thread;
-    m_pThread = new std::thread(CProtocol::Thread, this);
+	// start  thread;
+	m_pThread = new std::thread(CProtocol::Thread, this);
 
-    // done
-    return true;
+	// done
+	return true;
 }
 
 void CProtocol::Close(void)
 {
-    m_bStopThread = true;
-    if ( m_pThread != NULL )
-    {
-        m_pThread->join();
-        delete m_pThread;
-        m_pThread = NULL;
-    }
+	m_bStopThread = true;
+	if ( m_pThread != NULL ) {
+		m_pThread->join();
+		delete m_pThread;
+		m_pThread = NULL;
+	}
 }
 
 
@@ -97,10 +94,9 @@ void CProtocol::Close(void)
 
 void CProtocol::Thread(CProtocol *This)
 {
-    while ( !This->m_bStopThread )
-    {
-        This->Task();
-    }
+	while ( !This->m_bStopThread ) {
+		This->Task();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -108,27 +104,19 @@ void CProtocol::Thread(CProtocol *This)
 
 bool CProtocol::EncodeDvPacket(const CPacket &packet, CBuffer *buffer) const
 {
-    bool ok = false;
-    if ( packet.IsDvFrame() )
-    {
-        if ( packet.IsLastPacket() )
-        {
-            ok = EncodeDvLastFramePacket((const CDvLastFramePacket &)packet, buffer);
-        }
-        else
-        {
-            ok = EncodeDvFramePacket((const CDvFramePacket &)packet, buffer);
-        }
-    }
-    else if ( packet.IsDvHeader() )
-    {
-        ok = EncodeDvHeaderPacket((const CDvHeaderPacket &)packet, buffer);
-    }
-    else
-    {
-        buffer->clear();
-    }
-    return ok;
+	bool ok = false;
+	if ( packet.IsDvFrame() ) {
+		if ( packet.IsLastPacket() ) {
+			ok = EncodeDvLastFramePacket((const CDvLastFramePacket &)packet, buffer);
+		} else {
+			ok = EncodeDvFramePacket((const CDvFramePacket &)packet, buffer);
+		}
+	} else if ( packet.IsDvHeader() ) {
+		ok = EncodeDvHeaderPacket((const CDvHeaderPacket &)packet, buffer);
+	} else {
+		buffer->clear();
+	}
+	return ok;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -136,32 +124,30 @@ bool CProtocol::EncodeDvPacket(const CPacket &packet, CBuffer *buffer) const
 
 void CProtocol::OnDvFramePacketIn(CDvFramePacket *Frame, const CIp *Ip)
 {
-    // find the stream
-    CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
-    if ( stream != NULL )
-    {
-        //std::cout << "DV frame" << "from "  << *Ip << std::endl;
-        // and push
-        stream->Lock();
-        stream->Push(Frame);
-        stream->Unlock();
-    }
+	// find the stream
+	CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
+	if ( stream != NULL ) {
+		//std::cout << "DV frame" << "from "  << *Ip << std::endl;
+		// and push
+		stream->Lock();
+		stream->Push(Frame);
+		stream->Unlock();
+	}
 }
 
 void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
 {
-    // find the stream
-    CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
-    if ( stream != NULL )
-    {
-        // push
-        stream->Lock();
-        stream->Push(Frame);
-        stream->Unlock();
+	// find the stream
+	CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
+	if ( stream != NULL ) {
+		// push
+		stream->Lock();
+		stream->Push(Frame);
+		stream->Unlock();
 
-        // and close the stream
-        g_Reflector.CloseStream(stream);
-    }
+		// and close the stream
+		g_Reflector.CloseStream(stream);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -169,42 +155,35 @@ void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
 
 CPacketStream *CProtocol::GetStream(uint16 uiStreamId, const CIp *Ip)
 {
-    // find if we have a stream with same streamid in our cache
-    for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ )
-    {
-        if ( (*it)->GetStreamId() == uiStreamId )
-        {
-            // if Ip not NULL, also check if IP match
-            if ( (Ip != NULL) && (*Ip == *((*it)->GetOwnerIp())) )
-            {
-                return *it;
-            }
-        }
-    }
-    // done
-    return NULL;
+	// find if we have a stream with same streamid in our cache
+	for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ ) {
+		if ( (*it)->GetStreamId() == uiStreamId ) {
+			// if Ip not NULL, also check if IP match
+			if ( (Ip != NULL) && (*Ip == *((*it)->GetOwnerIp())) ) {
+				return *it;
+			}
+		}
+	}
+	// done
+	return NULL;
 }
 
 void CProtocol::CheckStreamsTimeout(void)
 {
 	auto it=m_Streams.begin();
-    while ( it != m_Streams.end() )
-    {
-        // time out ?
-        (*it)->Lock();
-        if ( (*it)->IsExpired() )
-        {
-            // yes, close it
-            (*it)->Unlock();
-            g_Reflector.CloseStream(*it);
-            // and remove it
-            it = m_Streams.erase(it);
-        }
-        else
-        {
-            (*it++)->Unlock();
-        }
-    }
+	while ( it != m_Streams.end() ) {
+		// time out ?
+		(*it)->Lock();
+		if ( (*it)->IsExpired() ) {
+			// yes, close it
+			(*it)->Unlock();
+			g_Reflector.CloseStream(*it);
+			// and remove it
+			it = m_Streams.erase(it);
+		} else {
+			(*it++)->Unlock();
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -212,14 +191,13 @@ void CProtocol::CheckStreamsTimeout(void)
 
 void CProtocol::HandleQueue(void)
 {
-    // the default protocol just keep queue empty
-    m_Queue.Lock();
-    while ( !m_Queue.empty() )
-    {
-        delete m_Queue.front();
-        m_Queue.pop();
-    }
-    m_Queue.Unlock();
+	// the default protocol just keep queue empty
+	m_Queue.Lock();
+	while ( !m_Queue.empty() ) {
+		delete m_Queue.front();
+		m_Queue.pop();
+	}
+	m_Queue.Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -227,17 +205,17 @@ void CProtocol::HandleQueue(void)
 
 bool CProtocol::IsNumber(char c) const
 {
-    return ((c >= '0') && (c <= '9'));
+	return ((c >= '0') && (c <= '9'));
 }
 
 bool CProtocol::IsLetter(char c) const
 {
-    return ((c >= 'A') && (c <= 'Z'));
+	return ((c >= 'A') && (c <= 'Z'));
 }
 
 bool CProtocol::IsSpace(char c) const
 {
-    return (c == ' ');
+	return (c == ' ');
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -245,12 +223,12 @@ bool CProtocol::IsSpace(char c) const
 
 char CProtocol::DmrDstIdToModule(uint32 tg) const
 {
-    return ((char)((tg % 26)-1) + 'A');
+	return ((char)((tg % 26)-1) + 'A');
 }
 
 uint32 CProtocol::ModuleToDmrDestId(char m) const
 {
-    return (uint32)(m - 'A')+1;
+	return (uint32)(m - 'A')+1;
 }
 
 

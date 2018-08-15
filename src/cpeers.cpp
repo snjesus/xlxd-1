@@ -41,13 +41,13 @@ CPeers::CPeers()
 
 CPeers::~CPeers()
 {
-    m_Mutex.lock();
-    while (! m_Peers.empty()) {
+	m_Mutex.lock();
+	while (! m_Peers.empty()) {
 		auto it = m_Peers.begin();
 		delete *it;
 		m_Peers.erase(it);
 	}
-    m_Mutex.unlock();
+	m_Mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -55,19 +55,17 @@ CPeers::~CPeers()
 
 void CPeers::AddPeer(CPeer *peer)
 {
-    // first check if peer already exists
-    for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ )
-    {
-        if (*peer == *(*it))
-        {
-            // delete new one
-            delete peer;
-            //std::cout << "Adding existing peer " << peer->GetCallsign() << " at " << peer->GetIp() << std::endl;
-            return;
-        }
-    }
+	// first check if peer already exists
+	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
+		if (*peer == *(*it)) {
+			// delete new one
+			delete peer;
+			//std::cout << "Adding existing peer " << peer->GetCallsign() << " at " << peer->GetIp() << std::endl;
+			return;
+		}
+	}
 
-    // if not, append to the vector
+	// if not, append to the vector
 	m_Peers.push_back(peer);
 	std::cout << "New peer " << peer->GetCallsign() << " at " << peer->GetIp()
 			  << " added with protocol " << peer->GetProtocolName()  << std::endl;
@@ -76,8 +74,7 @@ void CPeers::AddPeer(CPeer *peer)
 	CClients *clients = g_Reflector.GetClients();
 	auto it = peer->InitClientIterator();
 	CClient *client;
-	while ( NULL != (client = peer->GetClient(it)) )
-	{
+	while ( NULL != (client = peer->GetClient(it)) ) {
 		clients->AddClient(client);
 		it++;
 	}
@@ -89,38 +86,34 @@ void CPeers::AddPeer(CPeer *peer)
 
 void CPeers::RemovePeer(CPeer *peer)
 {
-    // look for the client
-    for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ )
-    {
-        // compare objetc pointers
-        if ( *it ==  peer )
-        {
-            // found it !
-            if ( ! (*it)->IsAMaster() )
-            {
-                // remove all clients from reflector client list
-                // it is double lock safe to lock Clients list after Peers list
-                CClients *clients = g_Reflector.GetClients();
-                auto cit = peer->InitClientIterator();
-                CClient *client;
-                while ( NULL != (client = peer->GetClient(cit)) )
-                {
-                    // this also delete the client object
-                    clients->RemoveClient(client);
-                    cit++;
-                }
-                g_Reflector.ReleaseClients();
+	// look for the client
+	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
+		// compare objetc pointers
+		if ( *it ==  peer ) {
+			// found it !
+			if ( ! (*it)->IsAMaster() ) {
+				// remove all clients from reflector client list
+				// it is double lock safe to lock Clients list after Peers list
+				CClients *clients = g_Reflector.GetClients();
+				auto cit = peer->InitClientIterator();
+				CClient *client;
+				while ( NULL != (client = peer->GetClient(cit)) ) {
+					// this also delete the client object
+					clients->RemoveClient(client);
+					cit++;
+				}
+				g_Reflector.ReleaseClients();
 
-                // remove it
-                std::cout << "Peer " << (*cit)->GetCallsign() << " at " << (*cit)->GetIp() << " removed" << std::endl;
-                delete *it;
-                m_Peers.erase(it);
-                // notify
-                g_Reflector.OnPeersChanged();
-                return;
-            }
-        }
-    }
+				// remove it
+				std::cout << "Peer " << (*cit)->GetCallsign() << " at " << (*cit)->GetIp() << " removed" << std::endl;
+				delete *it;
+				m_Peers.erase(it);
+				// notify
+				g_Reflector.OnPeersChanged();
+				return;
+			}
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -128,47 +121,41 @@ void CPeers::RemovePeer(CPeer *peer)
 
 CPeer *CPeers::FindPeer(const CIp &Ip, int Protocol)
 {
-    for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ )
-    {
-        if ( ((*it)->GetIp() == Ip)  && ((*it)->GetProtocol() == Protocol))
-        {
-            return *it;
-        }
-    }
+	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
+		if ( ((*it)->GetIp() == Ip)  && ((*it)->GetProtocol() == Protocol)) {
+			return *it;
+		}
+	}
 
-    // done
-    return NULL;
+	// done
+	return NULL;
 }
 
 CPeer *CPeers::FindPeer(const CCallsign &Callsign, const CIp &Ip, int Protocol)
 {
-    for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ )
-    {
-        if ( (*it)->GetCallsign().HasSameCallsign(Callsign) &&
-            ((*it)->GetIp() == Ip)  &&
-            ((*it)->GetProtocol() == Protocol) )
-        {
-            return *it;
-        }
-    }
+	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
+		if ( (*it)->GetCallsign().HasSameCallsign(Callsign) &&
+				((*it)->GetIp() == Ip)  &&
+				((*it)->GetProtocol() == Protocol) ) {
+			return *it;
+		}
+	}
 
-    // done
-    return NULL;
+	// done
+	return NULL;
 }
 
 CPeer *CPeers::FindPeer(const CCallsign &Callsign, int Protocol)
 {
-    for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ )
-    {
-        if ( ((*it)->GetProtocol() == Protocol) &&
-            (*it)->GetCallsign().HasSameCallsign(Callsign) )
-        {
-            return *it;
-        }
-    }
+	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
+		if ( ((*it)->GetProtocol() == Protocol) &&
+				(*it)->GetCallsign().HasSameCallsign(Callsign) ) {
+			return *it;
+		}
+	}
 
-    // done
-    return NULL;
+	// done
+	return NULL;
 }
 
 
@@ -177,14 +164,12 @@ CPeer *CPeers::FindPeer(const CCallsign &Callsign, int Protocol)
 
 CPeer *CPeers::FindNextPeer(int Protocol, std::list<CPeer *>::iterator &it)
 {
-    while ( it != m_Peers.end() )
-    {
-        if ( (*it)->GetProtocol() == Protocol )
-        {
-            return *it++;
-        }
-        it++;
-    }
-    return NULL;
+	while ( it != m_Peers.end() ) {
+		if ( (*it)->GetProtocol() == Protocol ) {
+			return *it++;
+		}
+		it++;
+	}
+	return NULL;
 }
 

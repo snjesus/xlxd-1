@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cprotocols_h
@@ -38,24 +38,28 @@
 class CProtocols
 {
 public:
-    // constructors
-    CProtocols();
-    
-    // destructors
-    virtual ~CProtocols();
-    
-    // initialization
-    bool Init(void);
-    void Close(void);
-    
-    // get
-    int Size(void) const            { return (int)m_Protocols.size(); }
-    CProtocol *GetProtocol(int i)   { return m_Protocols[i]; }
-    
+	// constructors
+	CProtocols();
+
+	// destructors
+	virtual ~CProtocols();
+
+	// initialization
+	bool Init(void);
+	void Close(void);
+
+	// get
+	int Size(void) const            {
+		return (int)m_Protocols.size();
+	}
+	CProtocol *GetProtocol(int i)   {
+		return m_Protocols[i];
+	}
+
 protected:
-    // data
-    std::mutex                                m_Mutex;
-    std::array<CProtocol *, NB_OF_PROTOCOLS>  m_Protocols;
+	// data
+	std::mutex                                m_Mutex;
+	std::array<CProtocol *, NB_OF_PROTOCOLS>  m_Protocols;
 };
 
 

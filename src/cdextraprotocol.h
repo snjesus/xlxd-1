@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cdextraprotocol_h
@@ -58,49 +58,49 @@
 class CDextraProtocol : public CProtocol
 {
 public:
-    // constructor
-    CDextraProtocol() {};
-    
-    // destructor
-    virtual ~CDextraProtocol() {};
-    
-    // initialization
-    bool Init(void);
-    
-    // task
-    void Task(void);
+	// constructor
+	CDextraProtocol() {};
+
+	// destructor
+	virtual ~CDextraProtocol() {};
+
+	// initialization
+	bool Init(void);
+
+	// task
+	void Task(void);
 
 protected:
-    // queue helper
-    void HandleQueue(void);
+	// queue helper
+	void HandleQueue(void);
 
-    // keepalive helpers
-    void HandleKeepalives(void);
+	// keepalive helpers
+	void HandleKeepalives(void);
 
-    // stream helpers
-    bool OnDvHeaderPacketIn(CDvHeaderPacket *, const CIp &);
-    
-    // packet decoding helpers
-    bool                IsValidConnectPacket(const CBuffer &, CCallsign *, char *, int *);
-    bool                IsValidDisconnectPacket(const CBuffer &, CCallsign *);
-    bool                IsValidKeepAlivePacket(const CBuffer &, CCallsign *);
-    CDvHeaderPacket     *IsValidDvHeaderPacket(const CBuffer &);
-    CDvFramePacket      *IsValidDvFramePacket(const CBuffer &);
-    CDvLastFramePacket  *IsValidDvLastFramePacket(const CBuffer &);
-    
-    // packet encoding helpers
-    void                EncodeKeepAlivePacket(CBuffer *);
-    void                EncodeConnectAckPacket(CBuffer *, int);
-    void                EncodeConnectNackPacket(CBuffer *);
-    void                EncodeDisconnectPacket(CBuffer *);
-    void                EncodeDisconnectedPacket(CBuffer *);
-    bool                EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const;
-    bool                EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const;
-    bool                EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const;
-    
+	// stream helpers
+	bool OnDvHeaderPacketIn(CDvHeaderPacket *, const CIp &);
+
+	// packet decoding helpers
+	bool                IsValidConnectPacket(const CBuffer &, CCallsign *, char *, int *);
+	bool                IsValidDisconnectPacket(const CBuffer &, CCallsign *);
+	bool                IsValidKeepAlivePacket(const CBuffer &, CCallsign *);
+	CDvHeaderPacket     *IsValidDvHeaderPacket(const CBuffer &);
+	CDvFramePacket      *IsValidDvFramePacket(const CBuffer &);
+	CDvLastFramePacket  *IsValidDvLastFramePacket(const CBuffer &);
+
+	// packet encoding helpers
+	void                EncodeKeepAlivePacket(CBuffer *);
+	void                EncodeConnectAckPacket(CBuffer *, int);
+	void                EncodeConnectNackPacket(CBuffer *);
+	void                EncodeDisconnectPacket(CBuffer *);
+	void                EncodeDisconnectedPacket(CBuffer *);
+	bool                EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const;
+	bool                EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const;
+	bool                EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const;
+
 protected:
-    // time
-    CTimePoint          m_LastKeepaliveTime;
+	// time
+	CTimePoint          m_LastKeepaliveTime;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

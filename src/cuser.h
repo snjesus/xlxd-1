@@ -19,7 +19,7 @@
 //    GNU General Public License for more details.
 //
 //    You should have received a copy of the GNU General Public License
-//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>. 
+//    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
 #ifndef cuser_h
@@ -33,32 +33,34 @@
 class CUser
 {
 public:
-    // constructor
-    CUser();
-    CUser(const CCallsign &, const CCallsign &, const CCallsign &, const CCallsign &);
-    CUser(const CUser &);
-    
-    // destructor
-    ~CUser() {}
-    
-    // operation
-    void HeardNow(void)     { m_LastHeardTime = std::time(NULL); }
+	// constructor
+	CUser();
+	CUser(const CCallsign &, const CCallsign &, const CCallsign &, const CCallsign &);
+	CUser(const CUser &);
 
-    // operators
-    bool operator ==(const CUser &) const;
-    bool operator <(const CUser &) const;
+	// destructor
+	~CUser() {}
 
-    // reporting
-    void WriteXml(std::ofstream &);
-    void GetJsonObject(char *);
+	// operation
+	void HeardNow(void)     {
+		m_LastHeardTime = std::time(NULL);
+	}
+
+	// operators
+	bool operator ==(const CUser &) const;
+	bool operator <(const CUser &) const;
+
+	// reporting
+	void WriteXml(std::ofstream &);
+	void GetJsonObject(char *);
 
 protected:
-    // data
-    CCallsign   m_My;
-    CCallsign   m_Rpt1;
-    CCallsign   m_Rpt2;
-    CCallsign   m_Xlx;
-    std::time_t m_LastHeardTime;
+	// data
+	CCallsign   m_My;
+	CCallsign   m_Rpt1;
+	CCallsign   m_Rpt2;
+	CCallsign   m_Xlx;
+	std::time_t m_LastHeardTime;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
