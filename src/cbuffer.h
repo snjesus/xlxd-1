@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cbuffer.h
 //  xlxd
@@ -23,20 +25,17 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cbuffer_h
-#define cbuffer_h
-
 ////////////////////////////////////////////////////////////////////////////////////////
 
 class CBuffer
 {
 public:
 	// constructor
-	CBuffer() {};
+	CBuffer() {}
 	CBuffer(uint8 *, int);
 
 	// destructor
-	virtual ~CBuffer() {};
+	virtual ~CBuffer() {}
 
 	// set
 	void Set(uint8 *, int);
@@ -68,25 +67,12 @@ public:
 	std::vector<uint8> v;
 
 	// methods
-	std::vector<uint8>::size_type size() const {
-		return v.size();
-	}
-	uint8 *data() {
-		return v.data();
-	}
-	const uint8 *data() const {
-		return v.data();
-	}
-	uint8 at(std::vector<uint8>::size_type i) {
-		return v.at(i);
-	}
-	void clear() {
-		v.clear();
-	}
-	void resize(std::vector<uint8>::size_type len, uint8 val = 0U) {
-		v.resize(len, val);
-	}
+	std::vector<uint8>::size_type size() const	{ return v.size(); }
+	uint8 *data()								{ return v.data(); }
+	const uint8 *data() const					{ return v.data(); }
+	uint8 at(std::vector<uint8>::size_type i)	{ return v.at(i); }
+	void clear()								{ v.clear(); }
+	void resize(std::vector<uint8>::size_type len, uint8 val = 0U) { v.resize(len, val); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cbuffer_h */

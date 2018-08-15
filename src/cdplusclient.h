@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdplusclient.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdplusclient_h
-#define cdplusclient_h
-
 #include "cclient.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -43,27 +42,15 @@ public:
 	CDplusClient(const CDplusClient &);
 
 	// destructor
-	virtual ~CDplusClient() {};
+	virtual ~CDplusClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_DPLUS;
-	}
-	const char *GetProtocolName(void) const     {
-		return "DPlus";
-	}
-	int GetCodec(void) const                    {
-		return CODEC_AMBEPLUS;
-	}
-	bool IsNode(void) const                     {
-		return true;
-	}
-	bool IsDextraDongle(void) const             {
-		return m_bDextraDongle;
-	}
-	void SetDextraDongle(void)                  {
-		m_bDextraDongle = true;
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_DPLUS; }
+	const char *GetProtocolName(void) const     { return "DPlus"; }
+	int GetCodec(void) const                    { return CODEC_AMBEPLUS; }
+	bool IsNode(void) const                     { return true; }
+	bool IsDextraDongle(void) const             { return m_bDextraDongle; }
+	void SetDextraDongle(void)                  { m_bDextraDongle = true; }
 
 	// status
 	bool IsAlive(void) const;
@@ -75,4 +62,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdplusclient_h */

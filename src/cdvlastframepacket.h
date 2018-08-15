@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdvlastframepacket.h
 //  xlxd
@@ -22,10 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdvlastframepacket_h
-#define cdvlastframepacket_h
-
-
 #include "cdvframepacket.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -46,20 +44,15 @@ public:
 	CDvLastFramePacket(const CDvLastFramePacket &);
 
 	// destructor
-	virtual ~CDvLastFramePacket() {};
+	virtual ~CDvLastFramePacket() {}
 
 	// virtual duplication
 	CPacket *Duplicate(void) const;
 
 	// identity
-	bool IsLastPacket(void) const           {
-		return true;
-	}
-	bool HaveTranscodableAmbe(void) const   {
-		return false;
-	}
+	bool IsLastPacket(void) const           { return true; }
+	bool HaveTranscodableAmbe(void) const   { return false; }
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdvlastframepacket_h */

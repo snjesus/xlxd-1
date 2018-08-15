@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cxlxprotocol.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cxlxprotocol_h
-#define cxlxprotocol_h
-
 #include "cversion.h"
 #include "ctimepoint.h"
 #include "cdextraprotocol.h"
@@ -41,10 +40,10 @@ class CXlxProtocol : public CDextraProtocol
 {
 public:
 	// constructor
-	CXlxProtocol() {};
+	CXlxProtocol() {}
 
 	// destructor
-	virtual ~CXlxProtocol() {};
+	virtual ~CXlxProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -94,4 +93,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cxlxprotocol_h */

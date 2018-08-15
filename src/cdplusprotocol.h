@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdplusprotocol.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdplusprotocol_h
-#define cdplusprotocol_h
-
 #include "ctimepoint.h"
 #include "cprotocol.h"
 #include "cdvheaderpacket.h"
@@ -42,9 +41,7 @@ class CDplusClient;
 class CDPlusStreamCacheItem
 {
 public:
-	CDPlusStreamCacheItem()     {
-		m_iSeqCounter = 0;
-	}
+	CDPlusStreamCacheItem()     { m_iSeqCounter = 0; }
 	~CDPlusStreamCacheItem()    {}
 
 	CDvHeaderPacket m_dvHeader;
@@ -55,10 +52,10 @@ class CDplusProtocol : public CProtocol
 {
 public:
 	// constructor
-	CDplusProtocol() {};
+	CDplusProtocol() {}
 
 	// destructor
-	virtual ~CDplusProtocol() {};
+	virtual ~CDplusProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -105,4 +102,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdplusprotocol_h */

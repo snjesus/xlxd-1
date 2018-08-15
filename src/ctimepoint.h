@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ctimepoint.h
 //  xlxd
@@ -23,10 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef ctimepoint_h
-#define ctimepoint_h
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
@@ -40,9 +38,7 @@ public:
 	virtual ~CTimePoint() {}
 
 	// operation
-	void   Now(void) {
-		m_TimePoint = std::chrono::steady_clock::now();
-	}
+	void   Now(void) { m_TimePoint = std::chrono::steady_clock::now(); }
 	double DurationSinceNow(void) const;
 
 	// task
@@ -55,4 +51,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* ctimepoint_h */

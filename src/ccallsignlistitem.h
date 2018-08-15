@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ccallsignlistitem.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef ccallsignlistitem_h
-#define ccallsignlistitem_h
 
 #include "main.h"
 #include "ccallsign.h"
@@ -56,20 +55,12 @@ public:
 	bool CheckListedModules(char*) const;
 
 	// get
-	const CCallsign &GetCallsign(void) const        {
-		return m_Callsign;
-	}
-	const CIp &GetIp(void) const                    {
-		return m_Ip;
-	}
-	const char *GetModules(void)                    {
-		return m_Modules;
-	}
+	const CCallsign &GetCallsign(void) const        { return m_Callsign; }
+	const CIp &GetIp(void) const                    { return m_Ip; }
+	const char *GetModules(void)                    { return m_Modules; }
 
 	// update
-	void ResolveIp(void)                            {
-		m_Ip = CIp(m_szUrl);
-	}
+	void ResolveIp(void)                            { m_Ip = CIp(m_szUrl); }
 
 protected:
 	// data
@@ -81,5 +72,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* ccallsignlistitem_h */

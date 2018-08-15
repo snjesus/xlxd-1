@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmrplusprotocol.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdmrplusprotocol_h
-#define cdmrplusprotocol_h
-
 #include "ctimepoint.h"
 #include "cprotocol.h"
 #include "cdvheaderpacket.h"
@@ -43,9 +42,7 @@
 class CDmrplusStreamCacheItem
 {
 public:
-	CDmrplusStreamCacheItem()     {
-		m_uiSeqId = 0x77;
-	}
+	CDmrplusStreamCacheItem()     { m_uiSeqId = 0x77; }
 	~CDmrplusStreamCacheItem()    {}
 
 	CDvHeaderPacket m_dvHeader;
@@ -60,10 +57,10 @@ class CDmrplusProtocol : public CProtocol
 {
 public:
 	// constructor
-	CDmrplusProtocol() {};
+	CDmrplusProtocol() {}
 
 	// destructor
-	virtual ~CDmrplusProtocol() {};
+	virtual ~CDmrplusProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -121,6 +118,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
-#endif /* cdmrplusprotocol_h */

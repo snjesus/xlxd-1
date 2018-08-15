@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cnotification.h
 //  xlxd
@@ -21,10 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-
-#ifndef cnotification_h
-#define cnotification_h
 
 #include "ccallsign.h"
 
@@ -51,15 +49,11 @@ public:
 	CNotification(int, const CCallsign &);
 
 	// destructor
-	~CNotification() {};
+	~CNotification() {}
 
 	// get
-	int GetId(void) const                       {
-		return m_iId;
-	}
-	const CCallsign &GetCallsign(void) const    {
-		return m_Callsign;
-	}
+	int GetId(void) const                       { return m_iId; }
+	const CCallsign &GetCallsign(void) const    { return m_Callsign; }
 
 protected:
 	// data
@@ -69,4 +63,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cnotification_h */

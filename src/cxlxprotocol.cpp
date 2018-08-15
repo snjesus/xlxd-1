@@ -411,7 +411,7 @@ void CXlxProtocol::OnDvFramePacketIn(CDvFramePacket *DvFrame, const CIp *Ip)
 	// tag packet as remote peer origin
 	DvFrame->SetRemotePeerOrigin();
 
-	// anc call base class
+	// and call base class
 	CDextraProtocol::OnDvFramePacketIn(DvFrame, Ip);
 }
 
@@ -420,7 +420,7 @@ void CXlxProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *DvFrame, const CIp 
 	// tag packet as remote peer origin
 	DvFrame->SetRemotePeerOrigin();
 
-	// anc call base class
+	// and call base class
 	CDextraProtocol::OnDvLastFramePacketIn(DvFrame, Ip);
 }
 
@@ -671,9 +671,7 @@ int CXlxProtocol::GetConnectingPeerProtocolRevision(const CCallsign &Callsign, c
 	// BM ?
 	if ( Callsign.HasSameCallsignWithWildcard(CCallsign("BM*")) ) {
 		protrev = CBmPeer::GetProtocolRevision(Version);
-	}
-	// otherwise, assume native xlx
-	else {
+	} else {	// otherwise, assume native xlx
 		protrev = CXlxPeer::GetProtocolRevision(Version);
 	}
 

@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmrmmdvmclient.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdmrmmdvmclient_h
-#define cdmrmmdvmclient_h
-
 #include "cclient.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -43,26 +42,16 @@ public:
 	CDmrmmdvmClient(const CDmrmmdvmClient &);
 
 	// destructor
-	virtual ~CDmrmmdvmClient() {};
+	virtual ~CDmrmmdvmClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_DMRMMDVM;
-	}
-	const char *GetProtocolName(void) const     {
-		return "DMRMmdvm";
-	}
-	int GetCodec(void) const                    {
-		return CODEC_AMBE2PLUS;
-	}
-	bool IsNode(void) const                     {
-		return true;
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_DMRMMDVM; }
+	const char *GetProtocolName(void) const     { return "DMRMmdvm"; }
+	int GetCodec(void) const                    { return CODEC_AMBE2PLUS; }
+	bool IsNode(void) const                     { return true; }
 
 	// status
 	bool IsAlive(void) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* cdmrmmdvmclient_h */

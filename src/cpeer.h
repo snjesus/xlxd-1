@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cpeer.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cpeer_h
-#define cpeer_h
 
 #include "cversion.h"
 #include "ctimepoint.h"
@@ -53,46 +52,26 @@ public:
 	bool operator ==(const CPeer &) const;
 
 	// get
-	const CCallsign &GetCallsign(void) const            {
-		return m_Callsign;
-	}
-	const CIp &GetIp(void) const                        {
-		return m_Ip;
-	}
-	char *GetModulesModules(void)                       {
-		return m_ReflectorModules;
-	}
+	const CCallsign &GetCallsign(void) const            { return m_Callsign; }
+	const CIp &GetIp(void) const                        { return m_Ip; }
+	char *GetModulesModules(void)                       { return m_ReflectorModules; }
 
 	// set
 
 	// identity
-	virtual int GetProtocol(void) const                 {
-		return PROTOCOL_NONE;
-	}
-	virtual int GetProtocolRevision(void) const         {
-		return 0;
-	}
-	virtual const char *GetProtocolName(void) const     {
-		return "none";
-	}
+	virtual int GetProtocol(void) const                 { return PROTOCOL_NONE; }
+	virtual int GetProtocolRevision(void) const         { return 0; }
+	virtual const char *GetProtocolName(void) const     { return "none"; }
 
 	// status
 	virtual bool IsAMaster(void) const;
 	virtual void Alive(void);
-	virtual bool IsAlive(void) const                    {
-		return false;
-	}
-	virtual void Heard(void)                            {
-		m_LastHeardTime = std::time(NULL);
-	}
+	virtual bool IsAlive(void) const                    { return false; }
+	virtual void Heard(void)                            { m_LastHeardTime = std::time(NULL); }
 
 	// clients access
-	CClient *GetClient(std::list<CClient *>::iterator it) {
-		return (it==m_Clients.end()) ? NULL : *it;
-	}
-	std::list<CClient *>::iterator InitClientIterator()   {
-		return m_Clients.begin();
-	}
+	CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
+	std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
 
 	// reporting
 	virtual void WriteXml(std::ofstream &);
@@ -113,4 +92,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cpeer_h */

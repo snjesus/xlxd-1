@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *   Copyright (C) 2015 by Jonathan Naylor G4KLX
  *
@@ -16,9 +18,6 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(RS129_H)
-#define	RS129_H
-
 class CRS129
 {
 public:
@@ -26,5 +25,3 @@ public:
 
 	static void encode(const unsigned char* msg, unsigned int nbytes, unsigned char* parity);
 };
-
-#endif

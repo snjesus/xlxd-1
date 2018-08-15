@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  creflector.h
 //  xlxd
@@ -22,16 +24,12 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef creflector_h
-#define creflector_h
-
 #include "cusers.h"
 #include "cclients.h"
 #include "cpeers.h"
 #include "cprotocols.h"
 #include "cpacketstream.h"
 #include "cnotificationqueue.h"
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // define
@@ -55,46 +53,24 @@ public:
 	virtual ~CReflector();
 
 	// settings
-	void SetCallsign(const CCallsign &callsign)     {
-		m_Callsign = callsign;
-	}
-	const CCallsign &GetCallsign(void) const        {
-		return m_Callsign;
-	}
-	void SetListenIp(const CIp &ip)                 {
-		m_Ip = ip;
-	}
-	void SetTranscoderIp(const CIp &ip)             {
-		m_AmbedIp = ip;
-	}
-	const CIp &GetListenIp(void) const              {
-		return m_Ip;
-	}
-	const CIp &GetTranscoderIp(void) const          {
-		return m_AmbedIp;
-	}
+	void SetCallsign(const CCallsign &callsign)	{ m_Callsign = callsign; }
+	const CCallsign &GetCallsign(void) const	{ return m_Callsign; }
+	void SetListenIp(const CIp &ip)				{ m_Ip = ip; }
+	void SetTranscoderIp(const CIp &ip)			{ m_AmbedIp = ip; }
+	const CIp &GetListenIp(void) const			{ return m_Ip; }
+	const CIp &GetTranscoderIp(void) const		{ return m_AmbedIp; }
 
 	// operation
 	bool Start(void);
 	void Stop(void);
 
 	// clients
-	CClients  *GetClients(void)                     {
-		m_Clients.Lock();
-		return &m_Clients;
-	}
-	void      ReleaseClients(void)                  {
-		m_Clients.Unlock();
-	}
+	CClients  *GetClients(void)		{ m_Clients.Lock(); return &m_Clients; }
+	void      ReleaseClients(void)	{ m_Clients.Unlock(); }
 
 	// peers
-	CPeers   *GetPeers(void)                        {
-		m_Peers.Lock();
-		return &m_Peers;
-	}
-	void      ReleasePeers(void)                    {
-		m_Peers.Unlock();
-	}
+	CPeers   *GetPeers(void)		{ m_Peers.Lock(); return &m_Peers; }
+	void      ReleasePeers(void)	{ m_Peers.Unlock(); }
 
 	// stream opening & closing
 	CPacketStream *OpenStream(CDvHeaderPacket *, CClient *);
@@ -102,22 +78,13 @@ public:
 	void CloseStream(CPacketStream *);
 
 	// users
-	CUsers  *GetUsers(void)                         {
-		m_Users.Lock();
-		return &m_Users;
-	}
-	void    ReleaseUsers(void)                      {
-		m_Users.Unlock();
-	}
+	CUsers  *GetUsers(void)				{ m_Users.Lock(); return &m_Users; }
+	void    ReleaseUsers(void)			{ m_Users.Unlock(); }
 
 	// get
-	bool IsValidModule(char c) const                {
-		return (GetModuleIndex(c) >= 0);
-	}
+	bool IsValidModule(char c) const	{ return (GetModuleIndex(c) >= 0); }
 	int  GetModuleIndex(char) const;
-	char GetModuleLetter(int i) const               {
-		return 'A' + (char)i;
-	}
+	char GetModuleLetter(int i) const	{ return 'A' + (char)i; }
 
 	// notifications
 	void OnPeersChanged(void);
@@ -173,4 +140,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* creflector_h */

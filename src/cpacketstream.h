@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cpacketstream.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cpacketstream_h
-#define cpacketstream_h
-
 #include "cpacketqueue.h"
 #include "ctimepoint.h"
 #include "cdvheaderpacket.h"
@@ -45,7 +44,7 @@ public:
 	CPacketStream();
 
 	// destructor
-	virtual ~CPacketStream() {};
+	virtual ~CPacketStream() {}
 
 	// open / close
 	bool Open(const CDvHeaderPacket &, CClient *);
@@ -53,28 +52,16 @@ public:
 
 	// push & pop
 	void Push(CPacket *);
-	void Tickle(void)                               {
-		m_LastPacketTime.Now();
-	}
+	void Tickle(void)                               { m_LastPacketTime.Now(); }
 	bool IsEmpty(void) const;
 
 	// get
-	CClient         *GetOwnerClient(void)           {
-		return m_OwnerClient;
-	}
+	CClient         *GetOwnerClient(void)           { return m_OwnerClient; }
 	const CIp       *GetOwnerIp(void);
-	bool            IsExpired(void) const           {
-		return (m_LastPacketTime.DurationSinceNow() > STREAM_TIMEOUT);
-	}
-	bool            IsOpen(void) const              {
-		return m_bOpen;
-	}
-	uint16          GetStreamId(void) const         {
-		return m_uiStreamId;
-	}
-	const CCallsign &GetUserCallsign(void) const    {
-		return m_DvHeader.GetMyCallsign();
-	}
+	bool            IsExpired(void) const           { return (m_LastPacketTime.DurationSinceNow() > STREAM_TIMEOUT); }
+	bool            IsOpen(void) const              { return m_bOpen; }
+	uint16          GetStreamId(void) const         { return m_uiStreamId; }
+	const CCallsign &GetUserCallsign(void) const    { return m_DvHeader.GetMyCallsign(); }
 
 protected:
 	// data
@@ -88,4 +75,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cpacketstream_h */

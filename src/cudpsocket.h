@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cudpsocket.h
 //  xlxd
@@ -22,11 +24,7 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cudpsocket_h
-#define cudpsocket_h
-
 #include <sys/types.h>
-//#include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/socket.h>
@@ -57,9 +55,7 @@ public:
 	// open & close
 	bool Open(uint16);
 	void Close(void);
-	int  GetSocket(void)        {
-		return m_Socket;
-	}
+	int  GetSocket(void)        { return m_Socket; }
 
 	// read
 	int Receive(CBuffer *, CIp *, int);
@@ -77,4 +73,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cudpsocket_h */

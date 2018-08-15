@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cnotificationqueue.h
 //  xlxd
@@ -22,11 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-
-
-#ifndef cnotificationqueue_h
-#define cnotificationqueue_h
-
 #include "cnotification.h"
 
 
@@ -42,36 +39,18 @@ public:
 	CNotificationQueue() {}
 
 	// destructor
-	virtual ~CNotificationQueue() {
-		while (! q.empty()) {
-			q.pop();
-		}
-	}
+	virtual ~CNotificationQueue() { while (! q.empty()) { q.pop(); } }
 
 	// lock
-	void Lock()                 {
-		m_Mutex.lock();
-	}
-	void Unlock()               {
-		m_Mutex.unlock();
-	}
+	void Lock()                 { m_Mutex.lock(); }
+	void Unlock()               { m_Mutex.unlock(); }
 
 	// methods
-	bool empty() const					{
-		return q.empty();
-	}
-	CNotification front()				{
-		return q.front();
-	}
-	const CNotification front() const	{
-		return q.front();
-	}
-	void pop()							{
-		q.pop();
-	}
-	void push(CNotification note)		{
-		q.push(note);
-	}
+	bool empty() const					{ return q.empty(); }
+	CNotification front()				{ return q.front(); }
+	const CNotification front() const	{ return q.front(); }
+	void pop()							{ q.pop(); }
+	void push(CNotification note)		{ q.push(note); }
 
 
 protected:
@@ -81,4 +60,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cnotificationqueue_h */

@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cuser.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cuser_h
-#define cuser_h
-
 #include "ccallsign.h"
 #include "cbuffer.h"
 
@@ -42,9 +41,7 @@ public:
 	~CUser() {}
 
 	// operation
-	void HeardNow(void)     {
-		m_LastHeardTime = std::time(NULL);
-	}
+	void HeardNow(void)     { m_LastHeardTime = std::time(NULL); }
 
 	// operators
 	bool operator ==(const CUser &) const;
@@ -64,4 +61,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cuser_h */

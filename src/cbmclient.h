@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cbmclient.h
 //  xlxd
@@ -22,10 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cbmclient_h
-#define cbmclient_h
-
-
 #include "cclient.h"
 #include "cxlxclient.h"
 
@@ -45,24 +43,14 @@ public:
 	CBmClient(const CBmClient &);
 
 	// destructor
-	virtual ~CBmClient() {};
+	virtual ~CBmClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_XLX;
-	}
-	int GetProtocolRevision(void) const         {
-		return XLX_PROTOCOL_REVISION_2;
-	}
-	const char *GetProtocolName(void) const     {
-		return "XLX";
-	}
-	int GetCodec(void) const                    {
-		return CODEC_AMBE2PLUS;
-	}
-	bool IsPeer(void) const                     {
-		return true;
-	}
+	int GetProtocol(void) const				{ return PROTOCOL_XLX; }
+	int GetProtocolRevision(void) const		{ return XLX_PROTOCOL_REVISION_2; }
+	const char *GetProtocolName(void) const	{ return "XLX"; }
+	int GetCodec(void) const				{ return CODEC_AMBE2PLUS; }
+	bool IsPeer(void) const					{ return true; }
 
 	// status
 	bool IsAlive(void) const;
@@ -72,4 +60,3 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cbmclient_h */

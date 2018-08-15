@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *   Copyright (C) 2015,2016 by Jonathan Naylor G4KLX
  *
@@ -16,9 +18,6 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if !defined(CRC_H)
-#define	CRC_H
-
 class CCRC
 {
 public:
@@ -33,5 +32,3 @@ public:
 
 	static unsigned char crc8(const unsigned char* in, unsigned int length);
 };
-
-#endif

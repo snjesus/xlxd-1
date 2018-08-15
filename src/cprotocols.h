@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cprotocols.h
 //  xlxd
@@ -22,11 +24,7 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cprotocols_h
-#define cprotocols_h
-
 #include "cprotocol.h"
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // define
@@ -49,12 +47,8 @@ public:
 	void Close(void);
 
 	// get
-	int Size(void) const            {
-		return (int)m_Protocols.size();
-	}
-	CProtocol *GetProtocol(int i)   {
-		return m_Protocols[i];
-	}
+	int Size(void) const            { return (int)m_Protocols.size(); }
+	CProtocol *GetProtocol(int i)   { return m_Protocols[i]; }
 
 protected:
 	// data
@@ -64,5 +58,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* cprotocols_h */

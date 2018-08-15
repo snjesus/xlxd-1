@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cbmpeer.h
 //  xlxd
@@ -21,10 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cbmpeer_h
-#define cbmpeer_h
-
 
 #include "cpeer.h"
 #include "cbmclient.h"
@@ -51,16 +49,11 @@ public:
 	bool IsAlive(void) const;
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_XLX;
-	}
-	const char *GetProtocolName(void) const     {
-		return "XLX";
-	}
+	int GetProtocol(void) const				{ return PROTOCOL_XLX; }
+	const char *GetProtocolName(void) const	{ return "XLX"; }
 
 	// revision helper
 	static int GetProtocolRevision(const CVersion &);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cbmpeer_h */

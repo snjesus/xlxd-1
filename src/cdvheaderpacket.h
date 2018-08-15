@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdvheaderpacket.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cdvheaderpacket_h
-#define cdvheaderpacket_h
 
 #include "ccallsign.h"
 #include "cpacket.h"
@@ -66,15 +65,13 @@ public:
 	CDvHeaderPacket(const CDvHeaderPacket &);
 
 	// destructor
-	virtual ~CDvHeaderPacket() {};
+	virtual ~CDvHeaderPacket() {}
 
 	// virtual duplication
 	CPacket *Duplicate(void) const;
 
 	// identity
-	bool IsDvHeader(void) const                     {
-		return true;
-	}
+	bool IsDvHeader(void) const                     { return true; }
 
 	// conversion
 	void ConvertToDstarStruct(struct dstar_header *) const;
@@ -83,40 +80,20 @@ public:
 	bool IsValid(void) const;
 
 	// get callsigns
-	const CCallsign &GetUrCallsign(void) const      {
-		return m_csUR;
-	}
-	const CCallsign &GetRpt1Callsign(void) const    {
-		return m_csRPT1;
-	}
-	const CCallsign &GetRpt2Callsign(void) const    {
-		return m_csRPT2;
-	}
-	const CCallsign &GetMyCallsign(void) const      {
-		return m_csMY;
-	}
+	const CCallsign &GetUrCallsign(void) const      { return m_csUR; }
+	const CCallsign &GetRpt1Callsign(void) const    { return m_csRPT1; }
+	const CCallsign &GetRpt2Callsign(void) const    { return m_csRPT2; }
+	const CCallsign &GetMyCallsign(void) const      { return m_csMY; }
 
 	// get modules
-	char GetUrModule(void) const                    {
-		return m_csUR.GetModule();
-	}
-	char GetRpt1Module(void) const                  {
-		return m_csRPT1.GetModule();
-	}
-	char GetRpt2Module(void) const                  {
-		return m_csRPT2.GetModule();
-	}
-	char GetMyModule(void) const                    {
-		return m_csMY.GetModule();
-	}
+	char GetUrModule(void) const                    { return m_csUR.GetModule(); }
+	char GetRpt1Module(void) const                  { return m_csRPT1.GetModule(); }
+	char GetRpt2Module(void) const                  { return m_csRPT2.GetModule(); }
+	char GetMyModule(void) const                    { return m_csMY.GetModule(); }
 
 	// set callsigns
-	void SetRpt2Callsign(const CCallsign &cs)       {
-		m_csRPT2 = cs;
-	}
-	void SetRpt2Module(char c)                      {
-		m_csRPT2.SetModule(c);
-	}
+	void SetRpt2Callsign(const CCallsign &cs)       { m_csRPT2 = cs; }
+	void SetRpt2Module(char c)                      { m_csRPT2.SetModule(c); }
 
 	// operators
 	bool operator ==(const CDvHeaderPacket &) const;
@@ -141,4 +118,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdvheaderpacket_h */

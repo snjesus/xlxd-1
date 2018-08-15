@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdvframepacket.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cdvframepacket_h
-#define cdvframepacket_h
 
 #include "cpacket.h"
 
@@ -59,33 +58,21 @@ public:
 	CDvFramePacket(const CDvFramePacket &);
 
 	// destructor
-	virtual ~CDvFramePacket() {};
+	virtual ~CDvFramePacket() {}
 
 	// virtual duplication
 	CPacket *Duplicate(void) const;
 
 	// identity
-	bool IsDvFrame(void) const              {
-		return true;
-	}
-	bool HaveTranscodableAmbe(void) const   {
-		return true;
-	}
+	bool IsDvFrame(void) const              { return true; }
+	bool HaveTranscodableAmbe(void) const   { return true; }
 
 	// get
 	const uint8 *GetAmbe(uint8) const;
-	const uint8 *GetAmbe(void) const        {
-		return m_uiAmbe;
-	}
-	const uint8 *GetAmbePlus(void) const    {
-		return m_uiAmbePlus;
-	}
-	const uint8 *GetDvData(void) const      {
-		return m_uiDvData;
-	}
-	const uint8 *GetDvSync(void) const      {
-		return m_uiDvSync;
-	}
+	const uint8 *GetAmbe(void) const        { return m_uiAmbe; }
+	const uint8 *GetAmbePlus(void) const    { return m_uiAmbePlus; }
+	const uint8 *GetDvData(void) const      { return m_uiDvData; }
+	const uint8 *GetDvSync(void) const      { return m_uiDvSync; }
 
 	// set
 	void SetDvData(uint8 *);
@@ -96,12 +83,8 @@ public:
 
 protected:
 	// get
-	uint8 *GetAmbeData(void)                {
-		return m_uiAmbe;
-	}
-	uint8 *GetAmbePlusData(void)            {
-		return m_uiAmbePlus;
-	}
+	uint8 *GetAmbeData(void)                { return m_uiAmbe; }
+	uint8 *GetAmbePlusData(void)            { return m_uiAmbePlus; }
 
 protected:
 	// data (dstar)
@@ -114,4 +97,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdvframepacket_h */

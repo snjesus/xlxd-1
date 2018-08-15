@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ccallsignlist.h
 //  xlxd
@@ -23,10 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-
-#ifndef ccallsignlist_h
-#define ccallsignlist_h
-
 #include "main.h"
 #include "ccallsignlistitem.h"
 
@@ -43,12 +41,8 @@ public:
 	virtual ~CCallsignList() {}
 
 	// locks
-	void Lock(void)                        {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                      {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                        { m_Mutex.lock(); }
+	void Unlock(void)                      { m_Mutex.unlock(); }
 
 	// file io
 	virtual bool LoadFromFile(const char *);
@@ -62,15 +56,9 @@ public:
 	bool IsCallsignListed(const CCallsign &, char*) const;
 
 	// access
-	std::list<CCallsignListItem>::iterator InitCallsignIterator() {
-		return m_Callsigns.begin();
-	}
-	CCallsignListItem *GetCallsignItem(std::list<CCallsignListItem>::iterator it) {
-		return (it==m_Callsigns.end()) ? NULL : &(*it);
-	}
-	bool empty() const {
-		return m_Callsigns.empty();
-	}
+	std::list<CCallsignListItem>::iterator InitCallsignIterator() { return m_Callsigns.begin(); }
+	CCallsignListItem *GetCallsignItem(std::list<CCallsignListItem>::iterator it) { return (it==m_Callsigns.end()) ? NULL : &(*it); }
+	bool empty() const { return m_Callsigns.empty(); }
 
 	// find
 	CCallsignListItem *FindListItem(const CCallsign &);
@@ -90,4 +78,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* ccallsignlist_h */

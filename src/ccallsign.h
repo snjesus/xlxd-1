@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ccallsign.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef ccallsign_h
-#define ccallsign_h
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // define
 
@@ -44,14 +43,12 @@ public:
 	CCallsign(const CCallsign &);
 
 	// destructor
-	virtual ~CCallsign() {};
+	virtual ~CCallsign() {}
 
 	// status
 	bool IsValid(void) const;
 	bool HasSuffix(void) const;
-	bool HasModule(void) const                {
-		return m_Module != ' ';
-	}
+	bool HasModule(void) const                { return m_Module != ' '; }
 
 	// set
 	void SetCallsign(const char *, bool = true);
@@ -68,13 +65,9 @@ public:
 	// get
 	void GetCallsign(uint8 *) const;
 	void GetCallsignString(char *) const;
-	uint32 GetDmrid(void) const             {
-		return m_uiDmrid;
-	}
+	uint32 GetDmrid(void) const             { return m_uiDmrid; }
 	void GetSuffix(uint8 *) const;
-	char GetModule(void) const              {
-		return m_Module;
-	}
+	char GetModule(void) const              { return m_Module; }
 
 	// compare
 	bool HasSameCallsign(const CCallsign &) const;
@@ -102,4 +95,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* ccallsign_h */

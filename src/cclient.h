@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cclient.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cclient_h
-#define cclient_h
-
 #include "ctimepoint.h"
 #include "cip.h"
 #include "ccallsign.h"
@@ -45,80 +44,40 @@ public:
 	CClient(const CClient &);
 
 	// destructor
-	virtual ~CClient() {};
+	virtual ~CClient() {}
 
 	// operators
 	bool operator ==(const CClient &) const;
 
 	// get
-	const CCallsign &GetCallsign(void) const            {
-		return m_Callsign;
-	}
-	const CIp &GetIp(void) const                        {
-		return m_Ip;
-	}
-	bool HasModule(void) const                          {
-		return m_Callsign.HasModule();
-	}
-	char GetModule(void) const                          {
-		return m_Callsign.GetModule();
-	}
-	bool HasReflectorModule(void) const                 {
-		return m_ReflectorModule != ' ';
-	}
-	char GetReflectorModule(void) const                 {
-		return m_ReflectorModule;
-	}
+	const CCallsign &GetCallsign(void) const            { return m_Callsign; }
+	const CIp &GetIp(void) const                        { return m_Ip; }
+	bool HasModule(void) const                          { return m_Callsign.HasModule(); }
+	char GetModule(void) const                          { return m_Callsign.GetModule(); }
+	bool HasReflectorModule(void) const                 { return m_ReflectorModule != ' '; }
+	char GetReflectorModule(void) const                 { return m_ReflectorModule; }
 
 	// set
-	void SetModule(char c)                              {
-		m_Callsign.SetModule(c);
-	}
-	void SetReflectorModule(char c)                     {
-		m_ReflectorModule = c;
-	}
+	void SetModule(char c)                              { m_Callsign.SetModule(c); }
+	void SetReflectorModule(char c)                     { m_ReflectorModule = c; }
 
 	// identity
-	virtual int GetProtocol(void) const                 {
-		return PROTOCOL_NONE;
-	}
-	virtual int GetProtocolRevision(void) const         {
-		return 0;
-	}
-	virtual int GetCodec(void) const                    {
-		return CODEC_NONE;
-	}
-	virtual const char *GetProtocolName(void) const     {
-		return "none";
-	}
-	virtual bool IsNode(void) const                     {
-		return false;
-	}
-	virtual bool IsPeer(void) const                     {
-		return false;
-	}
-	virtual bool IsDextraDongle(void) const             {
-		return false;
-	}
+	virtual int GetProtocol(void) const                 { return PROTOCOL_NONE; }
+	virtual int GetProtocolRevision(void) const         { return 0; }
+	virtual int GetCodec(void) const                    { return CODEC_NONE; }
+	virtual const char *GetProtocolName(void) const     { return "none"; }
+	virtual bool IsNode(void) const                     { return false; }
+	virtual bool IsPeer(void) const                     { return false; }
+	virtual bool IsDextraDongle(void) const             { return false; }
 	virtual void SetDextraDongle(void)                  { }
 
 	// status
 	virtual void Alive(void);
-	virtual bool IsAlive(void) const                    {
-		return false;
-	}
-	virtual bool IsAMaster(void) const                  {
-		return (m_ModuleMastered != ' ');
-	}
-	virtual void SetMasterOfModule(char c)              {
-		m_ModuleMastered = c;
-	}
-	virtual void NotAMaster(void)                       {
-		m_ModuleMastered = ' ';
-	}
-	virtual void Heard(void)                            {
-		m_LastHeardTime = std::time(NULL);
-	}
+	virtual bool IsAlive(void) const                    { return false; }
+	virtual bool IsAMaster(void) const                  { return (m_ModuleMastered != ' '); }
+	virtual void SetMasterOfModule(char c)              { m_ModuleMastered = c; }
+	virtual void NotAMaster(void)                       { m_ModuleMastered = ' '; }
+	virtual void Heard(void)                            { m_LastHeardTime = std::time(NULL); }
 
 	// reporting
 	virtual void WriteXml(std::ofstream &);
@@ -140,4 +99,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cclient_h */

@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cpeers.h
 //  xlxd
@@ -23,9 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cpeers_h
-#define cpeers_h
-
 #include "cpeer.h"
 
 
@@ -46,22 +45,14 @@ public:
 	virtual ~CPeers();
 
 	// locks
-	void Lock(void)                     {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                   {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                     { m_Mutex.lock(); }
+	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// manage peers
 	void    AddPeer(CPeer *);
 	void    RemovePeer(CPeer *);
-	CPeer   *GetPeer(std::list<CPeer *>::iterator it) {
-		return (it==m_Peers.end()) ? NULL : *it;
-	}
-	std::list<CPeer *>::iterator InitPeerIterator()   {
-		return m_Peers.begin();
-	}
+	CPeer   *GetPeer(std::list<CPeer *>::iterator it) { return (it==m_Peers.end()) ? NULL : *it; }
+	std::list<CPeer *>::iterator InitPeerIterator()   { return m_Peers.begin(); }
 
 	// find peers
 	CPeer *FindPeer(const CIp &, int);
@@ -77,6 +68,4 @@ protected:
 	std::list<CPeer *> m_Peers;
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cpeers_h */

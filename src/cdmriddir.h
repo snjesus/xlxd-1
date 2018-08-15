@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmriddir.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdmriddir_h
-#define cdmriddir_h
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -36,10 +35,7 @@
 
 struct CallsignCompare
 {
-	bool operator() (const CCallsign &cs1, const CCallsign &cs2) const
-	{
-		return cs1.HasLowerCallsign(cs2);
-	}
+	bool operator() (const CCallsign &cs1, const CCallsign &cs2) const { return cs1.HasLowerCallsign(cs2); }
 };
 
 
@@ -59,20 +55,12 @@ public:
 	virtual void Close(void);
 
 	// locks
-	void Lock(void)                                 {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                               {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                                 { m_Mutex.lock(); }
+	void Unlock(void)                               { m_Mutex.unlock(); }
 
 	// refresh
-	virtual bool LoadContent(CBuffer *)             {
-		return false;
-	}
-	virtual bool RefreshContent(const CBuffer &)    {
-		return false;
-	}
+	virtual bool LoadContent(CBuffer *)             { return false; }
+	virtual bool RefreshContent(const CBuffer &)    { return false; }
 
 	// find
 	const CCallsign *FindCallsign(uint32);
@@ -84,9 +72,7 @@ protected:
 
 	// reload helpers
 	bool Reload(void);
-	virtual bool NeedReload(void)                    {
-		return false;
-	}
+	virtual bool NeedReload(void)                    { return false; }
 	bool IsValidDmrid(const char *);
 
 protected:
@@ -104,4 +90,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdmriddir_h */

@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cusers.h
 //  xlxd
@@ -23,9 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cusers_h
-#define cusers_h
-
 #include "cuser.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -40,21 +39,13 @@ public:
 	virtual ~CUsers() {}
 
 	// locks
-	void Lock(void)                     {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                   {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                     { m_Mutex.lock(); }
+	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// management
 	void   AddUser(const CUser &);
-	CUser *GetUser(std::list<CUser>::iterator it) {
-		return (it==m_Users.end()) ? NULL : &(*it);
-	}
-	std::list<CUser>::iterator InitUserIterator() {
-		return m_Users.begin();
-	}
+	CUser *GetUser(std::list<CUser>::iterator it) { return (it==m_Users.end()) ? NULL : &(*it); }
+	std::list<CUser>::iterator InitUserIterator() { return m_Users.begin(); }
 
 	// operation
 	void   Hearing(const CCallsign &, const CCallsign &, const CCallsign &);
@@ -67,4 +58,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cusers_h */

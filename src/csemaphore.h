@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  csemaphore.h
 //  xlxd
@@ -22,10 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef csemaphore_h
-#define csemaphore_h
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
@@ -36,7 +34,7 @@ public:
 	CSemaphore();
 
 	// destructor
-	virtual ~CSemaphore() {};
+	virtual ~CSemaphore() {}
 
 	// operation
 	void Reset(void);
@@ -53,4 +51,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* csemaphore_h */

@@ -1,3 +1,4 @@
+#pragma once 
 //
 //  cdextraprotocol.h
 //  xlxd
@@ -21,9 +22,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cdextraprotocol_h
-#define cdextraprotocol_h
 
 #include "ctimepoint.h"
 #include "cprotocol.h"
@@ -59,10 +57,10 @@ class CDextraProtocol : public CProtocol
 {
 public:
 	// constructor
-	CDextraProtocol() {};
+	CDextraProtocol() {}
 
 	// destructor
-	virtual ~CDextraProtocol() {};
+	virtual ~CDextraProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -104,4 +102,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdextraprotocol_h */

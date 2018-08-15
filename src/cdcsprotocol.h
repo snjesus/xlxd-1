@@ -1,3 +1,6 @@
+#pragma once
+
+//
 //
 //  cdcsprotocol.h
 //  xlxd
@@ -22,9 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdcsprotocol_h
-#define cdcsprotocol_h
-
 #include "ctimepoint.h"
 #include "cprotocol.h"
 #include "cdvheaderpacket.h"
@@ -40,9 +40,7 @@
 class CDcsStreamCacheItem
 {
 public:
-	CDcsStreamCacheItem()     {
-		m_iSeqCounter = 0;
-	}
+	CDcsStreamCacheItem()     { m_iSeqCounter = 0; }
 	~CDcsStreamCacheItem()    {}
 
 	CDvHeaderPacket m_dvHeader;
@@ -53,10 +51,10 @@ class CDcsProtocol : public CProtocol
 {
 public:
 	// constructor
-	CDcsProtocol() {};
+	CDcsProtocol() {}
 
 	// destructor
-	virtual ~CDcsProtocol() {};
+	virtual ~CDcsProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -99,4 +97,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdcsprotocol_h */

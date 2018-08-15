@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cxlxpeer.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cxlxpeer_h
-#define cxlxpeer_h
 
 #include "cpeer.h"
 #include "cxlxclient.h"
@@ -50,16 +49,11 @@ public:
 	bool IsAlive(void) const;
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_XLX;
-	}
-	const char *GetProtocolName(void) const     {
-		return "XLX";
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_XLX; }
+	const char *GetProtocolName(void) const     { return "XLX"; }
 
 	// revision helper
 	static int GetProtocolRevision(const CVersion &);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cxlxpeer_h */

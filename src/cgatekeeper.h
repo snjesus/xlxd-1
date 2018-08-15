@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cgatekeeper.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cgatekeeper_h
-#define cgatekeeper_h
 
 #include "main.h"
 #include "ccallsign.h"
@@ -52,13 +51,8 @@ public:
 	bool MayTransmit(const CCallsign &, const CIp &, int = PROTOCOL_ANY, char = ' ') const;
 
 	// peer list handeling
-	CPeerCallsignList *GetPeerList(void)    {
-		m_PeerList.Lock();
-		return &m_PeerList;
-	}
-	void ReleasePeerList(void)              {
-		m_PeerList.Unlock();
-	}
+	CPeerCallsignList *GetPeerList(void)    { m_PeerList.Lock(); return &m_PeerList; }
+	void ReleasePeerList(void)              { m_PeerList.Unlock(); }
 
 protected:
 	// thread
@@ -82,4 +76,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cgatekeeper_h */

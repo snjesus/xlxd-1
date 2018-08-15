@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *   Copyright (C) 2015 by Jonathan Naylor G4KLX
  *
@@ -16,9 +18,6 @@
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef Golay2087_H
-#define Golay2087_H
-
 class CGolay2087 {
 public:
 	static void encode(unsigned char* data);
@@ -28,5 +27,3 @@ public:
 private:
 	static unsigned int getSyndrome1987(unsigned int pattern);
 };
-
-#endif

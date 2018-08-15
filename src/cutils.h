@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *	Copyright (C) 2009,2014,2015 by Jonathan Naylor, G4KLX
  *
@@ -11,9 +13,6 @@
  *	GNU General Public License for more details.
  */
 
-#ifndef	Utils_H
-#define	Utils_H
-
 #include <string>
 
 class CUtils {
@@ -26,5 +25,3 @@ public:
 
 private:
 };
-
-#endif

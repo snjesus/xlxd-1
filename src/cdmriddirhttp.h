@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmriddirhttp.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdmriddirhttp_h
-#define cdmriddirhttp_h
-
 #include "cdmriddir.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -44,11 +43,8 @@ public:
 
 protected:
 	// reload helpers
-	bool NeedReload(void)  {
-		return true;
-	}
+	bool NeedReload(void)  { return true; }
 	bool HttpGet(const char *, const char *, int, CBuffer *);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdmriddirhttp_h */

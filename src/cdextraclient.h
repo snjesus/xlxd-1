@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdextraclient.h
 //  xlxd
@@ -22,8 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdextraclient_h
-#define cdextraclient_h
 
 #include "cclient.h"
 
@@ -43,24 +43,14 @@ public:
 	CDextraClient(const CDextraClient &);
 
 	// destructor
-	virtual ~CDextraClient() {};
+	virtual ~CDextraClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_DEXTRA;
-	}
-	int GetProtocolRevision(void) const         {
-		return m_ProtRev;
-	}
-	const char *GetProtocolName(void) const     {
-		return "DExtra";
-	}
-	int GetCodec(void) const                    {
-		return CODEC_AMBEPLUS;
-	}
-	bool IsNode(void) const                     {
-		return true;
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_DEXTRA; }
+	int GetProtocolRevision(void) const         { return m_ProtRev; }
+	const char *GetProtocolName(void) const     { return "DExtra"; }
+	int GetCodec(void) const                    { return CODEC_AMBEPLUS; }
+	bool IsNode(void) const                     { return true; }
 
 	// status
 	bool IsAlive(void) const;
@@ -71,4 +61,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdextraclient_h */

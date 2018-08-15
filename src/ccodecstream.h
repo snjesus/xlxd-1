@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ccodecstream.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef ccodecstream_h
-#define ccodecstream_h
 
 #include "csemaphore.h"
 #include "cudpsocket.h"
@@ -57,27 +56,13 @@ public:
 	void Close(void);
 
 	// get
-	bool   IsConnected(void) const          {
-		return m_bConnected;
-	}
-	uint16 GetStreamId(void) const          {
-		return m_uiStreamId;
-	}
-	double GetPingMin(void) const           {
-		return m_fPingMin;
-	}
-	double GetPingMax(void) const           {
-		return m_fPingMax;
-	}
-	double GetPingAve(void) const           {
-		return (m_fPingCount != 0) ? m_fPingSum/m_fPingCount : 0;
-	}
-	uint32 GetTotalPackets(void) const      {
-		return m_uiTotalPackets;
-	}
-	uint32 GetTimeoutPackets(void) const    {
-		return m_uiTimeoutPackets;
-	}
+	bool   IsConnected(void) const          { return m_bConnected; }
+	uint16 GetStreamId(void) const          { return m_uiStreamId; }
+	double GetPingMin(void) const           { return m_fPingMin; }
+	double GetPingMax(void) const           { return m_fPingMax; }
+	double GetPingAve(void) const           { return (m_fPingCount != 0) ? m_fPingSum/m_fPingCount : 0; }
+	uint32 GetTotalPackets(void) const      { return m_uiTotalPackets; }
+	uint32 GetTimeoutPackets(void) const    { return m_uiTimeoutPackets; }
 	bool   IsEmpty(void) const;
 
 	// task
@@ -127,4 +112,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* ccodecstream_h */

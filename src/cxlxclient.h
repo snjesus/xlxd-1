@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cxlxclient.h
 //  xlxd
@@ -22,10 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cxlxclient_h
-#define cxlxclient_h
-
-
 #include "cclient.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -48,22 +46,14 @@ public:
 	CXlxClient(const CXlxClient &);
 
 	// destructor
-	virtual ~CXlxClient() {};
+	virtual ~CXlxClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_XLX;
-	}
-	int GetProtocolRevision(void) const         {
-		return m_ProtRev;
-	}
-	const char *GetProtocolName(void) const     {
-		return "XLX";
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_XLX; }
+	int GetProtocolRevision(void) const         { return m_ProtRev; }
+	const char *GetProtocolName(void) const     { return "XLX"; }
 	int GetCodec(void) const;
-	bool IsPeer(void) const                     {
-		return true;
-	}
+	bool IsPeer(void) const                     { return true; }
 
 	// status
 	bool IsAlive(void) const;
@@ -77,4 +67,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cxlxclient_h */

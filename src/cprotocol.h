@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cprotocol.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cprotocol_h
-#define cprotocol_h
 
 #include "cudpsocket.h"
 #include "cpacketstream.h"
@@ -81,40 +80,25 @@ public:
 	virtual void Close(void);
 
 	// queue
-	CPacketQueue *GetQueue(void)        {
-		m_Queue.Lock();
-		return &m_Queue;
-	}
-	void ReleaseQueue(void)             {
-		m_Queue.Unlock();
-	}
+	CPacketQueue *GetQueue(void)        { m_Queue.Lock(); return &m_Queue; }
+	void ReleaseQueue(void)             { m_Queue.Unlock(); }
 
 	// get
-	const CCallsign &GetReflectorCallsign(void)const {
-		return m_ReflectorCallsign;
-	}
+	const CCallsign &GetReflectorCallsign(void)const { return m_ReflectorCallsign; }
 
 	// task
 	static void Thread(CProtocol *);
-	virtual void Task(void) {};
+	virtual void Task(void) {}
 
 protected:
 	// packet encoding helpers
 	virtual bool EncodeDvPacket(const CPacket &, CBuffer *) const;
-	virtual bool EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const         {
-		return false;
-	}
-	virtual bool EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const           {
-		return false;
-	}
-	virtual bool EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const   {
-		return false;
-	}
+	virtual bool EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const         { return false; }
+	virtual bool EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const           { return false; }
+	virtual bool EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const   { return false; }
 
 	// stream helpers
-	virtual bool OnDvHeaderPacketIn(CDvHeaderPacket *, const CIp &) {
-		return false;
-	}
+	virtual bool OnDvHeaderPacketIn(CDvHeaderPacket *, const CIp &) { return false; }
 	virtual void OnDvFramePacketIn(CDvFramePacket *, const CIp * = NULL);
 	virtual void OnDvLastFramePacketIn(CDvLastFramePacket *, const CIp * = NULL);
 
@@ -159,4 +143,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cprotocol_h */

@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *   Copyright (C) 2015 by Jonathan Naylor G4KLX
  *
@@ -15,9 +17,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#if !defined(BPTC19696_H)
-#define	BPTC19696_H
 
 class CBPTC19696
 {
@@ -44,4 +43,3 @@ private:
 	void encodeExtractBinary(unsigned char* data);
 };
 
-#endif

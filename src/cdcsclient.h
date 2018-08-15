@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdcsclient.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cdcsclient_h
-#define cdcsclient_h
-
 #include "cclient.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -43,26 +42,16 @@ public:
 	CDcsClient(const CDcsClient &);
 
 	// destructor
-	virtual ~CDcsClient() {};
+	virtual ~CDcsClient() {}
 
 	// identity
-	int GetProtocol(void) const                 {
-		return PROTOCOL_DCS;
-	}
-	const char *GetProtocolName(void) const     {
-		return "DCS";
-	}
-	int GetCodec(void) const                    {
-		return CODEC_AMBEPLUS;
-	}
-	bool IsNode(void) const                     {
-		return true;
-	}
+	int GetProtocol(void) const                 { return PROTOCOL_DCS; }
+	const char *GetProtocolName(void) const     { return "DCS"; }
+	int GetCodec(void) const                    { return CODEC_AMBEPLUS; }
+	bool IsNode(void) const                     { return true; }
 
 	// status
 	bool IsAlive(void) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* cdcsclient_h */

@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cpeercallsignlist.h
 //  xlxd
@@ -23,11 +25,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-
-#ifndef cpeercallsignlist_h
-#define cpeercallsignlist_h
-
-
 #include "main.h"
 #include "ccallsignlist.h"
 
@@ -38,10 +35,10 @@ class CPeerCallsignList : public CCallsignList
 {
 public:
 	// constructor
-	CPeerCallsignList() {};
+	CPeerCallsignList() {}
 
 	// destructor
-	virtual ~CPeerCallsignList() {};
+	virtual ~CPeerCallsignList() {}
 
 	// file io
 	bool LoadFromFile(const char *);
@@ -49,4 +46,3 @@ public:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cpeercallsignlist_h */

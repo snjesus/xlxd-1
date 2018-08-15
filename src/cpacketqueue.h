@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cpacketqueue.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cpacketqueue_h
-#define cpacketqueue_h
-
 #include "cpacket.h"
 #include "cclient.h"
 
@@ -42,37 +41,18 @@ public:
 	CPacketQueue() {}
 
 	// destructor
-	virtual ~CPacketQueue() {
-		while (! q.empty()) {
-			delete front();
-			pop();
-		}
-	}
+	virtual ~CPacketQueue() { while (! q.empty()) { delete front(); pop(); } }
 
 	// lock
-	void Lock()                 {
-		m_Mutex.lock();
-	}
-	void Unlock()               {
-		m_Mutex.unlock();
-	}
+	void Lock()                 { m_Mutex.lock(); }
+	void Unlock()               { m_Mutex.unlock(); }
 
 	// methods
-	bool empty() const				{
-		return q.empty();
-	}
-	CPacket *front()				{
-		return q.front();
-	}
-	const CPacket *front() const	{
-		return q.front();
-	}
-	void pop()						{
-		q.pop();
-	}
-	void push(CPacket *packet)		{
-		q.push(packet);
-	}
+	bool empty() const				{ return q.empty(); }
+	CPacket *front()				{ return q.front(); }
+	const CPacket *front() const	{ return q.front(); }
+	void pop()						{ q.pop(); }
+	void push(CPacket *packet)		{ q.push(packet); }
 
 protected:
 	// status
@@ -86,4 +66,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cpacketqueue_h */

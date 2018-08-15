@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  ctranscoder.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef ctranscoder_h
-#define ctranscoder_h
 
 #include "csemaphore.h"
 #include "ccodecstream.h"
@@ -53,17 +52,11 @@ public:
 	void Close(void);
 
 	// locks
-	void Lock(void)                     {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                   {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                     { m_Mutex.lock(); }
+	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// status
-	bool IsConnected(void) const        {
-		return m_bConnected;
-	}
+	bool IsConnected(void) const        { return m_bConnected; }
 
 	// manage streams
 	CCodecStream *GetStream(CPacketStream *, uint8);
@@ -114,4 +107,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* ctranscoder_h */

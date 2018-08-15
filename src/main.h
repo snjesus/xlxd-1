@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  main.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef main_h
-#define main_h
 
 #include <vector>
 #include <list>
@@ -193,4 +192,3 @@ extern CTranscoder g_Transcoder;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* main_h */

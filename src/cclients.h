@@ -1,3 +1,6 @@
+#pragma once
+
+//
 //
 //  cclients.h
 //  xlxd
@@ -23,9 +26,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cclients_h
-#define cclients_h
-
 #include "cclient.h"
 
 
@@ -46,22 +46,14 @@ public:
 	virtual ~CClients();
 
 	// locks
-	void Lock(void)                     {
-		m_Mutex.lock();
-	}
-	void Unlock(void)                   {
-		m_Mutex.unlock();
-	}
+	void Lock(void)                     { m_Mutex.lock(); }
+	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// manage Clients
 	void    AddClient(CClient *);
 	void    RemoveClient(CClient *);
-	std::list<CClient *>::iterator InitClientIterator()   {
-		return m_Clients.begin();
-	}
-	CClient *GetClient(std::list<CClient *>::iterator it) {
-		return (it==m_Clients.end()) ? NULL : *it;
-	}
+	std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
+	CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
 	bool    IsClient(CClient *) const;
 
 	// find clients
@@ -85,4 +77,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cclients_h */

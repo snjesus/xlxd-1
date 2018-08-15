@@ -1,3 +1,5 @@
+#pragma once
+
 /*
  *   Copyright (C) 2015,2016 by Jonathan Naylor G4KLX
  *
@@ -15,9 +17,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#ifndef	Hamming_H
-#define	Hamming_H
 
 class CHamming {
 public:
@@ -39,5 +38,3 @@ public:
 	static void encode17123(bool* d);
 	static bool decode17123(bool* d);
 };
-
-#endif

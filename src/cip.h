@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cip.h
 //  xlxd
@@ -22,9 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#ifndef cip_h
-#define cip_h
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
@@ -40,21 +39,15 @@ public:
 	CIp(const CIp &);
 
 	// destructor
-	virtual ~CIp() {};
+	virtual ~CIp() {}
 
 	// sockaddr
 	void SetSockAddr(struct sockaddr_in *);
-	struct sockaddr_in *GetSockAddr(void)     {
-		return &m_Addr;
-	}
+	struct sockaddr_in *GetSockAddr(void)     { return &m_Addr; }
 
 	// convertor
-	uint32 GetAddr(void) const                {
-		return m_Addr.sin_addr.s_addr;
-	}
-	uint16 GetPort(void) const                {
-		return m_Addr.sin_port;
-	}
+	uint32 GetAddr(void) const                { return m_Addr.sin_addr.s_addr; }
+	uint16 GetPort(void) const                { return m_Addr.sin_port; }
 
 	// operator
 	bool operator ==(const CIp &) const;
@@ -66,4 +59,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cip_h */

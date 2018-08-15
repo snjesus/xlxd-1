@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cversion.h
 //  xlxd
@@ -22,11 +24,6 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-
-#ifndef cversion_h
-#define cversion_h
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // class
 
@@ -42,15 +39,9 @@ public:
 	virtual ~CVersion() {}
 
 	// get
-	int GetMajor(void) const        {
-		return m_iMajor;
-	}
-	int GetMinor(void) const        {
-		return m_iMinor;
-	}
-	int GetRevision(void) const     {
-		return m_iRevision;
-	}
+	int GetMajor(void) const        { return m_iMajor; }
+	int GetMinor(void) const        { return m_iMinor; }
+	int GetRevision(void) const     { return m_iRevision; }
 
 	// comparaison
 	bool IsEqualOrHigherTo(const CVersion &) const;
@@ -67,4 +58,3 @@ protected:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cversion_h */

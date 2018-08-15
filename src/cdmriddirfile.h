@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmrididirfile.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cdmrididirfile_h
-#define cdmrididirfile_h
 
 #include "cdmriddir.h"
 
@@ -56,4 +55,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-#endif /* cdmrididirfile_h */

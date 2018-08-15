@@ -1,3 +1,5 @@
+#pragma once
+
 //
 //  cdmrmmdvmprotocol.h
 //  xlxd
@@ -21,9 +23,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
-
-#ifndef cdmrmmdvmprotocol_h
-#define cdmrmmdvmprotocol_h
 
 #include "ctimepoint.h"
 #include "cprotocol.h"
@@ -67,10 +66,10 @@ class CDmrmmdvmProtocol : public CProtocol
 {
 public:
 	// constructor
-	CDmrmmdvmProtocol() {};
+	CDmrmmdvmProtocol() {}
 
 	// destructor
-	virtual ~CDmrmmdvmProtocol() {};
+	virtual ~CDmrmmdvmProtocol() {}
 
 	// initialization
 	bool Init(void);
@@ -137,5 +136,3 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-#endif /* cdmrmmdvmprotocol_h */
