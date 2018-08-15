@@ -57,10 +57,10 @@ bool CDmridDir::Init(void)
 {
 	// load content
 	Reload();
-	
+
     // reset stop flag
     m_bStopThread = false;
-    
+
     // start  thread;
     m_pThread = new std::thread(CDmridDir::Thread, this);
 
@@ -83,14 +83,17 @@ void CDmridDir::Close(void)
 
 void CDmridDir::Thread(CDmridDir *This)
 {
+	int limit = DMRIDDB_REFRESH_RATE * 30; 	// DMRIDDB_REFRESH_RATE is in minutes!
+	int count = 0;
     while ( !This->m_bStopThread )
     {
-        // Wait 30 seconds
-        CTimePoint::TaskSleepFor(DMRIDDB_REFRESH_RATE * 60000);
+        // Wait for 2 second
+        CTimePoint::TaskSleepFor(2000);
 
-        // have lists files changed ?
-        if ( This->NeedReload() )
+		// have we waited DMRIDDB_REFRESH_RATE minutes AND has the file changed?
+        if ( ( ++count >= limit ) && This->NeedReload() )
         {
+			count = 0;	// reset the counter
            	This->Reload();
         }
      }
@@ -103,7 +106,7 @@ bool CDmridDir::Reload(void)
 {
     CBuffer buffer;
     bool ok = false;
-    
+
     if ( LoadContent(&buffer) )
     {
         Lock();
