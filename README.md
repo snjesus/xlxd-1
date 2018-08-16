@@ -1,109 +1,112 @@
-# Copyright
+# Introduction
 
-© 2016 Luc Engelmann LX1IQ
+This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code simpler as well. In this version, no classes are derrived from any standard containers. I consider this bad programing and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development. The Makefile has been improved to provide automatically generated dependances. The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Any file you will be modifying for your configuraiton will be a copy of a repository file that has a `.example` suffix. The one exception to this is `Makefile` mentioned previously.
 
-The XLX Multiprotocol Gateway Reflector Server is part of the software system
-for the D-Star Network.
-The sources are published under GPL Licenses.
+- 73 de n7tae
 
 # Usage
 
-The packages which are described in this document are designed to install server
-software which is used for the D-Star network infrastructure.
-It requires a 24/7 internet connection which can support 20 voice streams or more
-to connect repeaters and hotspot dongles!!
+The packages which are described in this document are designed to install server software which is used for the D-Star network infrastructure. It requires a 24/7 internet connection which can support 20 voice streams or more to connect repeaters and hotspot dongles!
 
-- The server requires a fix IP-address !
-- The public IP address should have a DNS record which must be published in the
-common host files.
+- The server requires a static IP-address!
+- The public IP address should have a DNS record which must be published in the common host files.
 
-If you want to run this software please make sure that you can provide this
-service free of charge, like the developer team provides the software and the
-network infrastructure free of charge!
-
-# Requirements
-
-The software packages for Linux are tested on Debian7 (Wheezy) 32 and 64bit or newer.
-Raspbian will work but is not recommended.
-Please use the stable version listed above, we cannot support others.
+If you want to run this software please make sure that you can provide this service free of charge, like the developer team provides the software and they network infrastructure free of charge! If you don't need transcoding support, you don't need to build or install `ambed`.
 
 # Installation
 
-## Debian 7 (Wheezy) 32 and 64bit
-
 ###### After a clean installation of debian make sure to run update and upgrade
 ```
-# apt-get update
-# apt-get upgrade
+sudo apt update
+sudo apt upgrade
 ```
-###### Install Git
+###### Required packages (some of these will probabaly already be installed)
 ```
-# apt-get install git git-core
-```
-###### Install webserver with PHP5 support
-```
-# apt-get install apache2 php5
-```
-
-###### Install g++ compiler
-```
- # apt-get install build-essential
- # apt-get install g++-4.7 (skip this step on Debian 8.x) 
+sudo apt install git git-core
+sudo apt install apache2 php5
+sudo apt install build-essential
+sudo apt install g++
 ```
 
-###### Download and compile the XLX sources
+###### Download the sources
 ```
-# git clone https://github.com/LX3JL/xlxd.git
-# cd xlxd/src/
-# make clean
-# make
-# make install
+# git clone https://github.com/n7tae/xlxd.git
 ```
 
-###### Copy startup script "xlxd" to /etc/init.d
+###### Create and edit the xlxd `main.h` file
+Go to the xlxd/src directory and
 ```
-# cp ~/xlxd/scripts/xlxd /etc/init.d/xlxd
+cd xlxd/src
+cp main.h.example main.h
 ```
+Use your favorite editory to modify `main.h`. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
 
-###### Adapt the default startup parameters to your needs
-```
-# pico /etc/init.d/xlxd
-```
-###### Download the dmrid.dat from the XLXAPI server to your xlxd folder
-```
-# wget -O /xlxd/dmrid.dat http://xlxapi.rlx.lu/api/exportdmr.php
-```
+You will also want to set NB_OF_MODULES to the number of modules you need. The max is 26. If you want to use module Z you need to set `NB_OF_MODULES` to 26.
 
-###### Check your FTDI driver and install the AMBE service according to the readme in AMBEd
+###### Create and edit your systemd startup scripts
 ```
- 
+cd ../systemd
+cp ambed.service.example ambed.service
+cp xlxd.service.example xlxd.service
 ```
+Use your favorite editor to modify `ambed.service` and `xlxd.service`. You probabaly won't need to make any changes to the ambed script, but you will need to set the reflector name and IP address in the xlxd script.
 
-###### Last step is to declare the service for automatic startup and shutdown
+###### Create and edit your blacklist, whitelist and linking files
 ```
-# update-rc.d xlxd defaults
+cd ../config
+cp xlx.blacklist.example xlxd.blacklist
+cp xlx.whitelist.example xlxd.whitelist
+cp xlx.interlink.example xlxd.interlink
 ```
+Use your favorite editor to modify each of these files. If you want a totally open network, the blacklist and whitelist files are ready to go. The blacklist determine which callsigns can't use the reflector. The whitelist determines which callsigns can use the reflector and the interlink files set up the XLX<--->XLX linking. When building your network, remember that XLX only supports a single hop, so each XLX reflector needs to be interlinked with all the reflectors for that module's network. Along with multi-protocol support, this is the outstanding feature of the XLX design!
 
-###### Start or stop the service with
+###### Compile and install the xlxd and ambed programs
 ```
-# service xlxd start
-# service xlxd stop
+cd ../xlxd
+make -j<N>
+sudo make install
+cd ../ambed
+make -j<N>
+sudo make install
 ```
+Replace the `<N>` with the number of processors on your system, which can be found with `cat /proc/cpuinfo`.
+
+###### Start the services
+```
+sudo systemctl start xlxd
+sudo systemctl start ambed
+```
+You can stop each component by replacing `start` with `stop`.
 
 ###### Copy dashboard to /var/www
 ```
-# cp -r ~/xlxd/dashboard /var/www/db
+sudo cp -r ~/xlxd/dashboard /var/www/db
 ```
 
-###### Give the dashboard read access to the server log file 
+###### Give the dashboard read access to the server log file
 ```
-# chmod +r /var/log/messages 
+sudo chmod +r /var/log/messages
 ```
 
 ###### Reboot server to see if the auto-start is working
 ```
-# reboot
+sudo shutdown -r now
 ```
+
+###### Updating xlxd and ambed
+Go to the build directory, `xlxd`, and execute
+```
+git pull
+cd ambed
+make -j<N>
+sudo make install
+sudo systemctl restart ambed
+cd ../src
+make -j<N>
+sudo make install
+sudo systemctl restart xlxd
+```
+If you notice there are new versions of any of the `.example` files or a new `Makefile` after you do the `git pull`, you will want to reconcile those new files with your copies **before** you make and install the executables.
 
 # Firewall settings #
 
@@ -121,4 +124,12 @@ XLX Server requires the following ports to be open and forwarded properly for in
  - UDP port 10100         (AMBE controller port)
  - UDP port 10101 - 10199 (AMBE transcoding port)
 
+# Copyright
+
 © 2016 Luc Engelmann LX1IQ
+© 2016 Thomas A. Early, N7TAE
+
+
+The XLX Multiprotocol Gateway Reflector Server is part of the software system
+for the D-Star Network.
+The sources are published under GPL Licenses.
