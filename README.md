@@ -15,12 +15,12 @@ If you want to run this software please make sure that you can provide this serv
 
 # Installation
 
-###### After a clean installation of debian make sure to run update and upgrade
+#### After a clean installation of debian make sure to run update and upgrade
 ```
 sudo apt update
 sudo apt upgrade
 ```
-###### Required packages (some of these will probabaly already be installed)
+#### Required packages (some of these will probabaly already be installed)
 ```
 sudo apt install git git-core
 sudo apt install apache2 php5
@@ -28,12 +28,12 @@ sudo apt install build-essential
 sudo apt install g++
 ```
 
-###### Download the sources
+#### Download the sources
 ```
 # git clone https://github.com/n7tae/xlxd.git
 ```
 
-###### Create and edit the xlxd `main.h` file
+#### Create and edit the xlxd `main.h` file
 Go to the xlxd/src directory and
 ```
 cd xlxd/src
@@ -43,7 +43,7 @@ Use your favorite editory to modify `main.h`. By default, the DMR ID file is dow
 
 You will also want to set NB_OF_MODULES to the number of modules you need. The max is 26. If you want to use module Z you need to set `NB_OF_MODULES` to 26.
 
-###### Create and edit your systemd startup scripts
+#### Create and edit your systemd startup scripts
 ```
 cd ../systemd
 cp ambed.service.example ambed.service
@@ -51,7 +51,7 @@ cp xlxd.service.example xlxd.service
 ```
 Use your favorite editor to modify `ambed.service` and `xlxd.service`. You probabaly won't need to make any changes to the ambed script, but you will need to set the reflector name and IP address in the xlxd script.
 
-###### Create and edit your blacklist, whitelist and linking files
+#### Create and edit your blacklist, whitelist and linking files
 ```
 cd ../config
 cp xlx.blacklist.example xlxd.blacklist
@@ -60,7 +60,7 @@ cp xlx.interlink.example xlxd.interlink
 ```
 Use your favorite editor to modify each of these files. If you want a totally open network, the blacklist and whitelist files are ready to go. The blacklist determine which callsigns can't use the reflector. The whitelist determines which callsigns can use the reflector and the interlink files set up the XLX<--->XLX linking. When building your network, remember that XLX only supports a single hop, so each XLX reflector needs to be interlinked with all the reflectors for that module's network. Along with multi-protocol support, this is the outstanding feature of the XLX design!
 
-###### Compile and install the xlxd and ambed programs
+#### Compile and install the xlxd and ambed programs
 ```
 cd ../xlxd
 make -j<N>
@@ -71,29 +71,29 @@ sudo make install
 ```
 Replace the `<N>` with the number of processors on your system, which can be found with `cat /proc/cpuinfo`.
 
-###### Start the services
+#### Start the services
 ```
 sudo systemctl start xlxd
 sudo systemctl start ambed
 ```
 You can stop each component by replacing `start` with `stop`.
 
-###### Copy dashboard to /var/www
+#### Copy dashboard to /var/www
 ```
 sudo cp -r ~/xlxd/dashboard /var/www/db
 ```
 
-###### Give the dashboard read access to the server log file
+#### Give the dashboard read access to the server log file
 ```
 sudo chmod +r /var/log/messages
 ```
 
-###### Reboot server to see if the auto-start is working
+#### Reboot server to see if the auto-start is working
 ```
 sudo shutdown -r now
 ```
 
-###### Updating xlxd and ambed
+# Updating xlxd and ambed
 Go to the build directory, `xlxd`, and execute
 ```
 git pull
@@ -108,7 +108,7 @@ sudo systemctl restart xlxd
 ```
 If you notice there are new versions of any of the `.example` files or a new `Makefile` after you do the `git pull`, you will want to reconcile those new files with your copies **before** you make and install the executables.
 
-# Firewall settings #
+# Firewall settings
 
 XLX Server requires the following ports to be open and forwarded properly for in- and outgoing network traffic:
  - TCP port 80            (http) optional TCP port 443 (https)
