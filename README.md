@@ -1,6 +1,6 @@
 # Introduction
 
-This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code simpler as well. In this version, no classes are derrived from any standard containers. I consider this bad programing and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development. The Makefile has been improved to provide automatically generated dependances. The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Any file you will be modifying for your configuraiton will be a copy of a repository file that has a `.example` suffix. The one exception to this is `Makefile` mentioned previously.
+This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code simpler as well. In this version, no classes are derrived from any standard containers. I consider this bad programing and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development. The Makefile has been improved to provide automatically generated dependances. The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Any file you will be modifying for your configuration will be a copy of a repository file that has a `.example` suffix. The one exception to this is `Makefile` mentioned previously.
 
 - 73 de n7tae
 
@@ -76,7 +76,7 @@ Replace the `<N>` with the number of processors on your system, which can be fou
 sudo systemctl start xlxd
 sudo systemctl start ambed
 ```
-You can stop each component by replacing `start` with `stop`.
+You can stop each component by replacing `start` with `stop`, or you can restart each by using `restart` in place of `start`.
 
 #### Copy dashboard to /var/www
 ```
@@ -126,8 +126,8 @@ XLX Server requires the following ports to be open and forwarded properly for in
 
 # Copyright
 
-© 2016 Luc Engelmann LX1IQ
-© 2016 Thomas A. Early, N7TAE
+- © 2016 Luc Engelmann LX1IQ
+- © 2016 Thomas A. Early, N7TAE
 
 
 The XLX Multiprotocol Gateway Reflector Server is part of the software system
