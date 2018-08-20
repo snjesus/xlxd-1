@@ -38,8 +38,8 @@
 
 CProtocols::CProtocols()
 {
-	for ( unsigned int i = 0; i < m_Protocols.size(); i++ ) {
-		m_Protocols[i] = NULL;
+	for ( unsigned int i = 0; i < m_Protocol.size(); i++ ) {
+		m_Protocol[i] = NULL;
 	}
 }
 
@@ -50,8 +50,8 @@ CProtocols::~CProtocols()
 {
 	m_Mutex.lock();
 	{
-		for ( unsigned int i = 0; i < m_Protocols.size(); i++ ) {
-			delete m_Protocols[i];
+		for ( unsigned int i = 0; i < m_Protocol.size(); i++ ) {
+			delete m_Protocol[i];
 		}
 	}
 	m_Mutex.unlock();
@@ -67,34 +67,34 @@ bool CProtocols::Init(void)
 	m_Mutex.lock();
 	{
 		// create and initialize DEXTRA
-		delete m_Protocols[0];
-		m_Protocols[0] = new CDextraProtocol;
-		ok &= m_Protocols[0]->Init();
+		delete m_Protocol[0];
+		m_Protocol[0] = new CDextraProtocol;
+		ok &= m_Protocol[0]->Init();
 
 		// create and initialize DPLUS
-		delete m_Protocols[1];
-		m_Protocols[1] = new CDplusProtocol;
-		ok &= m_Protocols[1]->Init();
+		delete m_Protocol[1];
+		m_Protocol[1] = new CDplusProtocol;
+		ok &= m_Protocol[1]->Init();
 
 		// create and initialize DCS
-		delete m_Protocols[2];
-		m_Protocols[2] = new CDcsProtocol;
-		ok &= m_Protocols[2]->Init();
+		delete m_Protocol[2];
+		m_Protocol[2] = new CDcsProtocol;
+		ok &= m_Protocol[2]->Init();
 
 		// create and initialize XLX - interlink
-		delete m_Protocols[3];
-		m_Protocols[3] = new CXlxProtocol;
-		ok &= m_Protocols[3]->Init();
+		delete m_Protocol[3];
+		m_Protocol[3] = new CXlxProtocol;
+		ok &= m_Protocol[3]->Init();
 
 		// create and initialize DMRPLUS
-		delete m_Protocols[4];
-		m_Protocols[4] = new CDmrplusProtocol;
-		ok &= m_Protocols[4]->Init();
+		delete m_Protocol[4];
+		m_Protocol[4] = new CDmrplusProtocol;
+		ok &= m_Protocol[4]->Init();
 
 		// create and initialize DMRMMDVM
-		delete m_Protocols[5];
-		m_Protocols[5] = new CDmrmmdvmProtocol;
-		ok &= m_Protocols[5]->Init();
+		delete m_Protocol[5];
+		m_Protocol[5] = new CDmrmmdvmProtocol;
+		ok &= m_Protocol[5]->Init();
 	}
 	m_Mutex.unlock();
 
@@ -106,8 +106,8 @@ void CProtocols::Close(void)
 {
 	m_Mutex.lock();
 	{
-		for ( unsigned int i = 0; i < m_Protocols.size(); i++ ) {
-			m_Protocols[i]->Close();
+		for ( unsigned int i = 0; i < m_Protocol.size(); i++ ) {
+			m_Protocol[i]->Close();
 		}
 	}
 	m_Mutex.unlock();

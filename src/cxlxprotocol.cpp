@@ -241,18 +241,18 @@ void CXlxProtocol::HandleQueue(void)
 						// no, send the packet
 						// this is protocol revision dependent
 						switch ( client->GetProtocolRevision() ) {
-						case XLX_PROTOCOL_REVISION_0:
-						case XLX_PROTOCOL_REVISION_1:
-							m_Socket.Send(bufferLegacy, client->GetIp());
-							break;
-						case XLX_PROTOCOL_REVISION_2:
-						default:
-							if ( g_Transcoder.IsConnected() ) {
-								m_Socket.Send(buffer, client->GetIp());
-							} else {
+							case XLX_PROTOCOL_REVISION_0:
+							case XLX_PROTOCOL_REVISION_1:
 								m_Socket.Send(bufferLegacy, client->GetIp());
-							}
-							break;
+								break;
+							case XLX_PROTOCOL_REVISION_2:
+							default:
+								if ( g_Transcoder.IsConnected() ) {
+									m_Socket.Send(buffer, client->GetIp());
+								} else {
+									m_Socket.Send(bufferLegacy, client->GetIp());
+								}
+								break;
 						}
 					}
 				}

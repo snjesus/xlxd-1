@@ -168,7 +168,7 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
 {
 	CPacketStream *retStream = NULL;
 
-	// clients MUST have bee locked by the caller
+	// clients MUST have been locked by the caller
 	// so we can freely access it within the fuction
 
 	// check sid is not NULL

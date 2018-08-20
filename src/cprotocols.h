@@ -47,13 +47,13 @@ public:
 	void Close(void);
 
 	// get
-	int Size(void) const            { return (int)m_Protocols.size(); }
-	CProtocol *GetProtocol(int i)   { return m_Protocols[i]; }
+	int Size(void) const            { return (int)m_Protocol.size(); }
+	CProtocol *GetProtocol(int i)   { return m_Protocol[i]; }
 
 protected:
 	// data
 	std::mutex                                m_Mutex;
-	std::array<CProtocol *, NB_OF_PROTOCOLS>  m_Protocols;
+	std::array<CProtocol *, NB_OF_PROTOCOLS>  m_Protocol;
 };
 
 
