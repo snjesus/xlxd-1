@@ -92,7 +92,7 @@ void CPacketStream::Push(CPacket *Packet)
 				// is completed
 				m_CodecStream->push(Packet);
 			} else {
-				// no, just bypass tarnscoder
+				// no, just bypass transcoder
 				push(Packet);
 			}
 		}

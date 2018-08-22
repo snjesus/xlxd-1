@@ -87,8 +87,6 @@ CCodecStream::~CCodecStream()
 
 bool CCodecStream::Init(uint16 uiPort)
 {
-	bool ok;
-
 	// reset stop flag
 	m_bStopThread = false;
 
@@ -97,7 +95,7 @@ bool CCodecStream::Init(uint16 uiPort)
 	m_uiPort = uiPort;
 
 	// create our socket
-	ok = m_Socket.Open(uiPort);
+	bool ok = m_Socket.Open(uiPort);
 	if ( ok ) {
 		// start  thread;
 		m_pThread = new std::thread(CCodecStream::Thread, this);
@@ -224,13 +222,11 @@ void CCodecStream::Task(void)
 
 bool CCodecStream::IsValidAmbePacket(const CBuffer &Buffer, uint8 *Ambe)
 {
-	bool valid = false;
-
 	if ( (Buffer.size() == 11) && (Buffer.data()[0] == m_uiCodecOut) ) {
 		::memcpy(Ambe, &(Buffer.data()[2]), 9);
-		valid = true;
+		return true;
 	}
-	return valid;
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

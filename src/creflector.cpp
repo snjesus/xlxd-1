@@ -39,7 +39,7 @@ CReflector::CReflector()
 	m_bStopThreads = false;
 	m_XmlReportThread = NULL;
 	m_JsonReportThread = NULL;
-	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+	for ( int i=0; i<NB_OF_MODULES; i++ ) {
 		m_RouterThreads[i] = NULL;
 	}
 }
@@ -49,7 +49,7 @@ CReflector::CReflector(const CCallsign &callsign)
 	m_bStopThreads = false;
 	m_XmlReportThread = NULL;
 	m_JsonReportThread = NULL;
-	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+	for ( int i=0; i<NB_OF_MODULES; i++ ) {
 		m_RouterThreads[i] = NULL;
 	}
 	m_Callsign = callsign;
@@ -69,7 +69,7 @@ CReflector::~CReflector()
 		m_JsonReportThread->join();
 		delete m_JsonReportThread;
 	}
-	for ( int i = 0; i < NB_OF_MODULES; i++ ) {
+	for ( int i=0; i<NB_OF_MODULES; i++ ) {
 		if ( m_RouterThreads[i] != NULL ) {
 			m_RouterThreads[i]->join();
 			delete m_RouterThreads[i];
@@ -83,13 +83,11 @@ CReflector::~CReflector()
 
 bool CReflector::Start(void)
 {
-	bool ok = true;
-
 	// reset stop flag
 	m_bStopThreads = false;
 
 	// init gate keeper
-	ok &= g_GateKeeper.Init();
+	bool ok = g_GateKeeper.Init();
 
 	// init dmrid directory
 	g_DmridDir.Init();
@@ -302,7 +300,7 @@ void CReflector::RouterThread(CReflector *This, CPacketStream *streamIn)
 			packet->SetModuleId(uiModuleId);
 
 			// iterate on all protocols
-			for ( int i = 0; i < This->m_Protocols.Size(); i++ ) {
+			for ( int i=0; i<This->m_Protocols.Size(); i++ ) {
 				// duplicate packet
 				CPacket *packetClone = packet->Duplicate();
 
@@ -373,7 +371,7 @@ void CReflector::JsonReportThread(CReflector *This)
 			// any command ?
 			if ( Socket.Receive(&Buffer, &Ip, 50) != -1 ) {
 				// check verb
-				if ( Buffer.Compare((uint8 *)"hello", 5) == 0 ) {
+				if ( 0 == Buffer.Compare((uint8 *)"hello", 5) ) {
 					std::cout << "Monitor socket connected with " << Ip << std::endl;
 
 					// connected
@@ -499,33 +497,30 @@ int CReflector::GetModuleIndex(char module) const
 
 CPacketStream *CReflector::GetStream(char module)
 {
-	CPacketStream *stream = NULL;
 	int i = GetModuleIndex(module);
 	if ( i >= 0 ) {
-		stream = &(m_Streams[i]);
+		return &(m_Streams[i]);
 	}
-	return stream;
+	return NULL;
 }
 
 bool CReflector::IsStreamOpen(const CDvHeaderPacket *DvHeader)
 {
-	bool open = false;
-	for ( unsigned int i = 0; (i < m_Streams.size()) && !open; i++  ) {
-		open =  ( (m_Streams[i].GetStreamId() == DvHeader->GetStreamId()) &&
-				  (m_Streams[i].IsOpen()));
+	for ( unsigned int i=0; i<m_Streams.size(); i++  ) {
+		if ( (m_Streams[i].GetStreamId()==DvHeader->GetStreamId()) && m_Streams[i].IsOpen() )
+			return true;
 	}
-	return open;
+	return false;
 }
 
 char CReflector::GetStreamModule(CPacketStream *stream)
 {
-	char module = ' ';
-	for ( unsigned int i = 0; (i < m_Streams.size()) && (module == ' '); i++ ) {
+	for ( unsigned int i=0; i<m_Streams.size(); i++ ) {
 		if ( &(m_Streams[i]) == stream ) {
-			module = GetModuleLetter(i);
+			return GetModuleLetter(i);
 		}
 	}
-	return module;
+	return ' ';
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

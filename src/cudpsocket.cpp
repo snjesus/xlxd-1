@@ -107,9 +107,7 @@ int CUdpSocket::Receive(CBuffer *Buffer, CIp *Ip, int timeout)
 		Buffer->resize(UDP_BUFFER_LENMAX);
 
 		// read
-		iRecvLen = (int)recvfrom(m_Socket,
-								 (void *)Buffer->data(), UDP_BUFFER_LENMAX,
-								 0, (struct sockaddr *)&Sin, &uiFromLen);
+		iRecvLen = (int)recvfrom(m_Socket, (void *)Buffer->data(), UDP_BUFFER_LENMAX, 0, (struct sockaddr *)&Sin, &uiFromLen);
 
 		// handle
 		if ( iRecvLen != -1 ) {
