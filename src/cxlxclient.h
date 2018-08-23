@@ -53,7 +53,6 @@ public:
 	int GetProtocolRevision(void) const         { return m_ProtRev; }
 	const char *GetProtocolName(void) const     { return "XLX"; }
 	int GetCodec(void) const;
-	bool IsPeer(void) const                     { return true; }
 
 	// status
 	bool IsAlive(void) const;

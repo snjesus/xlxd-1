@@ -50,7 +50,6 @@ public:
 	int GetProtocolRevision(void) const		{ return XLX_PROTOCOL_REVISION_2; }
 	const char *GetProtocolName(void) const	{ return "XLX"; }
 	int GetCodec(void) const				{ return CODEC_AMBE2PLUS; }
-	bool IsPeer(void) const					{ return true; }
 
 	// status
 	bool IsAlive(void) const;
