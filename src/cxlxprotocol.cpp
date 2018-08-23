@@ -79,7 +79,7 @@ void CXlxProtocol::Task(void)
 		if ( (Frame = IsValidDvFramePacket(Buffer)) != NULL ) {
 			//std::cout << "XLX (DExtra) DV frame"  << std::endl;
 
-			// handle it
+			// mark it as non-local and push it on the packet stream
 			OnDvFramePacketIn(Frame, &Ip);
 		} else if ( (Header = IsValidDvHeaderPacket(Buffer)) != NULL ) {
 			//std::cout << "XLX (DExtra) DV header:"  << std::endl << *Header << std::endl;
@@ -87,7 +87,7 @@ void CXlxProtocol::Task(void)
 
 			// callsign muted?
 			if ( g_GateKeeper.MayTransmit(Header->GetMyCallsign(), Ip) ) {
-				// handle it
+				// mark it as non-local and push it on the packet stream
 				OnDvHeaderPacketIn(Header, Ip);
 			} else {
 				delete Header;
@@ -95,7 +95,7 @@ void CXlxProtocol::Task(void)
 		} else if ( (LastFrame = IsValidDvLastFramePacket(Buffer)) != NULL ) {
 			//std::cout << "XLX (DExtra) DV last frame" << std::endl;
 
-			// handle it
+			// mark it as non-local and push it on the packet stream
 			OnDvLastFramePacketIn(LastFrame, &Ip);
 		} else if ( IsValidConnectPacket(Buffer, &Callsign, Modules, &Version) ) {
 			std::cout << "XLX ("
@@ -107,26 +107,19 @@ void CXlxProtocol::Task(void)
 			if ( g_GateKeeper.MayLink(Callsign, Ip, PROTOCOL_XLX, Modules) ) {
 				// acknowledge connecting request
 				// following is version dependent
-				switch ( GetConnectingPeerProtocolRevision(Callsign, Version) ) {
-				case XLX_PROTOCOL_REVISION_0: {
+				if ( XLX_PROTOCOL_REVISION_0 == GetConnectingPeerProtocolRevision(Callsign, Version) ) {
 					// already connected ?
 					CPeers *peers = g_Reflector.GetPeers();
-					if ( peers->FindPeer(Callsign, Ip, PROTOCOL_XLX) == NULL ) {
+					if ( NULL == peers->FindPeer(Callsign, Ip, PROTOCOL_XLX) ) {
 						// acknowledge the request
 						EncodeConnectAckPacket(&Buffer, Modules);
 						m_Socket.Send(Buffer, Ip);
 					}
 					g_Reflector.ReleasePeers();
-
-				}
-				break;
-				case XLX_PROTOCOL_REVISION_1:
-				case XLX_PROTOCOL_REVISION_2:
-				default:
+				} else {	// XLX_PROTOCOL_REVISION_1 and _2
 					// acknowledge the request
 					EncodeConnectAckPacket(&Buffer, Modules);
 					m_Socket.Send(Buffer, Ip);
-					break;
 				}
 			} else {
 				// deny the request
