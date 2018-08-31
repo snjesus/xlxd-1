@@ -1,6 +1,10 @@
 # Introduction
 
-This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code simpler as well. In this version, no classes are derrived from any standard containers. I consider this bad programing and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development. The Makefile has been improved to provide automatically generated dependances. The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Any file you will be modifying for your configuration will be a copy of a repository file that has a `.example` suffix. The one exception to this is `Makefile` mentioned previously.
+This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code handling the containers simpler as well. In this version, no classes are derrived from any standard containers. I consider this highly ill-advised and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development.
+
+The Makefile has been improved to provide automatically generated dependances. This significantly speeds up updating or improving the code
+
+The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Follow the instructions below to build your transcoding XLX reflector.
 
 - 73 de n7tae
 
@@ -37,46 +41,43 @@ sudo apt install g++
 Go to the xlxd/src directory and
 ```
 cd xlxd/src
-cp main.h.example main.h
+cp main.example.h main.h
 ```
-Use your favorite editory to modify `main.h`. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
+Use your favorite editory to modify `main.h`. **You will need to change the parameters at the begining of this file!** REFLECTOR_CALLSIGN must be set as well as the MY_IP_ADDRESS. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
 
 You will also want to set NB_OF_MODULES to the number of modules you need. The max is 26. If you want to use module Z you need to set `NB_OF_MODULES` to 26.
 
-#### Create and edit your systemd startup scripts
-```
-cd ../systemd
-cp ambed.service.example ambed.service
-cp xlxd.service.example xlxd.service
-```
-Use your favorite editor to modify `ambed.service` and `xlxd.service`. You probabaly won't need to make any changes to the ambed script, but you will need to set the reflector name and IP address in the xlxd script.
-
 #### Create and edit your blacklist, whitelist and linking files
 ```
-cd ../config
-cp xlx.blacklist.example xlxd.blacklist
-cp xlx.whitelist.example xlxd.whitelist
-cp xlx.interlink.example xlxd.interlink
+cp ../config/xlx.blacklist .
+cp ../config/xlx.whitelist .
+cp ../config/xlx.interlink .
 ```
 Use your favorite editor to modify each of these files. If you want a totally open network, the blacklist and whitelist files are ready to go. The blacklist determine which callsigns can't use the reflector. The whitelist determines which callsigns can use the reflector and the interlink files set up the XLX<--->XLX linking. When building your network, remember that XLX only supports a single hop, so each XLX reflector needs to be interlinked with all the reflectors for that module's network. Along with multi-protocol support, this is the outstanding feature of the XLX design!
 
-#### Compile and install the xlxd and ambed programs
+#### Create and edit the ambed `main.h` file
 ```
-cd ../xlxd
+cd ../ambed
+cp main.example.h main.h
+```
+If you transcoding hardware is local, the default main.h works fine. If your transcoding hardware is not local, you need the specify the IP_ADDRESS of the hardware.
+
+#### Compile, install and start the ambed and xlxd programs
+```
 make -j<N>
 sudo make install
-cd ../ambed
+cd ../xlxd
 make -j<N>
 sudo make install
 ```
 Replace the `<N>` with the number of processors on your system, which can be found with `cat /proc/cpuinfo`.
 
-#### Start the services
+#### Stoping and starting the services
 ```
-sudo systemctl start xlxd
-sudo systemctl start ambed
+sudo systemctl stop xlxd
+sudo systemctl stop ambed
 ```
-You can stop each component by replacing `start` with `stop`, or you can restart each by using `restart` in place of `start`.
+You can start each component by replacing `stop` with `start`, or you can restart each by using `restart`.
 
 #### Copy dashboard to /var/www
 ```
@@ -94,19 +95,7 @@ sudo shutdown -r now
 ```
 
 # Updating xlxd and ambed
-Go to the build directory, `xlxd`, and execute
-```
-git pull
-cd ambed
-make -j<N>
-sudo make install
-sudo systemctl restart ambed
-cd ../src
-make -j<N>
-sudo make install
-sudo systemctl restart xlxd
-```
-If you notice there are new versions of any of the `.example` files or a new `Makefile` after you do the `git pull`, you will want to reconcile those new files with your copies **before** you make and install the executables.
+Go to the build directory and do a `git pull`. If you notice there are new versions of either of the `main.example.h` files or new `Makefile`s after you do the `git pull`, you will want to reconcile those new files with your copies **before** you make and install the executables.
 
 # Firewall settings
 

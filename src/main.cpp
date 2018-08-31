@@ -23,12 +23,11 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
-#include "creflector.h"
-
-#include <sys/stat.h>
 #include <signal.h>
 #include <unistd.h>
+
+#include "main.h"
+#include "creflector.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +43,7 @@ static void sigCatch(int signum)
 {
 	/* do NOT do any serious work here */
 	if ((signum == SIGTERM) || (signum == SIGINT))
-		std::cout << "Signal caught, hutting down reflector..." << std::endl;
+		std::cout << "Signal caught, shutting down reflector..." << std::endl;
 	return;
 }
 

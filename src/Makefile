@@ -37,8 +37,7 @@ install :
 	cp -f $(EXECUTABLE) $(BINDIR)
 	systemctl enable $(EXECUTABLE).service
 	systemctl daemon-reload
-	# xrfd is now controlled with systemd. The service has been enabled.
-	# You can start it with: sudo systemctl start xlxd
+	systemctl start xlxd
 
 uninstall :
 	rm -f $(CFGDIR)/$(EXECUTABLE).blacklist

@@ -22,12 +22,12 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
-#include "ctimepoint.h"
-#include "cambeserver.h"
+//#include <sys/stat.h>
+#include <signal.h>
+#include <unistd.h>
 
-#include "syslog.h"
-#include <sys/stat.h>
+#include "main.h"
+#include "cambeserver.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // global objects
@@ -36,96 +36,60 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // function declaration
 
-
-int main(int argc, const char * argv[])
+// signal catching function
+static void sigCatch(int signum)
 {
-#ifdef RUN_AS_DAEMON
-    
-    // redirect cout, cerr and clog to syslog
-    syslog::redirect cout_redir(std::cout);
-    syslog::redirect cerr_redir(std::cerr);
-    syslog::redirect clog_redir(std::clog);
-    
-    //Fork the Parent Process
-    pid_t pid, sid;
-    pid = ::fork();
-    //pid = ::vfork();
-    if ( pid < 0 )
-    {
-        exit(EXIT_FAILURE);
-    }
-    
-    // We got a good pid, Close the Parent Process
-    if (pid > 0)
-    {
-        exit(EXIT_SUCCESS);
-    }
-    
-    // Change File Mask
-    ::umask(0);
-    
-    //Create a new Signature Id for our child
-    sid = ::setsid();
-    if (sid < 0)
-    {
-        exit(EXIT_FAILURE);
-    }
-    
-    // Change Directory
-    // If we cant find the directory we exit with failure.
-    if ( (::chdir("/")) < 0)
-    {
-        exit(EXIT_FAILURE);
-    }
-    
-    // Close Standard File Descriptors
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
-    
-#endif
-    
+	// do NOT do any serious work here
+	if ((signum == SIGTERM) || (signum == SIGINT))
+		std::cout << "Signal caught, shutting down reflector..." << std::endl;
+	return;
+}
+
+int main(int argc, const char ** /*argv*/)
+{
+	struct sigaction act;
+
+	act.sa_handler = sigCatch;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_RESTART;
+
+	if (sigaction(SIGTERM, &act, 0) != 0) {
+		std::cerr << "sigaction-TERM failed" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	if (sigaction(SIGINT, &act, 0) != 0) {
+		std::cerr << "sigaction-INT failed" << std::endl;
+		return EXIT_FAILURE;
+	}
+
     // check arguments
-    if ( argc != 2 )
+    if ( argc != 1 )
     {
-        std::cout << "Usage: ambed ip" << std::endl;
-        std::cout << "example: ambed 192.168.178.212" << std::endl;
-        return 1;
+        std::cerr << "Usage: ambed" << std::endl;
+        std::cerr << "The IP address is set in Main.h" << std::endl;
+        return EXIT_FAILURE;
     }
-    
+
     // initialize ambeserver
-    g_AmbeServer.SetListenIp(CIp(argv[1]));
-    
+    g_AmbeServer.SetListenIp(CIp(IP_ADDRESS));
+
     // and let it run
     std::cout << "Starting AMBEd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+
     if ( !g_AmbeServer.Start() )
     {
-        std::cout << "Error starting AMBEd" << std::endl;
-        exit(EXIT_FAILURE);
+        std::cerr << "Error starting AMBEd" << std::endl;
+        return EXIT_FAILURE;
     }
     std::cout << "AMBEd started and listening on " << g_AmbeServer.GetListenIp() << std::endl;
-    
-#ifdef RUN_AS_DAEMON
-    // run forever
-    while ( true )
-    {
-        // sleep 60 seconds
-        CTimePoint::TaskSleepFor(60000);
-    }
-#else
-    // wait any key
-    for (;;)
-    {
-        // sleep 60 seconds
-        CTimePoint::TaskSleepFor(60000);
-        //std::cin.get();
-    }
-#endif
-    
+
+    pause(); // wait for a signal
+
     // and wait for end
     g_AmbeServer.Stop();
     std::cout << "AMBEd stopped" << std::endl;
-    
+
     // done
-    exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
