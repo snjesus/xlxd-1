@@ -48,7 +48,7 @@ static void sigCatch(int signum)
 	return;
 }
 
-int main(int argc, const char * argv[])
+int main(int argc, const char **/*argv*/)
 {
 	struct sigaction act;
 
@@ -57,40 +57,49 @@ int main(int argc, const char * argv[])
 	act.sa_flags = SA_RESTART;
 
 	if (sigaction(SIGTERM, &act, 0) != 0) {
-		std::cout << "sigaction-TERM failed" << std::endl;
-		exit(EXIT_FAILURE);
+		std::cerr << "sigaction-TERM failed" << std::endl;
+		return EXIT_FAILURE;
 	}
 
 	if (sigaction(SIGINT, &act, 0) != 0) {
-		std::cout << "sigaction-INT failed" << std::endl;
-		exit(EXIT_FAILURE);
+		std::cerr << "sigaction-INT failed" << std::endl;
+		return EXIT_FAILURE;
 	}
 
 	// check arguments
-	if ( argc != 4 ) {
-		std::cout << "Usage: xlxd callsign xlxdip ambedip" << std::endl;
-		std::cout << "example: xlxd XLX999 192.168.178.212 127.0.0.1" << std::endl;
-		exit(EXIT_FAILURE);
+	if ( argc != 1 ) {
+		std::cerr << "Usage: xrfd" << std::endl;
+		std::cerr << "Reflector Callsign and IP address are set in main.h" << std::endl;
+		return EXIT_FAILURE;
 	}
+
+	// delete the old pidfile. this will reset the web uptimer.
+	if (::remove(PIDFILE_PATH))
+		perror("Error deleting old pid file");	// it's okay if it doesn't yet exist
 
 	// splash
 	std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
 
 	// initialize reflector
-	g_Reflector.SetCallsign(argv[1]);
-	g_Reflector.SetListenIp(CIp(argv[2]));
-	g_Reflector.SetTranscoderIp(CIp(CIp(argv[3])));
+	g_Reflector.SetCallsign(REFLECTOR_CALLSIGN);
+	g_Reflector.SetListenIp(CIp(MY_IP_ADDRESS));
+	g_Reflector.SetTranscoderIp(CIp(TRANSCODER_IP_ADDRESS));
 
 	// and let it run
 	if ( !g_Reflector.Start() ) {
-		std::cout << "Error starting reflector" << std::endl;
-		exit(EXIT_FAILURE);
+		std::cerr << "Error starting reflector" << std::endl;
+		return EXIT_FAILURE;
 	}
 	std::cout << "Reflector " << g_Reflector.GetCallsign() << "started and listening on " << g_Reflector.GetListenIp() << std::endl;
+
+	// write new pid file
+	std::ofstream ofs(PIDFILE_PATH, std::ofstream::out);
+	ofs << ::getpid() << std::endl;
+	ofs.close();
 
 	pause(); // wait on a signal
 
 	g_Reflector.Stop();	// clean-up!
 
-	exit(EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }

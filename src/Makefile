@@ -1,38 +1,49 @@
-CC=g++
-#CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
+# Copyright (C) 2018 by Thomas A. Early, N7TAE
+
+# if you make changed in these two variable, you'll need to change things
+# in the main.h file as well as the systemd service file.
+BINDIR=/usr/local/bin
+CFGDIR=/usr/local/etc
+
+EXECUTABLE=xlxd
+GCC=g++
 CFLAGS=-c -W -Wall -MMD -MD -std=c++11
+# uncomment the next line for an executable with full gdb debugging support
+#CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
 LDFLAGS=-pthread
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(SOURCES:.cpp=.d)
-EXECUTABLE=xlxd
 
-all: $(SOURCES) $(EXECUTABLE)
+all : $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE) : $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(GCC) $(LDFLAGS) $(OBJECTS) -o $@
 
 .cpp.o :
-	$(CC) $(CFLAGS) $< -o $@
+	$(GCC) $(CFLAGS) $< -o $@
 
 clean :
 	$(RM) $(EXECUTABLE) *.o *.d
 
 -include $(DEPENDS)
 
+# install and uninstall need root level permission
 install :
-	mkdir -p /xlxd
-	cp -f $(EXECUTABLE) /xlxd/
-	[ -f /xlxd/xlxd.blacklist ] && \
-		cp ../config/xlxd.blacklist /xlxd/xlxd.blacklist.sample || \
-		cp ../config/xlxd.blacklist /xlxd/xlxd.blacklist
-	[ -f /xlxd/xlxd.whitelist ] && \
-		cp ../config/xlxd.whitelist /xlxd/xlxd.whitelist.sample || \
-		cp ../config/xlxd.whitelist /xlxd/xlxd.whitelist
-	[ -f /xlxd/xlxd.interlink ] && \
-		cp ../config/xlxd.interlink /xlxd/xlxd.interlink.sample || \
-		cp ../config/xlxd.interlink /xlxd/xlxd.interlink
-	cp -f ../systemd/xlxd.service /lib/systemd/system/
-	systemctl enable xlxd
-	# xlxd is now controlled with systemd. The service has been enabled. You can start it
-	# with systemctl start xlxd
+	ln -s $(shell pwd)/$(EXECUTABLE).blacklist $(CFGDIR)
+	ln -s $(shell pwd)/$(EXECUTABLE).whitelist $(CFGDIR)
+	ln -s $(shell pwd)/$(EXECUTABLE).linklist $(CFGDIR)
+	cp -f ../systemd/$(EXECUTABLE).service /lib/systemd/system/
+	cp -f $(EXECUTABLE) $(BINDIR)
+	systemctl enable $(EXECUTABLE).service
+	systemctl daemon-reload
+	# xrfd is now controlled with systemd. The service has been enabled.
+	# You can start it with: sudo systemctl start xlxd
+
+uninstall :
+	rm -f $(CFGDIR)/$(EXECUTABLE).blacklist
+	rm -f $(CFGDIR)/$(EXECUTABLE).whitelist
+	rm -f $(CFGDIR)/$(EXECUTABLE).linklist
+	systemctl stop $(EXECUTABLE).service
+	systemctl disable $(EXECUTABLE).service
+	systemctl daemon-reload
