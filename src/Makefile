@@ -30,9 +30,9 @@ clean :
 
 # install and uninstall need root level permission
 install :
-	ln -s $(shell pwd)/$(EXECUTABLE).blacklist $(CFGDIR)
-	ln -s $(shell pwd)/$(EXECUTABLE).whitelist $(CFGDIR)
-	ln -s $(shell pwd)/$(EXECUTABLE).linklist $(CFGDIR)
+	ln -s $(shell pwd)/$(EXECUTABLE).blacklist $(CFGDIR)/(EXECUTABLE).blacklist
+	ln -s $(shell pwd)/$(EXECUTABLE).whitelist $(CFGDIR)/$(EXECUTABLE).whitelist
+	ln -s $(shell pwd)/$(EXECUTABLE).linklist $(CFGDIR)/$(EXECUTABLE).linklist
 	cp -f ../systemd/$(EXECUTABLE).service /lib/systemd/system/
 	cp -f $(EXECUTABLE) $(BINDIR)
 	systemctl enable $(EXECUTABLE).service
