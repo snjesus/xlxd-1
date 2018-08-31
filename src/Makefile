@@ -32,7 +32,7 @@ clean :
 install :
 	ln -s $(shell pwd)/$(EXECUTABLE).blacklist $(CFGDIR)/$(EXECUTABLE).blacklist
 	ln -s $(shell pwd)/$(EXECUTABLE).whitelist $(CFGDIR)/$(EXECUTABLE).whitelist
-	ln -s $(shell pwd)/$(EXECUTABLE).linklist $(CFGDIR)/$(EXECUTABLE).linklist
+	ln -s $(shell pwd)/$(EXECUTABLE).interlink $(CFGDIR)/$(EXECUTABLE).interlink
 	cp -f ../systemd/$(EXECUTABLE).service /lib/systemd/system/
 	cp -f $(EXECUTABLE) $(BINDIR)
 	systemctl enable $(EXECUTABLE).service
@@ -42,7 +42,7 @@ install :
 uninstall :
 	rm -f $(CFGDIR)/$(EXECUTABLE).blacklist
 	rm -f $(CFGDIR)/$(EXECUTABLE).whitelist
-	rm -f $(CFGDIR)/$(EXECUTABLE).linklist
+	rm -f $(CFGDIR)/$(EXECUTABLE).interlink
 	systemctl stop $(EXECUTABLE).service
 	systemctl disable $(EXECUTABLE).service
 	systemctl daemon-reload
