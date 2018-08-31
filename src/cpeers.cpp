@@ -105,7 +105,7 @@ void CPeers::RemovePeer(CPeer *peer)
 				g_Reflector.ReleaseClients();
 
 				// remove it
-				std::cout << "Peer " << (*cit)->GetCallsign() << " at " << (*cit)->GetIp() << " removed" << std::endl;
+				std::cout << "Peer " << (*it)->GetCallsign() << " at " << (*it)->GetIp() << " removed" << std::endl;
 				delete *it;
 				m_Peers.erase(it);
 				// notify
