@@ -72,6 +72,7 @@ public:
 	// clients access
 	CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
 	std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
+	void ClearClients(void)                               { m_Clients.clear(); }
 
 	// reporting
 	virtual void WriteXml(std::ofstream &);

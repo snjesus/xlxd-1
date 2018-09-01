@@ -102,6 +102,7 @@ void CPeers::RemovePeer(CPeer *peer)
 					clients->RemoveClient(client);
 					cit++;
 				}
+				peer->ClearClients();	// just removed all the clients, so we just need to clear the list
 				g_Reflector.ReleaseClients();
 
 				// remove it
