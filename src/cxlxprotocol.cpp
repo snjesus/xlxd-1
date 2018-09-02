@@ -331,6 +331,9 @@ void CXlxProtocol::HandlePeerLinks(void)
 	auto cit = list->InitCallsignIterator();
 	CCallsignListItem *item;
 	while ( NULL != (item = list->GetCallsignItem(cit)) ) {
+		cit++;
+		if (item->GetCallsign().HasSameCallsignWithWildcard(CCallsign("XRF*")))
+			continue;
 		if ( peers->FindPeer(item->GetCallsign(), PROTOCOL_XLX) == NULL ) {
 			// resolve again peer's IP in case it's a dynamic IP
 			item->ResolveIp();
@@ -339,7 +342,6 @@ void CXlxProtocol::HandlePeerLinks(void)
 			m_Socket.Send(buffer, item->GetIp(), XLX_PORT);
 			std::cout << "Sending connect packet to XLX peer " << item->GetCallsign() << " @ " << item->GetIp() << " for modules " << item->GetModules() << std::endl;
 		}
-		cit++;
 	}
 
 	// done

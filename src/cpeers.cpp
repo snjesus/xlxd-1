@@ -88,7 +88,7 @@ void CPeers::RemovePeer(CPeer *peer)
 {
 	// look for the client
 	for ( auto it=m_Peers.begin(); it!=m_Peers.end(); it++ ) {
-		// compare objetc pointers
+		// compare object pointers
 		if ( *it ==  peer ) {
 			// found it !
 			if ( ! (*it)->IsAMaster() ) {

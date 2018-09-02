@@ -1,10 +1,9 @@
 //
-//  cxlxpeer.cpp
+//  cdextrapeer.cpp
 //  xlxd
 //
-//  Created by Jean-Luc Deltombe (LX3JL) on 10/12/2016.
+//  Created by Antony Chazapis (SV9OAN) on 25/2/2018.
 //  Copyright © 2016 Jean-Luc Deltombe (LX3JL). All rights reserved.
-//  Copyright © 2018 Thomas A. Early, N7TAE
 //
 // ----------------------------------------------------------------------------
 //    This file is part of xlxd.
@@ -26,71 +25,69 @@
 #include "main.h"
 #include <string.h>
 #include "creflector.h"
-#include "cxlxpeer.h"
-#include "cxlxclient.h"
+#include "cdextrapeer.h"
+#include "cdextraclient.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // constructor
 
 
-CXlxPeer::CXlxPeer()
+CDextraPeer::CDextraPeer()
 {
 }
 
-CXlxPeer::CXlxPeer(const CCallsign &callsign, const CIp &ip, const char *modules, const CVersion &version)
-	: CPeer(callsign, ip, modules, version)
+CDextraPeer::CDextraPeer(const CCallsign &callsign, const CIp &ip, const char *modules, const CVersion &version)
+: CPeer(callsign, ip, modules, version)
 {
-	// get protocol revision
-	int protrev = GetProtocolRevision(version);
-	//std::cout << "Adding XLX peer with protocol revision " << protrev << std::endl;
+    std::cout << "Adding DExtra peer" << std::endl;
 
-	// and construct all xlx clients
-	for ( unsigned int i = 0; i < ::strlen(modules); i++ ) {
-		// create
-		CXlxClient *client = new CXlxClient(callsign, ip, modules[i], protrev);
-		// and append to vector
-		m_Clients.push_back(client);
-	}
+    // and construct the DExtra clients
+    for (unsigned int i = 0; i < ::strlen(modules); i++)
+    {
+        // create
+        CDextraClient *client = new CDextraClient(callsign, ip, modules[i], version.GetMajor());
+        // and append to vector
+        m_Clients.push_back(client);
+    }
 }
 
-CXlxPeer::CXlxPeer(const CXlxPeer &peer)
-	: CPeer(peer)
+CDextraPeer::CDextraPeer(const CDextraPeer &peer)
+: CPeer(peer)
 {
-	for ( auto it=peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++ ) {
-		CXlxClient *client = new CXlxClient((const CXlxClient &)*(*it));
-		m_Clients.push_back(client);
+    for (auto it = peer.m_Clients.begin(); it!=peer.m_Clients.end(); it++)
+    {
+        CDextraClient *client = new CDextraClient((const CDextraClient &)*(*it));
+        m_Clients.push_back(client);
 
-	}
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // destructors
 
-CXlxPeer::~CXlxPeer()
+CDextraPeer::~CDextraPeer()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // status
 
-bool CXlxPeer::IsAlive(void) const
+bool CDextraPeer::IsAlive(void) const
 {
-	return (m_LastKeepaliveTime.DurationSinceNow() < XLX_KEEPALIVE_TIMEOUT);
+    for (auto it=m_Clients.begin(); it!=m_Clients.end(); it++)
+    {
+        if (! (*it)->IsAlive())
+			return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // revision helper
 
-int CXlxPeer::GetProtocolRevision(const CVersion &version)
+int CDextraPeer::GetProtocolRevision(const CVersion &version)
 {
-	int protrev = XLX_PROTOCOL_REVISION_0;
-
-	if ( version.IsEqualOrHigherTo(CVersion(2,2,0)) ) {
-		protrev = XLX_PROTOCOL_REVISION_2;
-	} else if ( version.IsEqualOrHigherTo(CVersion(1,4,0)) ) {
-		protrev = XLX_PROTOCOL_REVISION_1;
-	}
-	return protrev;
+    return version.GetMajor();
 }
 

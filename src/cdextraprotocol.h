@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 //
 //  cdextraprotocol.h
 //  xlxd
@@ -73,6 +73,7 @@ protected:
 	void HandleQueue(void);
 
 	// keepalive helpers
+	void HandlePeerLinks(void);
 	void HandleKeepalives(void);
 
 	// stream helpers
@@ -87,18 +88,20 @@ protected:
 	CDvLastFramePacket  *IsValidDvLastFramePacket(const CBuffer &);
 
 	// packet encoding helpers
-	void                EncodeKeepAlivePacket(CBuffer *);
-	void                EncodeConnectAckPacket(CBuffer *, int);
-	void                EncodeConnectNackPacket(CBuffer *);
-	void                EncodeDisconnectPacket(CBuffer *);
-	void                EncodeDisconnectedPacket(CBuffer *);
-	bool                EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const;
-	bool                EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const;
-	bool                EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const;
+	void EncodeKeepAlivePacket(CBuffer *);
+	void EncodeConnectPacket(CBuffer *, const char *);
+	void EncodeConnectAckPacket(CBuffer *, int);
+	void EncodeConnectNackPacket(CBuffer *);
+	void EncodeDisconnectPacket(CBuffer *, char);
+	void EncodeDisconnectedPacket(CBuffer *);
+	bool EncodeDvHeaderPacket(const CDvHeaderPacket &, CBuffer *) const;
+	bool EncodeDvFramePacket(const CDvFramePacket &, CBuffer *) const;
+	bool EncodeDvLastFramePacket(const CDvLastFramePacket &, CBuffer *) const;
 
 protected:
 	// time
-	CTimePoint          m_LastKeepaliveTime;
+	CTimePoint m_LastKeepaliveTime;
+	CTimePoint m_LastPeersLinkTime;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

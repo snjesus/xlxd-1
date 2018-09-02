@@ -55,7 +55,7 @@ protected:
 	// queue helper
 	void HandleQueue(void);
 
-	// keepalive helper
+	// keepalive helpers
 	void HandlePeerLinks(void);
 	void HandleKeepalives(void);
 
