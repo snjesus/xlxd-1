@@ -542,10 +542,8 @@ void CReflector::WriteXmlFile(std::ofstream &xmlFile)
 	CPeers *peers = GetPeers();
 	// iterate on peers
 	auto pit = peers->InitPeerIterator();
-	CPeer *peer;
-	while ( NULL != (peer = peers->GetPeer(pit)) ) {
-		peer->WriteXml(xmlFile);
-		pit++;
+	while (NULL != peers->GetPeer(pit)) {
+		peers->GetPeer(pit++)->WriteXml(xmlFile);
 	}
 	// unlock
 	ReleasePeers();

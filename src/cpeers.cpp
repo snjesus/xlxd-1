@@ -74,7 +74,7 @@ void CPeers::AddPeer(CPeer *peer)
 	CClients *clients = g_Reflector.GetClients();
 	auto it = peer->InitClientIterator();
 	CClient *client;
-	while ( NULL != (client = peer->GetClient(it)) ) {
+	while (NULL != (client = peer->GetClient(it))) {
 		clients->AddClient(client);
 		it++;
 	}
@@ -97,10 +97,9 @@ void CPeers::RemovePeer(CPeer *peer)
 				CClients *clients = g_Reflector.GetClients();
 				auto cit = peer->InitClientIterator();
 				CClient *client;
-				while ( NULL != (client = peer->GetClient(cit)) ) {
-					// this also delete the client object
-					clients->RemoveClient(client);
+				while (NULL != (client = peer->GetClient(cit))) {
 					cit++;
+					clients->RemoveClient(client);	// this also delete the client object
 				}
 				peer->ClearClients();	// just removed all the clients, so we just need to clear the list
 				g_Reflector.ReleaseClients();
