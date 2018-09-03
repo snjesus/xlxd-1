@@ -27,7 +27,9 @@
 #include "cpacketqueue.h"
 #include "ctimepoint.h"
 #include "cdvheaderpacket.h"
-#include "ctranscoder.h"
+#ifdef IS_XLX
+#include "xlx/ctranscoder.h"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -71,7 +73,9 @@ protected:
 	CClient             *m_OwnerClient;
 	CTimePoint          m_LastPacketTime;
 	CDvHeaderPacket     m_DvHeader;
+#ifdef IS_XLX
 	CCodecStream        *m_CodecStream;
+#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

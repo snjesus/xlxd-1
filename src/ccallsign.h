@@ -39,7 +39,11 @@ class CCallsign
 public:
 	// contructors
 	CCallsign();
+#ifdef IS_XLX
 	CCallsign(const char *, uint32 = 0);
+#else
+	CCallsign(const char *);
+#endif
 	CCallsign(const CCallsign &);
 
 	// destructor
@@ -51,10 +55,15 @@ public:
 	bool HasModule(void) const                { return m_Module != ' '; }
 
 	// set
+#ifdef IS_XLX
 	void SetCallsign(const char *, bool = true);
 	void SetCallsign(const uint8 *, int, bool = true);
 	void SetDmrid(uint32, bool = true);
 	void SetDmrid(const uint8 *, bool = true);
+#else
+void SetCallsign(const char *);
+void SetCallsign(const uint8 *, int);	
+#endif
 	void SetModule(char);
 	void SetSuffix(const char *);
 	void SetSuffix(const uint8 *, int);
@@ -65,7 +74,9 @@ public:
 	// get
 	void GetCallsign(uint8 *) const;
 	void GetCallsignString(char *) const;
+#ifdef IS_XLX
 	uint32 GetDmrid(void) const             { return m_uiDmrid; }
+#endif
 	void GetSuffix(uint8 *) const;
 	char GetModule(void) const              { return m_Module; }
 
@@ -91,7 +102,9 @@ protected:
 	char    m_Suffix[CALLSUFFIX_LEN];
 	char    m_Module;
 	char	m_sz[CALLSIGN_LEN+CALLSUFFIX_LEN+5];
+#ifdef IS_XLX
 	uint32  m_uiDmrid;
+#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

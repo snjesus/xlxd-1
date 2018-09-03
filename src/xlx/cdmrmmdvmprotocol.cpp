@@ -23,12 +23,12 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
 #include "cdmrmmdvmclient.h"
 #include "cdmrmmdvmprotocol.h"
-#include "creflector.h"
-#include "cgatekeeper.h"
+#include "../creflector.h"
+#include "../cgatekeeper.h"
 #include "cbptc19696.h"
 #include "crs129.h"
 #include "cgolay2087.h"

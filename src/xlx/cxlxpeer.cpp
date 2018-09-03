@@ -23,9 +23,9 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
-#include "creflector.h"
+#include "../creflector.h"
 #include "cxlxpeer.h"
 #include "cxlxclient.h"
 
@@ -93,4 +93,3 @@ int CXlxPeer::GetProtocolRevision(const CVersion &version)
 	}
 	return protrev;
 }
-

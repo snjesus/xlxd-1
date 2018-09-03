@@ -88,7 +88,11 @@ void CGateKeeper::Close(void)
 ////////////////////////////////////////////////////////////////////////////////////////
 // authorisations
 
+#ifdef IS_XLX
 bool CGateKeeper::MayLink(const CCallsign &callsign, const CIp &ip, int protocol, char *modules) const
+#else
+bool CGateKeeper::MayLink(const CCallsign &callsign, const CIp &ip, int protocol) const
+#endif
 {
 	bool ok = true;
 
@@ -97,17 +101,21 @@ bool CGateKeeper::MayLink(const CCallsign &callsign, const CIp &ip, int protocol
 	case PROTOCOL_DEXTRA:
 	case PROTOCOL_DPLUS:
 	case PROTOCOL_DCS:
+#ifdef IS_XLX
 	case PROTOCOL_DMRPLUS:
 	case PROTOCOL_DMRMMDVM:
+#endif
 		// first check is IP & callsigned listed OK
 		ok &= IsNodeListedOk(callsign, ip);
 		// todo: then apply any protocol specific authorisation for the operation
 		break;
 
+#ifdef IS_XLX
 	// XLX interlinks
 	case PROTOCOL_XLX:
 		ok &= IsPeerListedOk(callsign, ip, modules);
 		break;
+#endif
 
 	// unsupported
 	case PROTOCOL_NONE:
@@ -135,17 +143,21 @@ bool CGateKeeper::MayTransmit(const CCallsign &callsign, const CIp &ip, int prot
 	case PROTOCOL_DEXTRA:
 	case PROTOCOL_DPLUS:
 	case PROTOCOL_DCS:
+#ifdef IS_XLX
 	case PROTOCOL_DMRPLUS:
 	case PROTOCOL_DMRMMDVM:
+#endif
 		// first check is IP & callsigned listed OK
 		ok &= IsNodeListedOk(callsign, ip, module);
 		// todo: then apply any protocol specific authorisation for the operation
 		break;
 
+#ifdef IS_XLX
 	// XLX interlinks
 	case PROTOCOL_XLX:
 		ok &= IsPeerListedOk(callsign, ip, module);
 		break;
+#endif
 
 	// unsupported
 	case PROTOCOL_NONE:
@@ -254,4 +266,3 @@ bool CGateKeeper::IsPeerListedOk(const CCallsign &callsign, const CIp &/*ip*/, c
 	// done
 	return ok;
 }
-

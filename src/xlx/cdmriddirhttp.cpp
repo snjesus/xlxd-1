@@ -23,8 +23,8 @@
 // ----------------------------------------------------------------------------
 
 #include <string.h>
-#include "main.h"
-#include "creflector.h"
+#include "../main.h"
+#include "../creflector.h"
 #include "cdmriddirhttp.h"
 
 #if (DMRIDDB_USE_RLX_SERVER == 1)

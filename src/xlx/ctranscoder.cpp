@@ -23,8 +23,8 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
-#include "creflector.h"
+#include "../main.h"
+#include "../creflector.h"
 #include "ctranscoder.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -359,4 +359,3 @@ void CTranscoder::EncodeClosestreamPacket(CBuffer *Buffer, uint16 uiStreamId)
 	Buffer->Set(tag, sizeof(tag));
 	Buffer->Append((uint16)uiStreamId);
 }
-

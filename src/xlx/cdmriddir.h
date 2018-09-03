@@ -28,8 +28,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include "cbuffer.h"
-#include "ccallsign.h"
+#include "../cbuffer.h"
+#include "../ccallsign.h"
 
 // compare function for std::map::find
 

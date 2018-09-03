@@ -22,7 +22,7 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include "cdmrplusclient.h"
 
 

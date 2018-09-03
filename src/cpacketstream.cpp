@@ -34,7 +34,9 @@ CPacketStream::CPacketStream()
 	m_uiStreamId = 0;
 	m_uiPacketCntr = 0;
 	m_OwnerClient = NULL;
+#ifdef IS_XLX
 	m_CodecStream = NULL;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -53,10 +55,12 @@ bool CPacketStream::Open(const CDvHeaderPacket &DvHeader, CClient *client)
 		m_DvHeader = DvHeader;
 		m_OwnerClient = client;
 		m_LastPacketTime.Now();
+#ifdef IS_XLX
 		if(DvHeader.GetRpt2Module() == 'A' || DvHeader.GetRpt2Module() == 'B' || DvHeader.GetRpt2Module() == 'C' || DvHeader.GetRpt2Module() == 'D' || DvHeader.GetRpt2Module() == 'F')
 			m_CodecStream = g_Transcoder.GetStream(this, client->GetCodec());
 		else
 			m_CodecStream = g_Transcoder.GetStream(this, CODEC_NONE);
+#endif
 		ok = true;
 	}
 	return ok;
@@ -68,8 +72,10 @@ void CPacketStream::Close(void)
 	m_bOpen = false;
 	m_uiStreamId = 0;
 	m_OwnerClient = NULL;
+#ifdef IS_XLX
 	g_Transcoder.ReleaseStream(m_CodecStream);
 	m_CodecStream = NULL;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +86,7 @@ void CPacketStream::Push(CPacket *Packet)
 	// update stream dependent packet data
 	m_LastPacketTime.Now();
 	Packet->UpdatePids(m_uiPacketCntr++);
+#ifdef IS_XLX
 	// transcoder avaliable ?
 	if ( m_CodecStream != NULL ) {
 		// todo: verify no possibilty of double lock here
@@ -101,17 +108,20 @@ void CPacketStream::Push(CPacket *Packet)
 		// otherwise, push direct push
 		push(Packet);
 	}
+#else
+	push(Packet);
+#endif
 }
 
 bool CPacketStream::IsEmpty(void) const
 {
 	bool bEmpty = empty();
-
+#ifdef IS_XLX
 	// also check no packets still in Codec stream's queue
 	if ( bEmpty && (m_CodecStream != NULL) ) {
 		bEmpty &= m_CodecStream->IsEmpty();
 	}
-
+#endif
 	// done
 	return bEmpty;
 }
@@ -126,4 +136,3 @@ const CIp *CPacketStream::GetOwnerIp(void)
 	}
 	return NULL;
 }
-

@@ -50,15 +50,20 @@
 
 // YOU WILL CERTAINLY NEED TO CHANGE THE FIRST TWO VALUES!!!!!!
 
-#define REFLECTOR_CALLSIGN		"XLX???"
+#define REFLECTOR_CALLSIGN		"XLX???"	// this could also be an XRF???
 #define MY_IP_ADDRESS			"1.2.3.4"
 #define TRANSCODER_IP_ADDRESS	"127.0.0.1"
 
 // version -----------------------------------------------------
-
+#ifdef IS_XLX
 #define VERSION_MAJOR		2
 #define VERSION_MINOR		3
 #define VERSION_REVISION	18
+#else
+#define VERSION_MAJOR		5
+#define VERSION_MINOR		0
+#define VERSION_REVISION	1
+#endif
 
 // global ------------------------------------------------------
 
@@ -71,17 +76,22 @@
 //#define NB_OF_MODULES		NB_MODULES_MAX
 
 // protocols ---------------------------------------------------
-
+#ifdef IS_XLX
 #define NB_OF_PROTOCOLS		6
+#else
+#define NB_OF_PROTOCOLS		3
+#endif
 
 #define PROTOCOL_ANY		-1
 #define PROTOCOL_NONE		0
 #define PROTOCOL_DEXTRA		1
 #define PROTOCOL_DPLUS		2
 #define PROTOCOL_DCS		3
+#ifdef IS_XLX
 #define PROTOCOL_XLX		4
 #define PROTOCOL_DMRPLUS	5
 #define PROTOCOL_DMRMMDVM	6
+#endif
 
 // DExtra
 #define DEXTRA_PORT					30001							// UDP port
@@ -99,6 +109,7 @@
 #define DCS_KEEPALIVE_PERIOD		1							// in seconds
 #define DCS_KEEPALIVE_TIMEOUT		(DCS_KEEPALIVE_PERIOD*30)	// in seconds
 
+#ifdef IS_XLX
 // XLX
 #define XLX_PORT					10002						// UDP port
 #define XLX_KEEPALIVE_PERIOD		1							// in seconds
@@ -138,7 +149,7 @@
 #define DMRIDDB_USE_RLX_SERVER	1							// 1 = use http, 0 = use local file
 #define DMRIDDB_PATH			"/usr/local/etc/dmrid.dat"	// local file path
 #define DMRIDDB_REFRESH_RATE	180							// in minutes
-
+#endif
 
 // xml & json reporting -----------------------------------------
 
@@ -149,12 +160,21 @@
 
 // system paths -------------------------------------------------
 
+#ifdef IS_XLX
 #define XML_PATH			"/var/log/xlxd.xml"
 #define PIDFILE_PATH		"/var/log/xlxd.pid"
 #define WHITELIST_PATH		"/usr/local/etc/xlxd.whitelist"
 #define BLACKLIST_PATH		"/usr/local/etc/xlxd.blacklist"
 #define INTERLINKLIST_PATH	"/usr/local/etc/xlxd.interlink"
 #define DEBUGDUMP_PATH		"/var/log/xlxd.debug"
+#else
+#define XML_PATH			"/var/log/xrfd.xml"
+#define PIDFILE_PATH		"/var/log/xrfd.pid"
+#define WHITELIST_PATH		"/usr/local/etc/xrfd.whitelist"
+#define BLACKLIST_PATH		"/usr/local/etc/xrfd.blacklist"
+#define INTERLINKLIST_PATH	"/usr/local/etc/xrfd.linklist"
+#define DEBUGDUMP_PATH		"/var/log/xrfd.debug"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // typedefs
@@ -186,6 +206,7 @@ extern CReflector  g_Reflector;
 class CGateKeeper;
 extern CGateKeeper g_GateKeeper;
 
+#ifdef IS_XLX
 #if (DMRIDDB_USE_RLX_SERVER == 1)
 class CDmridDirHttp;
 extern CDmridDirHttp   g_DmridDir;
@@ -196,6 +217,6 @@ extern CDmridDirFile   g_DmridDir;
 
 class CTranscoder;
 extern CTranscoder g_Transcoder;
-
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////

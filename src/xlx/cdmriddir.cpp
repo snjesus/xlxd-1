@@ -23,8 +23,8 @@
 // ----------------------------------------------------------------------------
 
 #include <string.h>
-#include "main.h"
-#include "creflector.h"
+#include "../main.h"
+#include "../creflector.h"
 #include "cdmriddir.h"
 #include "cdmriddirfile.h"
 #include "cdmriddirhttp.h"
@@ -151,4 +151,3 @@ bool CDmridDir::IsValidDmrid(const char *sz)
 	}
 	return ok;
 }
-

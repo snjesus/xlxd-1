@@ -26,8 +26,10 @@
 #include "main.h"
 #include <string.h>
 #include <cctype>
-#include "cdmriddirfile.h"
-#include "cdmriddirhttp.h"
+#ifdef IS_XLX
+#include "xlx/cdmriddirfile.h"
+#include "xlx/cdmriddirhttp.h"
+#endif
 #include "ccallsign.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -39,16 +41,23 @@ CCallsign::CCallsign()
 	::memset(m_Callsign, ' ', sizeof(m_Callsign));
 	::memset(m_Suffix, ' ', sizeof(m_Suffix));
 	m_Module = ' ';
+#ifdef IS_XLX
 	m_uiDmrid = 0;
+#endif
 }
-
+#ifdef IS_XLX
 CCallsign::CCallsign(const char *sz, uint32 dmrid)
+#else
+CCallsign::CCallsign(const char *sz)
+#endif
 {
 	// blank all
 	::memset(m_Callsign, ' ', sizeof(m_Callsign));
 	::memset(m_Suffix, ' ', sizeof(m_Suffix));
 	m_Module = ' ';
+#ifdef IS_XLX
 	m_uiDmrid = dmrid;
+#endif
 
 	// and populate
 	if ( ::strlen(sz) > 0 ) {
@@ -57,6 +66,7 @@ CCallsign::CCallsign(const char *sz, uint32 dmrid)
 		if ( strlen(sz) >= sizeof(m_Callsign) ) {
 			m_Module = sz[sizeof(m_Callsign)-1];
 		}
+#ifdef IS_XLX
 		// dmrid ok ?
 		if ( m_uiDmrid == 0 ) {
 			g_DmridDir.Lock();
@@ -74,6 +84,7 @@ CCallsign::CCallsign(const char *sz, uint32 dmrid)
 			}
 		}
 		g_DmridDir.Unlock();
+#endif
 	}
 }
 
@@ -82,7 +93,9 @@ CCallsign::CCallsign(const CCallsign &callsign)
 	::memcpy(m_Callsign, callsign.m_Callsign, sizeof(m_Callsign));
 	::memcpy(m_Suffix, callsign.m_Suffix, sizeof(m_Suffix));
 	m_Module = callsign.m_Module;
+#ifdef IS_XLX
 	m_uiDmrid = callsign.m_uiDmrid;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -136,8 +149,11 @@ bool CCallsign::HasSuffix(void) const
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // set
-
+#ifdef IS_XLX
 void CCallsign::SetCallsign(const char *sz, bool UpdateDmrid)
+#else
+void CCallsign::SetCallsign(const char *sz)
+#endif
 {
 	// set callsign
 	::memset(m_Callsign, ' ', sizeof(m_Callsign));
@@ -146,6 +162,7 @@ void CCallsign::SetCallsign(const char *sz, bool UpdateDmrid)
 	if ( strlen(sz) >= sizeof(m_Callsign) ) {
 		m_Module = sz[sizeof(m_Callsign)-1];
 	}
+#ifdef IS_XLX
 	// and update dmrid
 	if ( UpdateDmrid ) {
 		g_DmridDir.Lock();
@@ -154,9 +171,14 @@ void CCallsign::SetCallsign(const char *sz, bool UpdateDmrid)
 		}
 		g_DmridDir.Unlock();
 	}
+#endif
 }
 
+#ifdef IS_XLX
 void CCallsign::SetCallsign(const uint8 *buffer, int len, bool UpdateDmrid)
+#else
+void CCallsign::SetCallsign(const uint8 *buffer, int len)
+#endif
 {
 	// set callsign
 	::memset(m_Callsign, ' ', sizeof(m_Callsign));
@@ -170,6 +192,7 @@ void CCallsign::SetCallsign(const uint8 *buffer, int len, bool UpdateDmrid)
 	if ( ((unsigned int)len >= sizeof(m_Callsign)) && ((char)buffer[sizeof(m_Callsign)-1] != 0) ) {
 		m_Module = (char)buffer[sizeof(m_Callsign)-1];
 	}
+#ifdef IS_XLX
 	if ( UpdateDmrid ) {
 		g_DmridDir.Lock();
 		{
@@ -177,8 +200,10 @@ void CCallsign::SetCallsign(const uint8 *buffer, int len, bool UpdateDmrid)
 		}
 		g_DmridDir.Unlock();
 	}
+#endif
 }
 
+#ifdef IS_XLX
 void CCallsign::SetDmrid(uint32 dmrid, bool UpdateCallsign)
 {
 	m_uiDmrid = dmrid;
@@ -201,6 +226,7 @@ void CCallsign::SetDmrid(const uint8 *buffer, bool UpdateCallsign)
 	sz[8] = 0;
 	SetDmrid((uint32)::strtol(sz, NULL, 16), UpdateCallsign);
 }
+#endif
 
 void CCallsign::SetModule(char c)
 {
@@ -294,10 +320,13 @@ bool CCallsign::HasSameModule(const CCallsign &Callsign) const
 
 bool CCallsign::operator ==(const CCallsign &callsign) const
 {
-	return ((::memcmp(callsign.m_Callsign, m_Callsign, sizeof(m_Callsign)) == 0) &&
-			(m_Module == callsign.m_Module) &&
-			(::memcmp(callsign.m_Suffix, m_Suffix, sizeof(m_Suffix)) == 0) &&
-			(m_uiDmrid == callsign.m_uiDmrid) );
+	return (0 == ::memcmp(callsign.m_Callsign, m_Callsign, sizeof(m_Callsign))
+		&&	(m_Module == callsign.m_Module)
+		&&	0 == ::memcmp(callsign.m_Suffix, m_Suffix, sizeof(m_Suffix))
+#ifdef IS_XLX
+		&&	(m_uiDmrid == callsign.m_uiDmrid)
+#endif
+	);
 }
 
 CCallsign::operator const char *() const

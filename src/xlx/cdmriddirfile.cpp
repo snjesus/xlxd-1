@@ -25,7 +25,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "main.h"
+#include "../main.h"
 #include "cdmriddirfile.h"
 
 

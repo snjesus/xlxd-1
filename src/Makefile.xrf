@@ -1,0 +1,42 @@
+BINDIR=/usr/local/bin
+CFGDIR=/usr/local/etc
+CC=g++
+#CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
+CFLAGS=-c -W -Wall -MMD -MD -std=c++11
+LDFLAGS=-pthread
+SOURCES=$(wildcard *.cpp)
+OBJECTS=$(SOURCES:.cpp=.o)
+DEPENDS=$(SOURCES:.cpp=.d)
+EXECUTABLE=xrfd
+
+all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE) : $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o :
+	$(CC) $(CFLAGS) $< -o $@
+
+clean :
+	$(RM) $(EXECUTABLE) *.o *.d *.gch
+
+-include $(DEPENDS)
+
+install :
+	ln -s $(shell pwd)/xrfd.blacklist $(CFGDIR)
+	ln -s $(shell pwd)/xrfd.whitelist $(CFGDIR)
+	ln -s $(shell pwd)/xrfd.linklist $(CFGDIR)
+	cp -f ../systemd/xrfd.service /lib/systemd/system/
+	cp -f $(EXECUTABLE) $(BINDIR)
+	systemctl enable xrfd.service
+	systemctl daemon-reload
+	# xrfd is now controlled with systemd. The service has been enabled. You can start it
+	# with systemctl start rxfd
+
+uninstall :
+	rm -f $(CFGDIR)/xrfd.blacklist
+	rm -f $(CFGDIR)/xrfd.whitelist
+	rm -f $(CFGDIR)/xrfd.linklist
+	systemctl stop xrfd.service
+	systemctl disable xrfd.service
+	systemctl daemon-reload

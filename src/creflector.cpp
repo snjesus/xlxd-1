@@ -27,9 +27,11 @@
 #include <string.h>
 #include "creflector.h"
 #include "cgatekeeper.h"
-#include "cdmriddirfile.h"
-#include "cdmriddirhttp.h"
-#include "ctranscoder.h"
+#ifdef IS_XLX
+#include "xlx/cdmriddirfile.h"
+#include "xlx/cdmriddirhttp.h"
+#include "xlx/ctranscoder.h"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // constructor
@@ -88,13 +90,13 @@ bool CReflector::Start(void)
 
 	// init gate keeper
 	bool ok = g_GateKeeper.Init();
-
+#ifdef IS_XLX
 	// init dmrid directory
 	g_DmridDir.Init();
 
 	// init the transcoder
 	g_Transcoder.Init();
-
+#endif
 	// create protocols
 	ok &= m_Protocols.Init();
 
@@ -146,10 +148,10 @@ void CReflector::Stop(void)
 
 	// close protocols
 	m_Protocols.Close();
-
+#ifdef IS_XLX
 	// close transcoder
 	g_Transcoder.Close();
-
+#endif
 	// close gatekeeper
 	g_GateKeeper.Close();
 }
@@ -196,8 +198,7 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
 						stream->Push(DvHeader);
 
 						// report
-						std::cout << "Opening stream on module " << module << " for client " << client->GetCallsign()
-								  << " with sid " << DvHeader->GetStreamId() << std::endl;
+						std::cout << "Opening stream on module " << module << " for client " << client->GetCallsign() << " with sid " << DvHeader->GetStreamId() << std::endl;
 
 						// notify
 						g_Reflector.OnStreamOpen(stream->GetUserCallsign());
@@ -208,8 +209,7 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
 				}
 			} else {
 				// report
-				std::cout << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign()
-						  << " with sid " << DvHeader->GetStreamId() << std::endl;
+				std::cout << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign() << " with sid " << DvHeader->GetStreamId() << std::endl;
 			}
 		}
 	}

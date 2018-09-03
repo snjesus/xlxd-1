@@ -47,7 +47,11 @@ public:
 	void Close(void);
 
 	// authorizations
+#ifdef IS_XLX
 	bool MayLink(const CCallsign &, const CIp &, int, char * = NULL) const;
+#else
+	bool MayLink(const CCallsign &, const CIp &, int) const;
+#endif
 	bool MayTransmit(const CCallsign &, const CIp &, int = PROTOCOL_ANY, char = ' ') const;
 
 	// peer list handeling

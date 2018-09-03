@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------------
 
 #include <string.h>
-#include "main.h"
+#include "../main.h"
 #include "cbmclient.h"
 
 
@@ -51,4 +51,3 @@ bool CBmClient::IsAlive(void) const
 {
 	return (m_LastKeepaliveTime.DurationSinceNow() < XLX_KEEPALIVE_TIMEOUT);
 }
-

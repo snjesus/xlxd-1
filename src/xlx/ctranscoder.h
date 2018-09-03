@@ -27,7 +27,7 @@
 
 #include "csemaphore.h"
 #include "ccodecstream.h"
-#include "cudpsocket.h"
+#include "../cudpsocket.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // define

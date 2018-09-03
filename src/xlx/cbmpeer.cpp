@@ -23,9 +23,9 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
-#include "creflector.h"
+#include "../creflector.h"
 #include "cbmpeer.h"
 #include "cbmclient.h"
 
@@ -84,4 +84,3 @@ int CBmPeer::GetProtocolRevision(const CVersion &/*version*/)
 {
 	return XLX_PROTOCOL_REVISION_2;
 }
-

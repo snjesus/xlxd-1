@@ -25,8 +25,8 @@
 // ----------------------------------------------------------------------------
 
 #include "csemaphore.h"
-#include "cudpsocket.h"
-#include "cpacketqueue.h"
+#include "../cudpsocket.h"
+#include "../cpacketqueue.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////

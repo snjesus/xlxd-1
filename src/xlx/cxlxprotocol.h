@@ -24,10 +24,10 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "cversion.h"
-#include "ctimepoint.h"
-#include "cdextraprotocol.h"
-#include "cclients.h"
+#include "../cversion.h"
+#include "../ctimepoint.h"
+#include "../cdextraprotocol.h"
+#include "../cclients.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 

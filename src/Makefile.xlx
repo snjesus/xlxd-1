@@ -7,11 +7,11 @@ CFGDIR=/usr/local/etc
 
 EXECUTABLE=xlxd
 GCC=g++
-CFLAGS=-c -W -Wall -MMD -MD -std=c++11
+CFLAGS=-c -W -Wall -MMD -MD -std=c++11 -DIS_XLX
 # uncomment the next line for an executable with full gdb debugging support
-#CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11
+#CFLAGS=-c -ggdb3 -W -Wall -MMD -MD -std=c++11 -DIS_XLX
 LDFLAGS=-pthread
-SOURCES=$(wildcard *.cpp)
+SOURCES=$(wildcard *.cpp) $(wildcard xlx/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPENDS=$(SOURCES:.cpp=.d)
 
@@ -24,7 +24,7 @@ $(EXECUTABLE) : $(OBJECTS)
 	$(GCC) $(CFLAGS) $< -o $@
 
 clean :
-	$(RM) $(EXECUTABLE) *.o *.d
+	$(RM) $(EXECUTABLE) *.o *.d *.gch xlx/*.o xlx/*.d xlx/*.gch
 
 -include $(DEPENDS)
 

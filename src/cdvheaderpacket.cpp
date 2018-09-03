@@ -25,7 +25,7 @@
 #include "main.h"
 #include <string.h>
 #include <cstdio>
-#include "cdmriddir.h"
+//#include "cdmriddir.h"
 #include "cdvheaderpacket.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +55,7 @@ CDvHeaderPacket::CDvHeaderPacket(const struct dstar_header *buffer, uint16 sid, 
 	m_uiCrc = buffer->Crc;
 }
 
+#ifdef IS_XLX
 // dmr constructor
 
 CDvHeaderPacket::CDvHeaderPacket(uint32 my, const CCallsign &ur, const CCallsign &rpt1, const CCallsign &rpt2, uint16 sid, uint8 pid, uint8 spid)
@@ -69,6 +70,7 @@ CDvHeaderPacket::CDvHeaderPacket(uint32 my, const CCallsign &ur, const CCallsign
 	m_csRPT2 = rpt2;
 	m_csMY = CCallsign("", my);
 }
+#endif
 
 // copy constructor
 

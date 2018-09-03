@@ -23,12 +23,12 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
 #include "cdmrplusclient.h"
 #include "cdmrplusprotocol.h"
-#include "creflector.h"
-#include "cgatekeeper.h"
+#include "../creflector.h"
+#include "../cgatekeeper.h"
 #include "cdmriddir.h"
 #include "cbptc19696.h"
 #include "crs129.h"

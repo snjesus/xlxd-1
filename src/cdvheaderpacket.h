@@ -61,7 +61,9 @@ public:
 	// constructor
 	CDvHeaderPacket();
 	CDvHeaderPacket(const struct dstar_header *, uint16, uint8);
+#ifdef IS_XLX
 	CDvHeaderPacket(uint32, const CCallsign &, const CCallsign &, const CCallsign &, uint16, uint8, uint8);
+#endif
 	CDvHeaderPacket(const CDvHeaderPacket &);
 
 	// destructor

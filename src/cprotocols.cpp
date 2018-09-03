@@ -27,9 +27,11 @@
 #include "cdextraprotocol.h"
 #include "cdplusprotocol.h"
 #include "cdcsprotocol.h"
-#include "cxlxprotocol.h"
-#include "cdmrplusprotocol.h"
-#include "cdmrmmdvmprotocol.h"
+#ifdef IS_XLX
+#include "xlx/cxlxprotocol.h"
+#include "xlx/cdmrplusprotocol.h"
+#include "xlx/cdmrmmdvmprotocol.h"
+#endif
 #include "cprotocols.h"
 
 
@@ -81,6 +83,7 @@ bool CProtocols::Init(void)
 		m_Protocol[2] = new CDcsProtocol;
 		ok &= m_Protocol[2]->Init();
 
+#ifdef IS_XLX
 		// create and initialize XLX - interlink
 		delete m_Protocol[3];
 		m_Protocol[3] = new CXlxProtocol;
@@ -95,6 +98,7 @@ bool CProtocols::Init(void)
 		delete m_Protocol[5];
 		m_Protocol[5] = new CDmrmmdvmProtocol;
 		ok &= m_Protocol[5]->Init();
+#endif
 	}
 	m_Mutex.unlock();
 

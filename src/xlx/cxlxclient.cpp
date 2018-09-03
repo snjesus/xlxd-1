@@ -23,7 +23,7 @@
 // ----------------------------------------------------------------------------
 
 #include <string.h>
-#include "main.h"
+#include "../main.h"
 #include "cxlxclient.h"
 
 
@@ -74,4 +74,3 @@ bool CXlxClient::IsAlive(void) const
 {
 	return (m_LastKeepaliveTime.DurationSinceNow() < XLX_KEEPALIVE_TIMEOUT);
 }
-

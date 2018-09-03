@@ -24,11 +24,11 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "ctimepoint.h"
-#include "cprotocol.h"
-#include "cdvheaderpacket.h"
-#include "cdvframepacket.h"
-#include "cdvlastframepacket.h"
+#include "../ctimepoint.h"
+#include "../cprotocol.h"
+#include "../cdvheaderpacket.h"
+#include "../cdvframepacket.h"
+#include "../cdvlastframepacket.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // define

@@ -49,7 +49,9 @@ public:
 	int GetProtocol(void) const                 { return PROTOCOL_DEXTRA; }
 	int GetProtocolRevision(void) const         { return m_ProtRev; }
 	const char *GetProtocolName(void) const     { return "DExtra"; }
+#ifdef IS_XLX
 	int GetCodec(void) const                    { return CODEC_AMBEPLUS; }
+#endif
 	bool IsNode(void) const                     { return true; }
 
 	// status

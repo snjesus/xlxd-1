@@ -23,13 +23,13 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
 #include "cxlxpeer.h"
 #include "cbmpeer.h"
 #include "cxlxprotocol.h"
-#include "creflector.h"
-#include "cgatekeeper.h"
+#include "../creflector.h"
+#include "../cgatekeeper.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -688,4 +688,3 @@ CPeer *CXlxProtocol::CreateNewPeer(const CCallsign &Callsign, const CIp &Ip, cha
 	// done
 	return peer;
 }
-

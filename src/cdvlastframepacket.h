@@ -39,8 +39,10 @@ public:
 	// constructor
 	CDvLastFramePacket();
 	CDvLastFramePacket(const struct dstar_dvframe *, uint16, uint8);
+#ifdef IS_XLX
 	CDvLastFramePacket(const uint8 *, const uint8 *, uint16, uint8, uint8);
 	CDvLastFramePacket(uint16, uint8, const uint8 *, const uint8 *, uint8, uint8, const uint8 *, const uint8 *);
+#endif
 	CDvLastFramePacket(const CDvLastFramePacket &);
 
 	// destructor
@@ -51,7 +53,9 @@ public:
 
 	// identity
 	bool IsLastPacket(void) const           { return true; }
+#ifdef IS_XLX
 	bool HaveTranscodableAmbe(void) const   { return false; }
+#endif
 };
 
 

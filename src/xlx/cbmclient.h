@@ -24,7 +24,7 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "cclient.h"
+#include "../cclient.h"
 #include "cxlxclient.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////

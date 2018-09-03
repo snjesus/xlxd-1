@@ -35,8 +35,10 @@ CDvFramePacket::CDvFramePacket()
 {
 	::memset(m_uiAmbe, 0, sizeof(m_uiAmbe));
 	::memset(m_uiDvData, 0, sizeof(m_uiDvData));
+#ifdef IS_XLX
 	::memset(m_uiAmbePlus, 0, sizeof(m_uiAmbePlus));
 	::memset(m_uiDvSync, 0, sizeof(m_uiDvSync));
+#endif
 };
 
 // dstar constructor
@@ -46,10 +48,13 @@ CDvFramePacket::CDvFramePacket(const struct dstar_dvframe *dvframe, uint16 sid, 
 {
 	::memcpy(m_uiAmbe, dvframe->AMBE, sizeof(m_uiAmbe));
 	::memcpy(m_uiDvData, dvframe->DVDATA, sizeof(m_uiDvData));
+#ifdef IS_XLX
 	::memset(m_uiAmbePlus, 0, sizeof(m_uiAmbePlus));
 	::memset(m_uiDvSync, 0, sizeof(m_uiDvSync));
+#endif
 }
 
+#ifdef IS_XLX
 // dmr constructor
 
 CDvFramePacket::CDvFramePacket(const uint8 *ambe, const uint8 *sync, uint16 sid, uint8 pid, uint8 spid)
@@ -74,6 +79,7 @@ CDvFramePacket::CDvFramePacket
 	::memcpy(m_uiAmbePlus, dmrambe, sizeof(m_uiAmbePlus));
 	::memcpy(m_uiDvSync, dmrsync, sizeof(m_uiDvSync));
 }
+#endif
 
 // copy constructor
 
@@ -82,8 +88,10 @@ CDvFramePacket::CDvFramePacket(const CDvFramePacket &DvFrame)
 {
 	::memcpy(m_uiAmbe, DvFrame.m_uiAmbe, sizeof(m_uiAmbe));
 	::memcpy(m_uiDvData, DvFrame.m_uiDvData, sizeof(m_uiDvData));
+#ifdef IS_XLX
 	::memcpy(m_uiAmbePlus, DvFrame.m_uiAmbePlus, sizeof(m_uiAmbePlus));
 	::memcpy(m_uiDvSync, DvFrame.m_uiDvSync, sizeof(m_uiDvSync));
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +104,7 @@ CPacket *CDvFramePacket::Duplicate(void) const
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // get
-
+#ifdef IS_XLX
 const uint8 *CDvFramePacket::GetAmbe(uint8 uiCodec) const
 {
 	switch (uiCodec) {
@@ -108,6 +116,7 @@ const uint8 *CDvFramePacket::GetAmbe(uint8 uiCodec) const
 		return NULL;
 	}
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // set
@@ -117,6 +126,7 @@ void CDvFramePacket::SetDvData(uint8 *DvData)
 	::memcpy(m_uiDvData, DvData, sizeof(m_uiDvData));
 }
 
+#ifdef IS_XLX
 void CDvFramePacket::SetAmbe(uint8 uiCodec, uint8 *Ambe)
 {
 	switch (uiCodec) {
@@ -128,15 +138,23 @@ void CDvFramePacket::SetAmbe(uint8 uiCodec, uint8 *Ambe)
 		break;
 	}
 }
-
+#else
+void CDvFramePacket::SetAmbe(uint8 *Ambe)
+{
+	::memcpy(m_uiAmbe, Ambe, sizeof(m_uiAmbe));
+}
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // operators
 
 bool CDvFramePacket::operator ==(const CDvFramePacket &DvFrame) const
 {
-	return ( (::memcmp(m_uiAmbe, DvFrame.m_uiAmbe, sizeof(m_uiAmbe)) == 0) &&
-			 (::memcmp(m_uiDvData, DvFrame.m_uiDvData, sizeof(m_uiDvData)) == 0) &&
-			 (::memcmp(m_uiAmbePlus, DvFrame.m_uiAmbePlus, sizeof(m_uiAmbePlus)) == 0) &&
-			 (::memcmp(m_uiDvSync, DvFrame.m_uiDvSync, sizeof(m_uiDvSync)) == 0) );
+	return ( 0 == ::memcmp(m_uiAmbe, DvFrame.m_uiAmbe, sizeof(m_uiAmbe))
+		&&	 0 == ::memcmp(m_uiDvData, DvFrame.m_uiDvData, sizeof(m_uiDvData))
+#ifdef IS_XLX
+		&&	 0 == ::memcmp(m_uiAmbePlus, DvFrame.m_uiAmbePlus, sizeof(m_uiAmbePlus))
+		&&	 0 == ::memcmp(m_uiDvSync, DvFrame.m_uiDvSync, sizeof(m_uiDvSync))
+#endif
+	);
 }

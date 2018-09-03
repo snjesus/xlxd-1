@@ -47,7 +47,9 @@ public:
 	// identity
 	int GetProtocol(void) const                 { return PROTOCOL_DCS; }
 	const char *GetProtocolName(void) const     { return "DCS"; }
+#ifdef IS_XLX
 	int GetCodec(void) const                    { return CODEC_AMBEPLUS; }
+#endif
 	bool IsNode(void) const                     { return true; }
 
 	// status

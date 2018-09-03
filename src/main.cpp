@@ -67,7 +67,11 @@ int main(int argc, const char **/*argv*/)
 
 	// check arguments
 	if ( argc != 1 ) {
+	#ifdef IS_XLX
+		std::cerr << "Usage: xlxd" << std::endl;
+	#else
 		std::cerr << "Usage: xrfd" << std::endl;
+	#endif
 		std::cerr << "Reflector Callsign and IP address are set in main.h" << std::endl;
 		return EXIT_FAILURE;
 	}
@@ -77,12 +81,18 @@ int main(int argc, const char **/*argv*/)
 		perror("Error deleting old pid file");	// it's okay if it doesn't yet exist
 
 	// splash
+#ifdef IS_XLX
 	std::cout << "Starting xlxd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+#else
+	std::cout << "Starting xrfd " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_REVISION << std::endl << std::endl;
+#endif
 
 	// initialize reflector
 	g_Reflector.SetCallsign(REFLECTOR_CALLSIGN);
 	g_Reflector.SetListenIp(CIp(MY_IP_ADDRESS));
+#ifdef IS_XLX
 	g_Reflector.SetTranscoderIp(CIp(TRANSCODER_IP_ADDRESS));
+#endif
 
 	// and let it run
 	if ( !g_Reflector.Start() ) {

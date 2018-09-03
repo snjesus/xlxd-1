@@ -22,11 +22,11 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
-#include "main.h"
+#include "../main.h"
 #include <string.h>
 #include "ccodecstream.h"
-#include "cdvframepacket.h"
-#include "creflector.h"
+#include "../cdvframepacket.h"
+#include "../creflector.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // define
