@@ -1,8 +1,8 @@
 # Introduction
 
-This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I beleive this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I beleive it makes the code handling the containers simpler as well. In this version, no classes are derrived from any standard containers. I consider this highly ill-advised and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development.
+This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I believe this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I believe it makes the code handling the containers simpler as well. In this version, no classes are derived from any standard containers. I consider this highly ill-advised and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development.
 
-The Makefile has been improved to provide automatically generated dependances. This significantly speeds up updating or improving the code
+The Makefile has been improved to provide automatically generated dependencies. This significantly speeds up updating or improving the code
 
 The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Follow the instructions below to build your transcoding XLX reflector.
 
@@ -10,7 +10,7 @@ The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only supp
 
 # Usage
 
-The packages which are described in this document are designed to install server software which is used for the D-Star network infrastructure. It requires a 24/7 internet connection which can support 20 voice streams or more to connect repeaters and hotspot dongles!
+The packages which are described in this document are designed to install server software which is used for the D-Star network infrastructure. It requires a 24/7 internet connection which can support 20 voice streams or more to connect repeaters and hot-spot dongles!
 
 - The server requires a static IP-address!
 - The public IP address should have a DNS record which must be published in the common host files.
@@ -19,12 +19,12 @@ If you want to run this software please make sure that you can provide this serv
 
 # Installation
 
-#### After a clean installation of debian make sure to run update and upgrade
+#### After a clean installation of Debian make sure to run update and upgrade
 ```
 sudo apt update
 sudo apt upgrade
 ```
-#### Required packages (some of these will probabaly already be installed)
+#### Required packages (some of these will probably already be installed)
 ```
 sudo apt install git git-core
 sudo apt install apache2 php5
@@ -43,7 +43,7 @@ Go to the xlxd/src directory and
 cd xlxd/src
 cp main.example.h main.h
 ```
-Use your favorite editory to modify `main.h`. **You will need to change the parameters at the begining of this file!** REFLECTOR_CALLSIGN must be set as well as the MY_IP_ADDRESS. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
+Use your favorite editor to modify `main.h`. **You will need to change the parameters at the begining of this file!** REFLECTOR_CALLSIGN must be set as well as the MY_IP_ADDRESS. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
 
 You will also want to set NB_OF_MODULES to the number of modules you need. The max is 26. If you want to use module Z you need to set `NB_OF_MODULES` to 26.
 
@@ -115,8 +115,8 @@ XLX Server requires the following ports to be open and forwarded properly for in
 
 # Copyright
 
-- © 2016 Luc Engelmann LX1IQ
-- © 2016 Thomas A. Early, N7TAE
+- ï¿½ 2016 Luc Engelmann LX1IQ
+- ï¿½ 2016 Thomas A. Early, N7TAE
 
 
 The XLX Multiprotocol Gateway Reflector Server is part of the software system
