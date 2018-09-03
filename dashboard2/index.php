@@ -124,7 +124,7 @@ if ($CallingHome['Active']) {
         echo '
       }';
 
-        if (!isset($_GET['show']) || (($_GET['show'] != 'liveircddb') && ($_GET['show'] != 'reflectors') && ($_GET['show'] != 'interlinks'))) {
+        if (!isset($_GET['show']) || (($_GET['show'] != 'livequadnet') && ($_GET['show'] != 'reflectors') && ($_GET['show'] != 'interlinks'))) {
             echo '
       PageRefresh = setTimeout(ReloadPage, ' . $PageOptions['PageRefreshDelay'] . ');';
         }
@@ -156,7 +156,7 @@ if ($CallingHome['Active']) {
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="navbar-info"><?php echo $Reflector->GetVersion(); ?> - Dashboard
+                <li class="navbar-info">V#Q<?php echo $Reflector->GetVersion(); ?> - Dashboard
                     v<?php echo $PageOptions['DashboardVersion']; ?></li>
                 <li class="navbar-info">Service
                     uptime: <?php echo FormatSeconds($Reflector->GetServiceUptime()); ?></li>
@@ -170,16 +170,16 @@ if ($CallingHome['Active']) {
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li<?php echo (($_GET['show'] == "users") || ($_GET['show'] == "")) ? ' class="active"' : ''; ?>><a
-                            href="./index.php">Users / Modules</a></li>
+                            href="./index.php">Last Heard</a></li>
                 <li<?php echo ($_GET['show'] == "repeaters") ? ' class="active"' : ''; ?>><a
-                            href="./index.php?show=repeaters">Repeaters / Nodes (<?php echo $Reflector->NodeCount(); ?>
-                        )</a></li>
+                            href="./index.php?show=repeaters">Links (<?php echo $Reflector->NodeCount(); ?>)
+                        </a></li>
                 <li<?php echo ($_GET['show'] == "peers") ? ' class="active"' : ''; ?>><a href="./index.php?show=peers">Peers
                         (<?php echo $Reflector->PeerCount(); ?>)</a></li>
                 <li<?php echo ($_GET['show'] == "reflectors") ? ' class="active"' : ''; ?>><a
-                            href="./index.php?show=reflectors">Reflectorlist</a></li>
-                <li<?php echo ($_GET['show'] == "liveircddb") ? ' class="active"' : ''; ?>><a
-                            href="./index.php?show=liveircddb">D-Star live</a></li>
+                            href="./index.php?show=reflectors">Reflector List</a></li>
+                <li<?php echo ($_GET['show'] == "livequadnet") ? ' class="active"' : ''; ?>><a
+                            href="./index.php?show=livequadnet">QuadNet Live</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -201,8 +201,8 @@ if ($CallingHome['Active']) {
                 case 'repeaters'  :
                     require_once("./pgs/repeaters.php");
                     break;
-                case 'liveircddb' :
-                    require_once("./pgs/liveircddb.php");
+                case 'livequadnet' :
+                    require_once("./pgs/livequadnet.php");
                     break;
                 case 'peers'      :
                     require_once("./pgs/peers.php");
