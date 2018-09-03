@@ -1,6 +1,7 @@
 [Unit]
 Description=ambed
-After=systemd-user-session.service
+Requires=network.target
+After=systemd-user-session.service network.target
 
 [Service]
 Type=simple
@@ -11,4 +12,3 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-
