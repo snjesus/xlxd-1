@@ -3,7 +3,7 @@
 /*
  *  This dashboard is being developed by the DVBrazil Team as a courtesy to
  *  the XLX Multiprotocol Gateway Reflector Server project.
- *  The dashboard is based of the Bootstrap dashboard template. 
+ *  The dashboard is based of the Bootstrap dashboard template.
 */
 
 if (file_exists("./pgs/functions.php")) {
@@ -152,7 +152,7 @@ if ($CallingHome['Active']) {
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand"><?php echo $Reflector->GetReflectorName(); ?> Multiprotocol Gateway</span>
+            <span class="navbar-brand"><?php echo $Reflector->GetReflectorName(); ?> Multiprotocol Reflector</span>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
