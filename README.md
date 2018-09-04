@@ -1,10 +1,12 @@
 # Introduction
 
-This is a (hopefully) improved version of the multi-protocol XLX-Reflector. Nearly all std::vector containers have been replaced with std::list containers. I believe this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I believe it makes the code handling the containers simpler as well. In this version, no classes are derived from any standard containers. I consider this highly ill-advised and while the origin XLX server worked using such derivations, it represents a possible problem when considering future development.
+This will build either an **new** kind of XLX reflector *or* a tri-mode XRF reflector. The XLX is new because it can support out-going DExtra links, by adding a new DExtra Peer type. Please note that you cannot have multiple out-going DExtra links to the same node, but you can have the object source another out-going link back to this reflector, so it is possible to have up to two DExtra links between nodes. The XRF reflector supports inbound DExtra, DPlus and DCS connections. It also supports out-going DExtra linking with the same restrictions as the XLX reflector.
 
-The Makefile has been improved to provide automatically generated dependencies. This significantly speeds up updating or improving the code
+This is an improved version of the multi-protocol Reflector. Nearly all std::vector containers have been replaced with std::list containers. I believe this is a far better choice for any collection where it is common to delete elements that are not at the end of the collection. In most cases, I believe it makes the code handling the containers simpler as well. In this package, no classes are derived from any standard containers. I consider this highly ill-advised and while the origin XLX server worked using such derivations, it represents a possible serious problem when considering future development.
 
-The xlxd no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian jessie or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd are built without gdb support. If you want to add it, copy the `Makefile` in each build directory to `makefile` and modify that file. Finally, I have designed this repository so that you don't have to modify any file in the repository. Follow the instructions below to build your transcoding XLX reflector.
+The Makefiles have been improved to provide automatically generated dependencies. This significantly speeds up updating or improving the code
+
+These reflectors no longer has a daemon-mode. It is unnecessary for systemd. I only support systemd-based operating systems. Debian 9 or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd or xrfd are built without gdb support. If you want to add it, modify the `Makefile` in each build directory. Finally, I have designed this repository so that you don't have to modify any file in the repository. Follow the instructions below to build your transcoding XLX reflector or tri-mode XRF reflector.
 
 - 73 de n7tae
 
@@ -18,6 +20,8 @@ The packages which are described in this document are designed to install server
 If you want to run this software please make sure that you can provide this service free of charge, like the developer team provides the software and they network infrastructure free of charge! If you don't need transcoding support, you don't need to build or install `ambed`.
 
 # Installation
+
+Below are instructions for building either an XLX or XRF reflector.
 
 #### After a clean installation of Debian make sure to run update and upgrade
 ```
@@ -43,30 +47,58 @@ Go to the xlxd/src directory and
 cd xlxd/src
 cp main.example.h main.h
 ```
-Use your favorite editor to modify `main.h`. **You will need to change the parameters at the begining of this file!** REFLECTOR_CALLSIGN must be set as well as the MY_IP_ADDRESS. By default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
+Use your favorite editor to modify `main.h`. **You will need to change the parameters at the begining of this file!** REFLECTOR_CALLSIGN must be set as well as the MY_IP_ADDRESS. If you are building an XLX reflector, by default, the DMR ID file is downloaded from XLX950 every three hours. If you want to provide your own source, build a cron-based script that will download a suitable file. You also need to modify the `DMRIDDB_USE_RLX_SERVER` and `DMRIDDB_PATH` variables.
 
 You will also want to set NB_OF_MODULES to the number of modules you need. The max is 26. If you want to use module Z you need to set `NB_OF_MODULES` to 26.
 
 #### Create and edit your blacklist, whitelist and linking files
+If you are building an XLX reflector:
 ```
 cp ../config/xlx.blacklist .
 cp ../config/xlx.whitelist .
 cp ../config/xlx.interlink .
 ```
-Use your favorite editor to modify each of these files. If you want a totally open network, the blacklist and whitelist files are ready to go. The blacklist determine which callsigns can't use the reflector. The whitelist determines which callsigns can use the reflector and the interlink files set up the XLX<--->XLX linking. When building your network, remember that XLX only supports a single hop, so each XLX reflector needs to be interlinked with all the reflectors for that module's network. Along with multi-protocol support, this is the outstanding feature of the XLX design!
+If you are building an XRF reflector:
+```
+cp ../config/xlx.blacklist xrf.blacklist
+cp ../config/xlx.whitelist xrf.whitelist
+cp ../config/xlx.interlink xrf.linklist
+```
+Use your favorite editor to modify each of these files. If you want a totally open network, the blacklist and whitelist files are ready to go. The blacklist determine which callsigns can't use the reflector. The whitelist determines which callsigns can use the reflector and the interlink or linklist file sets up the XLX<--->XLX linking and/or out-going XRF linking. When building your network, remember that XLX only supports a single hop, so each XLX reflector needs to be interlinked with all the reflectors for that module's network. Along with multi-protocol support, this is the outstanding feature of the XLX design! The down-side is that a Brand Meister link is of the same Peer group as XLX, so if you want to set up a big XLX cluster that supports transcoding, you need a transcoder for all nodes!
 
-#### Create and edit the ambed `main.h` file
+This limitation was the main driving force to develop this new XLX and XRF system: Transcoder hardware can be attached to an isolated XLX reflector and then linked to a larger network via XRF reflectors.
+
+#### Create and edit the ambed `main.h` file (if you need transcoding capability for an XLX reflector)
 ```
 cd ../ambed
 cp main.example.h main.h
 ```
 If you transcoding hardware is local, the default main.h works fine. If your transcoding hardware is not local, you need the specify the IP_ADDRESS of the hardware.
 
-#### Compile, install and start the ambed and xlxd programs
+#### Compile, install and start the ambed program
 ```
 make -j<N>
 sudo make install
+```
+#### Compile the reflector
+```
 cd ../xlxd
+```
+#### Compile, install and start the reflector
+If you are building an XLX refector:
+```
+cp Makefile.xlx Makefile
+```
+Or, if you are building an XRF reflector:
+```
+cp Makefile.xrf Makefile
+```
+If you need/want gdb debugging support, you can modify your `Makefile`. Next, create a main.h file:
+```
+cp main.example.h main.h
+```
+User you your favorite editor to make configuration changes. At the very least, you will need to specify the reflector callsign and its IP address. If you are building an XLX reflector with transcoding, and the transcoder is not local, you will need to specify the IP address of the transcoder. You will also want to set the number of modules. The maximum supported is 26. Now your read to build and install:
+```
 make -j<N>
 sudo make install
 ```
@@ -74,15 +106,19 @@ Replace the `<N>` with the number of processors on your system, which can be fou
 
 #### Stoping and starting the services
 ```
-sudo systemctl stop xlxd
+sudo systemctl stop xlxd # (or xrfd)
 sudo systemctl stop ambed
 ```
 You can start each component by replacing `stop` with `start`, or you can restart each by using `restart`.
 
 #### Copy dashboard to /var/www
+There are two supplied, one for XRF systems and one for XLX systems.
 ```
-sudo cp -r ~/xlxd/dashboard /var/www/db
+sudo cp -r ~/xlxd/dashboard.xlx /var/www/db     # or dashboard.xrf
 ```
+Please note that your www root directory might be some place else. There are one file that needs configuration. Edit the copied files, not the ones from the repository:
+
+* **pgs/config.inc.php** - At a minimum set your email address, country and comment. **Do not** enable the calling home feature if you built an XRF reflector. This feature is for **XLX systems only**.
 
 #### Give the dashboard read access to the server log file
 ```
