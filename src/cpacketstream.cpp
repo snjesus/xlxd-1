@@ -56,7 +56,7 @@ bool CPacketStream::Open(const CDvHeaderPacket &DvHeader, CClient *client)
 		m_OwnerClient = client;
 		m_LastPacketTime.Now();
 #ifdef IS_XLX
-		if(DvHeader.GetRpt2Module() == 'A' || DvHeader.GetRpt2Module() == 'B' || DvHeader.GetRpt2Module() == 'C' || DvHeader.GetRpt2Module() == 'D' || DvHeader.GetRpt2Module() == 'F')
+		if (std::string::npos != std::string(TRANSCODED_CHANNELS).find(DvHeader.GetRpt2Module()))
 			m_CodecStream = g_Transcoder.GetStream(this, client->GetCodec());
 		else
 			m_CodecStream = g_Transcoder.GetStream(this, CODEC_NONE);
