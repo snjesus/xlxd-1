@@ -294,7 +294,6 @@ void CXlxProtocol::HandleKeepalives(void)
 			std::cout << "XLX peer " << peer->GetCallsign() << " keepalive timeout" << std::endl;
 			peers->RemovePeer(peer);
 		}
-		it++;
 	}
 	g_Reflector.ReleasePeers();
 }
@@ -323,7 +322,6 @@ void CXlxProtocol::HandlePeerLinks(void)
 			// remove client
 			peers->RemovePeer(peer);
 		}
-		pit++;
 	}
 
 	// check if all ours peers listed by gatekeeper are connected
