@@ -6,7 +6,7 @@ This is an improved version of the multi-protocol Reflector. Nearly all std::vec
 
 The Makefiles have been improved to provide automatically generated dependencies. This significantly speeds up updating time and eliminates build errors. Be sure to do a `make clean` before you switch your build type between XLX and XRF.
 
-These reflectors no longer has a daemon-mode. It is unnecessary for systemd. Only systemd-based operating systems are supported. Debian 9 or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd or xrfd are built without gdb support. If you want to add it, modify the `Makefile` in each build directory. Finally, this repository so that you don't have to modify any file in the repository when you build your system. This makes it easier to update the source code when this repository is updated. Follow the instructions below to build your transcoding XLX reflector or tri-mode XRF reflector.
+These reflectors no longer has a daemon-mode. It is unnecessary for systemd. Only systemd-based operating systems are supported. Debian 9 or Ubuntu 18 is recommended. If you want to install this on a non-systemd based OS, you are on your own. Also, by default, ambed and xlxd or xrfd are built without gdb support. If you want to add it, modify the `Makefile` in each build directory. Finally, this repository is designed so that you don't have to modify any file in the repository when you build your system. Any file you need to modify to properly configure your reflector will be a file you copy from you locally cloned repo. This makes it easier to update the source code when this repository is updated. Follow the instructions below to build your transcoding XLX reflector or tri-mode XRF reflector.
 
 - 73 de n7tae
 
@@ -21,7 +21,7 @@ If you want to run this software please make sure that you can provide this serv
 
 # Installation
 
-Below are instructions for building either an XLX or XRF reflector.
+Below are instructions for building either an XLX or XRF reflector. It is assumed that the XLX system will support transcoding. If this is not the case, you can safely ignore commands associated with building and installing `ambed`.
 
 #### After a clean installation of Debian make sure to run update and upgrade
 ```
