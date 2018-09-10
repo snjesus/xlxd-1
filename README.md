@@ -58,7 +58,7 @@ cp ../config/xlx.blacklist .
 cp ../config/xlx.whitelist .
 cp ../config/xlx.interlink .
 ```
-If you are building an XRF reflector:
+If you are building an XRF reflector (please note the name changes, especially for the interlink file):
 ```
 cp ../config/xlx.blacklist xrf.blacklist
 cp ../config/xlx.whitelist xrf.whitelist
