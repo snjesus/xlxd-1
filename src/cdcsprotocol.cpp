@@ -46,7 +46,7 @@ bool CDcsProtocol::Init(void)
 	// create our socket
 	ok &= m_Socket.Open(DCS_PORT);
 	if ( !ok ) {
-		std::cout << "Error opening socket on port UDP" << DCS_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << DCS_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
 	}
 
 	// update time
@@ -110,7 +110,7 @@ void CDcsProtocol::Task(void)
 					g_Reflector.GetClients()->AddClient(client);
 					g_Reflector.ReleaseClients();
 				} else {
-					std::cout << "DCS node " << Callsign << " connect attempt on non-existing module" << std::endl;
+					std::cerr << "DCS node " << Callsign << " connect attempt on non-existing module" << std::endl;
 
 					// deny the request
 					EncodeConnectNackPacket(Callsign, ToLinkModule, &Buffer);

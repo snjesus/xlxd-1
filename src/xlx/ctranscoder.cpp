@@ -98,7 +98,7 @@ bool CTranscoder::Init(void)
 		// start  thread;
 		m_pThread = new std::thread(CTranscoder::Thread, this);
 	} else {
-		std::cout << "Error opening socket on port UDP" << TRANSCODER_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << TRANSCODER_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
 	}
 
 	// done
@@ -219,7 +219,7 @@ CCodecStream *CTranscoder::GetStream(CPacketStream *PacketStream, uint8 uiCodecI
 						stream = NULL;
 					}
 				} else {
-					std::cout << "ambed openstream failed (no suitable channel available)" << std::endl;
+					std::cerr << "ambed openstream failed (no suitable channel available)" << std::endl;
 				}
 			} else {
 				std::cout << "ambed openstream timeout" << std::endl;
@@ -290,7 +290,7 @@ void CTranscoder::HandleKeepalives(void)
 	if ( m_bConnected && (m_LastActivityTime.DurationSinceNow() >= TRANSCODER_KEEPALIVE_TIMEOUT) ) {
 		// no, disconnect
 		m_bConnected = false;
-		std::cout << "Transcoder keepalive timeout" << std::endl;
+		std::cerr << "Transcoder keepalive timeout" << std::endl;
 	}
 }
 

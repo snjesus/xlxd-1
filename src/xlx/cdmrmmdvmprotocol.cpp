@@ -260,7 +260,7 @@ bool CDmrmmdvmProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &I
 						// link
 						client->SetReflectorModule(Header->GetRpt2Module());
 					} else {
-						std::cout << "DMRMMDVM node " << via << " link attempt on non-existing module" << std::endl;
+						std::cerr << "DMRMMDVM node " << via << " link attempt on non-existing module" << std::endl;
 					}
 				}
 			} else {

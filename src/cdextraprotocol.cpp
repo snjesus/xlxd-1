@@ -48,7 +48,7 @@ bool CDextraProtocol::Init(void)
 	// create our socket
 	ok &= m_Socket.Open(DEXTRA_PORT);
 	if ( !ok ) {
-		std::cout << "Error opening socket on port UDP" << DEXTRA_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << DEXTRA_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
 	}
 
 	// update time
@@ -275,7 +275,7 @@ void CDextraProtocol::HandleKeepalives(void)
 				m_Socket.Send(disconnect, client->GetIp());
 
 				// remove it
-				std::cout << "DExtra client " << client->GetCallsign() << " keepalive timeout" << std::endl;
+				std::cerr << "DExtra client " << client->GetCallsign() << " keepalive timeout" << std::endl;
 				clients->RemoveClient(client);
 			}
 			g_Reflector.ReleasePeers();
@@ -614,4 +614,3 @@ bool CDextraProtocol::EncodeDvLastFramePacket(const CDvLastFramePacket &Packet, 
 
 	return true;
 }
-

@@ -47,7 +47,7 @@ bool CDplusProtocol::Init(void)
 	// create our socket
 	ok &= m_Socket.Open(DPLUS_PORT);
 	if ( !ok ) {
-		std::cout << "Error opening socket on port UDP" << DPLUS_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << DPLUS_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
 	}
 
 	// update time
@@ -213,7 +213,7 @@ bool CDplusProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &Ip)
 				delete Header;
 			}
 		} else {
-			std::cout << "DPlus node " << via << " link attempt on non-existing module" << std::endl;
+			std::cerr << "DPlus node " << via << " link attempt on non-existing module" << std::endl;
 		}
 	} else {
 		// stream already open

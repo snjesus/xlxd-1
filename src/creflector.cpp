@@ -209,7 +209,7 @@ CPacketStream *CReflector::OpenStream(CDvHeaderPacket *DvHeader, CClient *client
 				}
 			} else {
 				// report
-				std::cout << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign() << " with sid " << DvHeader->GetStreamId() << std::endl;
+				std::cerr << "Detected stream loop on module " << DvHeader->GetRpt2Module() << " for client " << client->GetCallsign() << " with sid " << DvHeader->GetStreamId() << std::endl;
 			}
 		}
 	}
@@ -346,7 +346,7 @@ void CReflector::XmlReportThread(CReflector *This)
 			// and close file
 			xmlFile.close();
 		} else {
-			std::cout << "Failed to open " << XML_PATH  << std::endl;
+			std::cerr << "Failed to open " << XML_PATH  << std::endl;
 		}
 
 		// and wait a bit
@@ -431,7 +431,7 @@ void CReflector::JsonReportThread(CReflector *This)
 			}
 		}
 	} else {
-		std::cout << "Error creating monitor socket" << std::endl;
+		std::cerr << "Error creating monitor socket" << std::endl;
 	}
 }
 

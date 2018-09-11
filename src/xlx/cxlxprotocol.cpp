@@ -48,7 +48,7 @@ bool CXlxProtocol::Init(void)
 	// create our socket
 	ok &= m_Socket.Open(XLX_PORT);
 	if ( !ok ) {
-		std::cout << "Error opening socket on port UDP" << XLX_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << XLX_PORT << " on ip " << g_Reflector.GetListenIp() << std::endl;
 	}
 
 	// update time

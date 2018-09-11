@@ -151,14 +151,14 @@ bool CDmridDirHttp::HttpGet(const char *hostname, const char *filename, int port
 				// and disconnect
 				close(sock_id);
 			} else {
-				std::cout << "Cannot establish connection with host " << hostname << std::endl;
+				std::cerr << "Cannot establish connection with host " << hostname << std::endl;
 			}
 		} else {
 			std::cout << "Host " << hostname << " not found" << std::endl;
 		}
 
 	} else {
-		std::cout << "Failed to open wget socket" << std::endl;
+		std::cerr << "Failed to open wget socket" << std::endl;
 	}
 
 	// done

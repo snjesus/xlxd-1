@@ -89,7 +89,7 @@ bool CCallsignList::LoadFromFile(const char *filename)
 		ok = true;
 		std::cout << "Gatekeeper loaded " << m_Callsigns.size() << " lines from " << filename <<  std::endl;
 	} else {
-		std::cout << "Gatekeeper cannot find " << filename <<  std::endl;
+		std::cerr << "Gatekeeper cannot find " << filename <<  std::endl;
 	}
 
 	return ok;

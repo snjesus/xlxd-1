@@ -76,7 +76,7 @@ CCodecStream::~CCodecStream()
 	}
 	// empty ourselves
 	while ( !empty() ) {
-		std::cout << "TAE Deleting a CCodecStream packet!" << std::endl;
+		//std::cout << "TAE Deleting a CCodecStream packet!" << std::endl;
 		delete front();
 		pop();
 	}
@@ -101,7 +101,7 @@ bool CCodecStream::Init(uint16 uiPort)
 		m_pThread = new std::thread(CCodecStream::Thread, this);
 		m_bConnected = true;
 	} else {
-		std::cout << "Error opening socket on port UDP" << uiPort << " on ip " << g_Reflector.GetListenIp() << std::endl;
+		std::cerr << "Error opening socket on port UDP" << uiPort << " on ip " << g_Reflector.GetListenIp() << std::endl;
 		m_bConnected = false;
 	}
 
@@ -212,7 +212,7 @@ void CCodecStream::Task(void)
 
 	// handle timeout
 	if ( !m_LocalQueue.empty() && (m_TimeoutTimer.DurationSinceNow() >= (TRANSCODER_AMBEPACKET_TIMEOUT/1000.0f)) ) {
-		//std::cout << "ambed packet timeout" << std::endl;
+		//std::cerr << "ambed packet timeout" << std::endl;
 		m_uiTimeoutPackets++;
 	}
 }
