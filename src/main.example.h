@@ -57,17 +57,6 @@
 #define TRANSCODED_CHANNELS		"ABCDF"		// only these channels will be trancoded
 #endif
 
-// version -----------------------------------------------------
-#ifdef IS_XLX
-#define VERSION_MAJOR		2
-#define VERSION_MINOR		3
-#define VERSION_REVISION	18
-#else
-#define VERSION_MAJOR		5
-#define VERSION_MINOR		0
-#define VERSION_REVISION	1
-#endif
-
 // global ------------------------------------------------------
 
 #define JSON_MONITOR

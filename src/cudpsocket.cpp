@@ -116,6 +116,8 @@ int CUdpSocket::Receive(CBuffer *Buffer, CIp *Ip, int timeout)
 
 			// get IP
 			Ip->SetSockAddr(&Sin);
+			if (uiFromLen != sizeof(struct sockaddr_in))
+				std::cout << "WARNING: recvfrom() returned address buffer was " << uiFromLen << " bytes. Should have been " << sizeof(struct sockaddr_in) << " bytes!" << std::endl;
 		}
 	}
 
@@ -159,5 +161,3 @@ int CUdpSocket::Send(const char *Buffer, const CIp &Ip, uint16 destport)
 						 (void *)Buffer, ::strlen(Buffer),
 						 0, (struct sockaddr *)temp.GetSockAddr(), sizeof(struct sockaddr_in));
 }
-
-

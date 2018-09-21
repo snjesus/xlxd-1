@@ -159,7 +159,8 @@ CPacketStream *CProtocol::GetStream(uint16 uiStreamId, const CIp *Ip)
 	for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ ) {
 		if ( (*it)->GetStreamId() == uiStreamId ) {
 			// if Ip not NULL, also check if IP match
-			if ( (Ip != NULL) && (*Ip == *((*it)->GetOwnerIp())) ) {
+			const CIp *streamIP = (*it)->GetOwnerIp();	// it's possible this could be NULL
+			if ( (Ip != NULL) && (streamIP != NULL) && (*Ip == *streamIP) ) {
 				return *it;
 			}
 		}
@@ -230,5 +231,3 @@ uint32 CProtocol::ModuleToDmrDestId(char m) const
 {
 	return (uint32)(m - 'A')+1;
 }
-
-

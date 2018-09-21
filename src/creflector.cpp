@@ -23,6 +23,7 @@
 //    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 // ----------------------------------------------------------------------------
 
+#include "version.h"
 #include "main.h"
 #include <string.h>
 #include "creflector.h"
