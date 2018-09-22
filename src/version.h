@@ -27,9 +27,9 @@
 #ifdef IS_XLX
 #define VERSION_MAJOR		2
 #define VERSION_MINOR		3
-#define VERSION_REVISION	19
+#define VERSION_REVISION	20
 #else
 #define VERSION_MAJOR		5
 #define VERSION_MINOR		0
-#define VERSION_REVISION	2
+#define VERSION_REVISION	3
 #endif

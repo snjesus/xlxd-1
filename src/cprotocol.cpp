@@ -127,7 +127,8 @@ void CProtocol::OnDvFramePacketIn(CDvFramePacket *Frame, const CIp *Ip)
 	// find the stream
 	CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
 	if ( stream == NULL ) {
-		std::cerr << "WARNING: CProtocol::OnDvFramePacketIn stream " << Frame->GetStreamId() << " on " << *Ip << " not found!" << std::endl;
+		std::cerr << "WARNING: orphaned DvFramePacket SID " << Frame->GetStreamId() << " from " << *Ip << std::endl;
+		delete Frame;
 	} else {
 		//std::cout << "DV frame" << "from "  << *Ip << std::endl;
 		// and push
@@ -142,7 +143,8 @@ void CProtocol::OnDvLastFramePacketIn(CDvLastFramePacket *Frame, const CIp *Ip)
 	// find the stream
 	CPacketStream *stream = GetStream(Frame->GetStreamId(), Ip);
 	if ( stream == NULL ) {
-		std::cerr << "WARNING: CProtocol::OnDvLastFramePacketIn stream " << Frame->GetStreamId() << " on " << *Ip << " not found!" << std::endl;
+		std::cerr << "WARNING: orphaned DvLastFramPacket SID " << Frame->GetStreamId() << " from " << *Ip << std::endl;
+		delete Frame;
 	} else {
 		// push
 		stream->Lock();

@@ -29,8 +29,8 @@ CNotificationQueue
 CDPlusStreamCacheItem		in    CDplusProtocol
 CPacket
 	CDvFramePacket
+		CDvLastFramePacket
 	CDvHeaderPacket
-	CDvLastFramePacket
 CPacketQueue
 	CCodecStream
 	CPacketStream
