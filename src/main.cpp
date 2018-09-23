@@ -43,12 +43,19 @@ CReflector  g_Reflector;
 static void sigCatch(int signum)
 {
 	/* do NOT do any serious work here */
-	if ((signum == SIGTERM) || (signum == SIGINT))
-		std::cout << "Signal caught, shutting down reflector..." << std::endl;
+	std::string sigstr;
+	switch (signum) {
+		case SIGTERM: sigstr = "SIGTERM"; break;
+		case SIGHUP:  sigstr = "SIGHUP";  break;
+		case SIGINT:  sigstr = "SIGINT";  break;
+		case SIGQUIT: sigstr = "SIGQUIT"; break;
+		default:      sigstr = "unknown"; break;
+	}
+	std::cout << sigstr << " signal caught, shutting down reflector..." << std::endl;
 	return;
 }
 
-int main(int argc, const char **/*argv*/)
+int main(int argc, const char ** /*argv*/)
 {
 	struct sigaction act;
 
@@ -56,15 +63,25 @@ int main(int argc, const char **/*argv*/)
 	sigemptyset(&act.sa_mask);
 	act.sa_flags = SA_RESTART;
 
-	if (sigaction(SIGTERM, &act, 0) != 0) {
-		std::cerr << "sigaction-TERM failed" << std::endl;
-		return EXIT_FAILURE;
-	}
+		if (sigaction(SIGTERM, &act, 0) != 0) {
+			std::cerr << "sigaction-TERM failed" << std::endl;
+			return EXIT_FAILURE;
+		}
 
-	if (sigaction(SIGINT, &act, 0) != 0) {
-		std::cerr << "sigaction-INT failed" << std::endl;
-		return EXIT_FAILURE;
-	}
+		if (sigaction(SIGINT, &act, 0) != 0) {
+			std::cerr << "sigaction-INT failed" << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		if (sigaction(SIGHUP, &act, 0) != 0) {
+			std::cerr << "sigaction-HUP failed" << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		if (sigaction(SIGQUIT, &act, 0) != 0) {
+			std::cerr << "sigaction-QUIT failed" << std::endl;
+			return EXIT_FAILURE;
+		}
 
 	// check arguments
 	if ( argc != 1 ) {
