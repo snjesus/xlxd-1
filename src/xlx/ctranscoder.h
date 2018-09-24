@@ -51,10 +51,6 @@ public:
 	bool Init(void);
 	void Close(void);
 
-	// locks
-	void Lock(void)                     { m_Mutex.lock(); }
-	void Unlock(void)                   { m_Mutex.unlock(); }
-
 	// status
 	bool IsConnected(void) const        { return m_bConnected; }
 

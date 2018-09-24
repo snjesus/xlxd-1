@@ -207,9 +207,9 @@ CCodecStream *CTranscoder::GetStream(CPacketStream *PacketStream, uint8 uiCodecI
 					// init it
 					if ( stream->Init(m_PortOpenStream) ) {
 						// and append to list
-						Lock();
+						m_Mutex.lock();
 						m_Streams.push_back(stream);
-						Unlock();
+						m_Mutex.unlock();
 					} else {
 						// send close packet
 						EncodeClosestreamPacket(&Buffer, stream->GetStreamId());
@@ -238,7 +238,7 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 		return;
 
 	// look for the stream
-	Lock();
+	m_Mutex.lock();
 	{
 		for ( auto it=m_Streams.begin(); it!=m_Streams.end(); it++ ) {
 			// compare object pointers
@@ -267,12 +267,12 @@ void CTranscoder::ReleaseStream(CCodecStream *stream)
 				(*it)->Close();
 				delete *it;
 				m_Streams.erase(it);
-				Unlock();
+				m_Mutex.unlock();
 				return;
 			}
 		}
 	}
-	Unlock();
+	m_Mutex.unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
