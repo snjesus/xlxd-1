@@ -37,6 +37,7 @@ CPacketQueue
 CPeer
 	CBmPeer
 	CXlxPeer
+	CDextraPeer
 CPeers
 CProtocol
 	CDcsProtocol

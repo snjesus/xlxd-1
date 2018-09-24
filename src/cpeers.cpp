@@ -41,13 +41,17 @@ CPeers::CPeers()
 
 CPeers::~CPeers()
 {
-	m_Mutex.lock();
+	RemoveAllPeers();
+}
+
+void CPeers::RemoveAllPeers()
+{
+	Lock();
 	while (! m_Peers.empty()) {
 		auto it = m_Peers.begin();
-		delete *it;
-		m_Peers.erase(it);
+		RemovePeer(*it);
 	}
-	m_Mutex.unlock();
+	Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -94,12 +98,13 @@ void CPeers::RemovePeer(CPeer *peer)
 			if ( ! (*it)->IsAMaster() ) {
 				// remove all clients from reflector client list
 				// it is double lock safe to lock Clients list after Peers list
+				std::cout << "Removing peer " << (*it)->GetCallsign() << " at " << (*it)->GetIp() << "." << std::endl;
 				CClients *clients = g_Reflector.GetClients();
 				auto cit = peer->InitClientIterator();
 				CClient *client;
 				while (NULL != (client = peer->GetClient(cit))) {
 					cit++;
-					clients->RemoveClient(client);	// this also delete the client object
+					clients->RemoveClient(client);	// this deletes the client object
 				}
 				peer->ClearClients();	// just removed all the clients, so we just need to clear the list
 				g_Reflector.ReleaseClients();
@@ -172,4 +177,3 @@ CPeer *CPeers::FindNextPeer(int Protocol, std::list<CPeer *>::iterator &it)
 	}
 	return NULL;
 }
-

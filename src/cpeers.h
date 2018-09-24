@@ -49,9 +49,10 @@ public:
 	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// manage peers
-	void    AddPeer(CPeer *);
-	void    RemovePeer(CPeer *);
-	CPeer   *GetPeer(std::list<CPeer *>::iterator it) { return (it==m_Peers.end()) ? NULL : *it; }
+	void AddPeer(CPeer *);
+	void RemovePeer(CPeer *);
+	void RemoveAllPeers();
+	CPeer *GetPeer(std::list<CPeer *>::iterator it) { return (it==m_Peers.end()) ? NULL : *it; }
 	std::list<CPeer *>::iterator InitPeerIterator()   { return m_Peers.begin(); }
 
 	// find peers

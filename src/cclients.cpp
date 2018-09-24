@@ -41,13 +41,17 @@ CClients::CClients()
 
 CClients::~CClients()
 {
-	m_Mutex.lock();
+	RemoveAllClients();
+}
+
+void CClients::RemoveAllClients()
+{
+	Lock();
 	while (! m_Clients.empty()) {
 		auto it = m_Clients.begin();
-		delete *it;
-		m_Clients.erase(it);
+		RemoveClient(*it);
 	}
-	m_Mutex.unlock();
+	Unlock();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -227,4 +231,3 @@ CClient *CClients::FindNextClient(const CCallsign &Callsign, const CIp &Ip, int 
 	}
 	return NULL;
 }
-

@@ -151,13 +151,21 @@ void CReflector::Stop(void)
 		}
 	}
 
+	// close all Peers
+	m_Peers.RemoveAllPeers();
+
+	// close all clients
+	m_Clients.RemoveAllClients();
+
 	// close protocols
 	m_Protocols.Close();
+
 #ifdef IS_XLX
 	// close transcoder
 	g_Transcoder.Close();
 	std::cout << "Closed Transcoder." << std::endl;
 #endif
+
 	// close gatekeeper
 	g_GateKeeper.Close();
 	std::cout << "Closed Gatekeeper." << std::endl;

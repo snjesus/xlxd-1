@@ -50,8 +50,9 @@ public:
 	void Unlock(void)                   { m_Mutex.unlock(); }
 
 	// manage Clients
-	void    AddClient(CClient *);
-	void    RemoveClient(CClient *);
+	void AddClient(CClient *);
+	void RemoveClient(CClient *);
+	void RemoveAllClients();
 	std::list<CClient *>::iterator InitClientIterator()   { return m_Clients.begin(); }
 	CClient *GetClient(std::list<CClient *>::iterator it) { return (it==m_Clients.end()) ? NULL : *it; }
 	bool    IsClient(CClient *) const;
