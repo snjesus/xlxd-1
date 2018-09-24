@@ -112,6 +112,7 @@ void CProtocols::Close(void)
 	{
 		for ( unsigned int i = 0; i < m_Protocol.size(); i++ ) {
 			m_Protocol[i]->Close();
+			std::cout << "Closed Protocol " << i << "." << std::endl;
 		}
 	}
 	m_Mutex.unlock();

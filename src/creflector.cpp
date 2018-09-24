@@ -125,17 +125,20 @@ void CReflector::Stop(void)
 {
 	// stop & delete all threads
 	m_bStopThreads = true;
+	std::cout << "Stopping all CReflector Threads..." << std::endl;
 
 	// stop & delete report threads
 	if ( m_XmlReportThread != NULL ) {
 		m_XmlReportThread->join();
 		delete m_XmlReportThread;
 		m_XmlReportThread = NULL;
+		std::cout << "Stopped XmlReportThread." << std::endl;
 	}
 	if ( m_JsonReportThread != NULL ) {
 		m_JsonReportThread->join();
 		delete m_JsonReportThread;
 		m_JsonReportThread = NULL;
+		std::cout << "Stopped JsonReportThread." << std::endl;
 	}
 
 	// stop & delete all router thread
@@ -144,6 +147,7 @@ void CReflector::Stop(void)
 			m_RouterThreads[i]->join();
 			delete m_RouterThreads[i];
 			m_RouterThreads[i] = NULL;
+			std::cout << "Stopped Module " << (char)(i + 'A') << " thread." << std::endl;
 		}
 	}
 
@@ -152,9 +156,11 @@ void CReflector::Stop(void)
 #ifdef IS_XLX
 	// close transcoder
 	g_Transcoder.Close();
+	std::cout << "Closed Transcoder." << std::endl;
 #endif
 	// close gatekeeper
 	g_GateKeeper.Close();
+	std::cout << "Closed Gatekeeper." << std::endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
