@@ -214,6 +214,10 @@ bool CDplusProtocol::OnDvHeaderPacketIn(CDvHeaderPacket *Header, const CIp &Ip)
 			}
 		} else {
 			std::cerr << "DPlus node " << via << " link attempt on non-existing module" << std::endl;
+			std::cerr << "Header->GetMyCallsign() returned '" << Header->GetMyCallsign() << "'" << std::endl;
+			std::cerr << "Header->GetUrCallsign() returned '" << Header->GetUrCallsign() << "'" << std::endl;
+			std::cerr << "Header->GetRpt1Callsign() returned '" << Header->GetRpt1Callsign() << "'" << std::endl;
+			std::cerr << "Header->GetRpt2Callsign() returned '" << Header->GetRpt2Callsign() << "'" << std::endl;
 		}
 	} else {
 		// stream already open

@@ -87,38 +87,38 @@
 
 // DExtra
 #define DEXTRA_PORT					30001							// UDP port
-#define DEXTRA_KEEPALIVE_PERIOD		3								// in seconds
-#define DEXTRA_KEEPALIVE_TIMEOUT	(DEXTRA_KEEPALIVE_PERIOD*10)	// in seconds
+#define DEXTRA_KEEPALIVE_PERIOD		10								// in seconds
+#define DEXTRA_KEEPALIVE_TIMEOUT	(DEXTRA_KEEPALIVE_PERIOD*3)	// in seconds
 #define DEXTRA_RECONNECT_PERIOD		5								// in seconds
 
 // DPlus
 #define DPLUS_PORT					20001						// UDP port
-#define DPLUS_KEEPALIVE_PERIOD		1							// in seconds
-#define DPLUS_KEEPALIVE_TIMEOUT		(DPLUS_KEEPALIVE_PERIOD*10)	// in seconds
+#define DPLUS_KEEPALIVE_PERIOD		10							// in seconds
+#define DPLUS_KEEPALIVE_TIMEOUT		(DPLUS_KEEPALIVE_PERIOD*3)	// in seconds
 
 // DCS
 #define DCS_PORT					30051						// UDP port
-#define DCS_KEEPALIVE_PERIOD		1							// in seconds
-#define DCS_KEEPALIVE_TIMEOUT		(DCS_KEEPALIVE_PERIOD*30)	// in seconds
+#define DCS_KEEPALIVE_PERIOD		10							// in seconds
+#define DCS_KEEPALIVE_TIMEOUT		(DCS_KEEPALIVE_PERIOD*3)	// in seconds
 
 #ifdef IS_XLX
 // XLX
 #define XLX_PORT					10002						// UDP port
-#define XLX_KEEPALIVE_PERIOD		1							// in seconds
-#define XLX_KEEPALIVE_TIMEOUT		(XLX_KEEPALIVE_PERIOD*30)	// in seconds
+#define XLX_KEEPALIVE_PERIOD		10							// in seconds
+#define XLX_KEEPALIVE_TIMEOUT		(XLX_KEEPALIVE_PERIOD*3)	// in seconds
 #define XLX_RECONNECT_PERIOD		5							// in seconds
 
 // DMRPlus (dongle)
 #define DMRPLUS_PORT				8880							// UDP port
-#define DMRPLUS_KEEPALIVE_PERIOD	1								// in seconds
-#define DMRPLUS_KEEPALIVE_TIMEOUT	(DMRPLUS_KEEPALIVE_PERIOD*10)	// in seconds
+#define DMRPLUS_KEEPALIVE_PERIOD	10								// in seconds
+#define DMRPLUS_KEEPALIVE_TIMEOUT	(DMRPLUS_KEEPALIVE_PERIOD*3)	// in seconds
 #define DMRPLUS_REFLECTOR_SLOT		DMR_SLOT2
 #define DMRPLUS_REFLECTOR_COLOUR	1
 
 // DMRMmdvm
 #define DMRMMDVM_PORT				62030							// UDP port
 #define DMRMMDVM_KEEPALIVE_PERIOD	10								// in seconds
-#define DMRMMDVM_KEEPALIVE_TIMEOUT	(DMRMMDVM_KEEPALIVE_PERIOD*10)	// in seconds
+#define DMRMMDVM_KEEPALIVE_TIMEOUT	(DMRMMDVM_KEEPALIVE_PERIOD*3)	// in seconds
 #define DMRMMDVM_REFLECTOR_SLOT		DMR_SLOT2
 #define DMRMMDVM_REFLECTOR_COLOUR	1
 
