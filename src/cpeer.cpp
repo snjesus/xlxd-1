@@ -103,7 +103,7 @@ bool CPeer::operator ==(const CPeer &peer) const
 bool CPeer::IsAMaster(void) const
 {
 	for ( auto it=m_Clients.begin(); it!=m_Clients.end(); it++ ) {
-		if ( (*it)->IsAMaster() )
+		if ( *it && (*it)->IsAMaster() )
 			return true;
 	}
 	return false;
@@ -113,7 +113,8 @@ void CPeer::Alive(void)
 {
 	m_LastKeepaliveTime.Now();;
 	for ( auto it=m_Clients.begin(); it!=m_Clients.end(); it++ ) {
-		(*it)->Alive();
+		if (*it)
+			(*it)->Alive();
 	}
 }
 
