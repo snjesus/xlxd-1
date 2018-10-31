@@ -16,7 +16,7 @@ $PageOptions = array();
 
 $PageOptions['ContactEmail']                         = 'your_email';		    // Support E-Mail address
 
-$PageOptions['DashboardVersion']                     = '2.4.0';       			// Dashboard Version
+$PageOptions['DashboardVersion']                     = '2.4.1';       			// Dashboard Version
 
 $PageOptions['PageRefreshActive']                    = true;          			// Activate automatic refresh
 $PageOptions['PageRefreshDelay']                     = '10000';       			// Page refresh time in miliseconds
@@ -49,6 +49,11 @@ $PageOptions['MetaRevisit']                          = 'After 30 Days';         
 $PageOptions['MetaRobots']                           = 'index,follow';                                               // Meta Tag Values, usefull for Search Engine
 
 $PageOptions['UserPage']['ShowFilter']               = true;                                                         // Show Filter on Users page
+$PageOptions['Network']['Show']               	     = false;                                                        // Show vnstat traffic statistics
+
+#$PageOptions['Live']['URL']             	     = 'http://live.ircddb.net:8080/ircddblive5.html';               // This is the global ircddb feed
+$PageOptions['Live']['URL']             	     = 'https://irc-1.openquad.net/ics/';                            // URL of the live ircddb feed                            
+$PageOptions['Live']['Title']               	     = 'QuadNet Live';                                               // Title of the page for the live feed 
 
 $Service['PIDFile']                                  = '/var/log/xlxd.pid';
 $Service['XMLFile']                                  = '/var/log/xlxd.xml';
@@ -64,6 +69,10 @@ $CallingHome['LastCallHomefile']                     = "/xlxd-ch/lastcallhome.ph
 $CallingHome['OverrideIPAddress']                    = "";                                     // Insert your IP address here. Leave blank for autodetection. No need to enter a fake address.
 $CallingHome['InterlinkFile']                        = "/usr/local/etc/xlxd.interlink";                 // Path to interlink file
 
+$VNStat['Interfaces']                                = array();
+$VNStat['Interfaces'][0]['Name']                     = 'eth0';
+$VNStat['Interfaces'][0]['Address']                  = 'eth0';
+$VNStat['Binary']                                    = '/usr/bin/vnstat';
 
 /*
   include an extra config file for people who dont like to mess with shipped config.ing.php

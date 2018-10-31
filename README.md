@@ -82,7 +82,7 @@ sudo make install
 ```
 #### Compile the reflector
 ```
-cd ../xlxd
+cd ../src
 ```
 #### Compile, install and start the reflector
 If you are building an XLX refector:

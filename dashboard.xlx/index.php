@@ -124,7 +124,7 @@ if ($CallingHome['Active']) {
         echo '
       }';
 
-        if (!isset($_GET['show']) || (($_GET['show'] != 'livequadnet') && ($_GET['show'] != 'reflectors') && ($_GET['show'] != 'interlinks'))) {
+        if (!isset($_GET['show']) || (($_GET['show'] != 'liveircddb') && ($_GET['show'] != 'reflectors') && ($_GET['show'] != 'interlinks'))) {
             echo '
       PageRefresh = setTimeout(ReloadPage, ' . $PageOptions['PageRefreshDelay'] . ');';
         }
@@ -178,8 +178,15 @@ if ($CallingHome['Active']) {
                         (<?php echo $Reflector->PeerCount(); ?>)</a></li>
                 <li<?php echo ($_GET['show'] == "reflectors") ? ' class="active"' : ''; ?>><a
                             href="./index.php?show=reflectors">Reflector List</a></li>
-                <li<?php echo ($_GET['show'] == "livequadnet") ? ' class="active"' : ''; ?>><a
-                            href="./index.php?show=livequadnet">QuadNet Live</a></li>
+                <li<?php echo ($_GET['show'] == "liveircddb") ? ' class="active"' : ''; ?>><a
+			href="./index.php?show=liveircddb"><?php echo ($PageOptions['Live']['Title'])?></a></li>
+                <?php
+                if ($PageOptions['Network']['Show']) {
+                   echo '<li';
+                   echo ($_GET['show'] == "network") ? ' class="active"' : '';
+                   echo '>';
+                   echo  '<a href="./index.php?show=network">Network Statistics</a></li>';
+               }?>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -201,14 +208,17 @@ if ($CallingHome['Active']) {
                 case 'repeaters'  :
                     require_once("./pgs/repeaters.php");
                     break;
-                case 'livequadnet' :
-                    require_once("./pgs/livequadnet.php");
+                case 'liveircddb' :
+                    require_once("./pgs/liveircddb.php");
                     break;
                 case 'peers'      :
                     require_once("./pgs/peers.php");
                     break;
                 case 'reflectors' :
                     require_once("./pgs/reflectors.php");
+                    break;
+                case 'network' :
+                    require_once("./pgs/network.php");
                     break;
                 default           :
                     require_once("./pgs/users.php");
